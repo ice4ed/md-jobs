@@ -16,7 +16,6 @@ server_script{
     '@oxmysql/lib/MySQL.lua',
     'server/locations/**.lua',
     'server/functions.lua',
-    'server/server.lua',
     'server/jobs.lua',
     'server/catering.lua',
     'server/closedshops.lua',

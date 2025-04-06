@@ -1,6 +1,6 @@
 
 local notify = Config.Notify -- qb or ox
-local logs = false 
+local logs = true 
 local logapi = GetConvar("fivemerrLogs", "")
 local endpoint = 'https://api.fivemerr.com/v1/logs'
 local headers = {

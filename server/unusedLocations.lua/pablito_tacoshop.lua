@@ -8,7 +8,6 @@ Jobs['tacoshop'] = {
         {ped = 'mp_m_freemode_01', loc = vector4(13.6, -1606.69, 29.4, 147.99), label = 'Pablito Taco Shop'}
     },
     closedShopItems = {
-      
     },
     craftingStations = {
         soda = {
@@ -23,12 +22,15 @@ Jobs['tacoshop'] = {
         cuttingboard = {
             {anim = 'uncuff',give = {onion = 1}, take = {sliced_onion = 1}, progtext = 'Chopping'},
         },
-       
     },
     catering = {
         commission = 0.2,
         items = {
-         
+            {name = 'taco_beef',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'taco_chicken',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'taco_fish',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'ecola',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'sprunk',     minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
     },
     shops = {
