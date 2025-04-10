@@ -94,8 +94,8 @@ lib.callback.register('md-jobs:server:addItemsToClosed', function(source, job, n
         sorter(data, 'label')
         local items = lib.callback.await('md-jobs:client:addItemsToClosed', src, data)
         if items == nil then return end
-        local git = MySQL.query.await('SELECT * FROM mdjobs_closedshop WHERE job = ? and label = ?', {job, Jobs[job]['closedShops'][num].label})
-        local alreadyin = json.decode(git[1].items)
+        local git = MySQL.query.await('SELECT * FROM mdjobs_closedshop WHERE job = ? AND label = ?', {job, Jobs[job]['closedShops'][num].label})
+        local alreadyin = json.decode(git[1].items) or json.encode(git.items)
 
         if not items then return end
         for k , v in pairs (data) do

@@ -92,20 +92,19 @@ local consumables = {
 
     -- uwu cafe
     -- coffee =            {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
-    blueberryuwutea   = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
-    chocouwutea       = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
-    classicuwutea     = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
-    uwuicedcoffee     = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
-    matchTea          = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
-    peachicedtea      = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
-    strawberryuwutea  = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
-    uwukarecurry      = {anim = 'eat', label = 'Eating', add = {hunger = 20}},
-    uwuomurice        = {anim = 'eat', label = 'Eating', add = {hunger = 20}},
-    uwubentobox       = {anim = 'eat', label = 'Eating', add = {hunger = 20}},
-    uwuanpan          = {anim = 'eat', label = 'Eating', add = {hunger = 20}},
-    uwudoughnut       = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
-    uwucookie         = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
-    uwucremecaramel   = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    blueberry_uwu_tea   = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    chocolate_uwu_tea       = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    uwu_iced_coffee     = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    matcha_uwu_tea          = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    peach_iced_tea      = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    strawberry_uwu_tea  = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    uwu_kare_curry      = {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    uwu_omurice        = {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    uwu_bento_box       = {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    uwu_anpan          = {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    kitty_doughnut       = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    uwu_cookie         = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    uwu_creme_caramel   = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
 }
 
 local function handleConsumablePerks(source, type, amount)
@@ -117,7 +116,7 @@ local function handleConsumablePerks(source, type, amount)
             local new = old + amount
             if new > 100.0 then new = 100.0 end
             Player.Functions.SetMetaData(type, new)
-           -- TriggerClientEvent('hud:client:UpdateNeeds', source, meta.hunger, new)
+            TriggerClientEvent('hud:client:UpdateNeeds', source, meta.hunger, new)
         elseif type == 'hunger' then
             local Player = getPlayer(source)
             local meta = Player.PlayerData.metadata
@@ -125,7 +124,7 @@ local function handleConsumablePerks(source, type, amount)
             local new = old + amount
             if new > 100.0 then new = 100.0 end
             Player.Functions.SetMetaData(type, new)
-           -- TriggerClientEvent('hud:client:UpdateNeeds', source, new, meta.thirst)
+            TriggerClientEvent('hud:client:UpdateNeeds', source, new, meta.thirst)
         elseif type == 'stress' then
             local Player = getPlayer(source)
             local meta = Player.PlayerData.metadata
@@ -133,7 +132,7 @@ local function handleConsumablePerks(source, type, amount)
             local new = old + amount
             if new > 100.0 then new = 0.0 end
             Player.Functions.SetMetaData(type, new)
-           -- TriggerClientEvent('hud:client:UpdateStress', source, new)
+            TriggerClientEvent('hud:client:UpdateStress', source, new)
         end
     elseif Config.Framework  == 'esx' then 
         if type == 'thirst' then
