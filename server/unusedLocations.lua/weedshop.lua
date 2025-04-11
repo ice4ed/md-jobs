@@ -1,5 +1,4 @@
 -- https://avoj.tebex.io/package/6060267 -- THIS IS FREE ON THE TEBEX!
-
 Jobs['weedshop'] = {
     CateringEnabled = false,
     closedShopsEnabled = true,
