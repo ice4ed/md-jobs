@@ -1,4 +1,7 @@
 -- https://avoj.tebex.io/package/6060267 -- THIS IS FREE ON THE TEBEX!
+-- MAKE SURE YOU ADD ITEMS > BEST BUDS 
+-- (They use the Same Images & Items)
+
 Jobs['weedshop'] = {
     CateringEnabled = false,
     closedShopsEnabled = true,
