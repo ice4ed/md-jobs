@@ -4,20 +4,23 @@ Jobs['pharmacy'] = {
     CateringEnabled = false,
     closedShopsEnabled = true,
     Blip = {
-        {sprite = 52, color = 2, scale = 0.5, label = 'Locksmith', loc = vector3(174.11, -1801.95, 29.26)},
+        {sprite = 52, color = 2, scale = 0.5, label = 'Pharmacy', loc = vector3(174.11, -1801.95, 29.26)},
     },
     closedShops = {
-        {ped = 'mp_m_freemode_01', loc = vector4(174.11, -1801.95, 29.26, 321.03), label = 'Lockpicks Shop'}
+        {ped = 's_m_m_doctor_01', loc = vector4(174.11, -1801.95, 29.26, 321.03), label = 'Pharmacy Shop'}
     },
     closedShopItems = {
-       lockpick = {name = 'lockpick', price = 5},
-       advancedlockpick = {name = 'advancedlockpick', price = 5},
+       bandage = {name = 'bandage', price = 15},
+       painkillers = {name = 'painkillers', price = 20},
+       ifaks = {name = 'ifaks', price = 35},
+       firstaid = {name = 'firstaid', price = 35},
     },
     craftingStations = {
         shaper = {
-            {anim = 'uncuff', give = {cloth = 4}, take = {bandage = 1}, progtext = 'Pouring' },
-            {anim = 'uncuff', give = {cloth = 8}, take = {ifaks = 1}, progtext = 'Pouring' },
-            {anim = 'uncuff', give = {cloth = 16}, take = {firstaid = 1}, progtext = 'Pouring' },
+            {anim = 'mechanic', give = {cloth = 4}, take = {bandage = 1}, progtext = 'Grabbing' },
+            {anim = 'mechanic', give = {cloth = 8}, take = {ifaks = 1}, progtext = 'Grabbing' },
+            {anim = 'mechanic', give = {cloth = 16}, take = {firstaid = 1}, progtext = 'Grabbing' },
+            {anim = 'mechanic', give = {cloth = 16}, take = {painkillers = 1}, progtext = 'Grabbing' },
         },
     },
     shops = { -- must match the key value in locations
