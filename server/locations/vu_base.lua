@@ -8,7 +8,7 @@ Jobs['vu'] = {
         {ped = 'mp_m_freemode_01', loc = vector4(129.02, -1283.25, 29.27, 120.67), label = 'Vanilla Unicorn Shop'}
     },
     closedShopItems = { -- items allowed in closed shops
-       vodka_soda = {name = 'vodka_soda', price = 5},
+        vodka_soda = {name = 'vodka_soda', price = 5},
         moscow_mule = {name = 'moscow_mule', price = 5},
         tequila_sunrise = {name = 'tequila_sunrise', price = 5},
         whiskey_sour = {name = 'whiskey_sour', price = 5},
@@ -107,5 +107,18 @@ Jobs['vu'] = {
         trays = { -- storages to place things for people | prop is only needed if you want to spawn an object | prop = 'prop_bar_fridge_01' for example
             {prop = 'prop_food_tray_01', label = 'Grab Food', loc = vector3(129.6180, -1286.6339, 29.2904), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'vu'},
         }
+    },
+    consumables = {
+        daiquiri = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        gin_fizz = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        gin_and_tonic = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        mojito = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        moscow_mule = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        rum_and_coke = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        rum_punch = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        screwdriver = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        tequila_sunrise = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        vodka_soda = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        whiskey_sour = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
     }
 }

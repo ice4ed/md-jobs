@@ -68,5 +68,15 @@ Jobs['tequilala'] = {
             {loc = vector3(-568.64, 290.78, 79.61), l = 0.5, w = 1.0, lwr = 1.0, upr = 1.0, r = 180, slots = 20, weight = 100000, job = 'tequilala'},
         },
         
-    }
+    },
+    consumables = {
+        ambeer = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        beer = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        dusche = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        logger = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        patochebeer = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        pisswaser = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        pisswaser_dark = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        pisswaser_light = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    },
 }

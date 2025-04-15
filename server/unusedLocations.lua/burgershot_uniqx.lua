@@ -121,5 +121,19 @@ Jobs['burgershot'] = {
             {label = 'Store Products', loc = vector3(-1195.96, -902.59, 13.85), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 180, slots = 100, weight = 600000, job = jobloc},
         },
  
-    }
+    },
+    consumables = {
+        bs_bleeder = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        bs_fries = {anim = 'eat', label = 'Eating', add = {hunger = 5}},
+        bs_heartstopper = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        bs_heartstopper_meal = {anim = 'eat', label = 'Consuming', add = {hunger = 25, thirst = 10}},
+        bs_moneyshot = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        bs_moneyshot_meal = {anim = 'eat', label = 'Eating', add = {hunger = 25, thirst = 10}},
+        bs_nuggets = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        bs_nugget_meal = {anim = 'eat', label = 'Eating', add = {hunger = 25, thirst = 10}},
+        bs_torpedo = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        bs_torpedo_meal = {anim = 'eat', label = 'Eating', add = {hunger = 25, thirst = 10}},
+        ecola = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        sprunk = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    },
 }

@@ -55,8 +55,19 @@ Jobs['burgershot'] = {
     catering = {
             commission = 0.2,
             items = {
-                {name = 'vodka',        minPrice = 10, maxPrice = 20, maxAmount = 30},
-                {name = 'tequila',      minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'bs_fries',     minPrice = 5, maxPrice = 10, maxAmount = 30},
+                {name = 'bs_nuggets',   minPrice = 5, maxPrice = 10, maxAmount = 30},
+                {name = 'bs_heartstopper', minPrice = 5, maxPrice = 10, maxAmount = 30},
+                {name = 'bs_bleeder',   minPrice = 5, maxPrice = 10, maxAmount = 30},
+                {name = 'bs_torpedo',   minPrice = 5, maxPrice = 10, maxAmount = 30},
+                {name = 'bs_moneyshot', minPrice = 5, maxPrice = 10, maxAmount = 30},
+                {name = 'sprunk',        minPrice = 5, maxPrice = 10, maxAmount = 30},
+                {name = 'ecola',         minPrice = 5, maxPrice = 10, maxAmount = 30},
+                {name = 'bs_heartstopper_meal', minPrice = 5, maxPrice = 10, maxAmount = 30},
+                {name = 'bs_nugget_meal', minPrice = 5, maxPrice = 10, maxAmount = 30},
+                {name = 'bs_torpedo_meal', minPrice = 5, maxPrice = 10, maxAmount = 30},
+                {name = 'bs_moneyshot_meal', minPrice = 5, maxPrice = 10, maxAmount = 30},
+
             },
             Van = {
                 vu = {model = 'burrito', label = 'Burrito', plate = 'TEQCATER', loc = vector4(-563.02, 287.51, 82.39, 180.0), heading = 28.78},
@@ -140,5 +151,19 @@ Jobs['burgershot'] = {
             {label = 'Grab Food', loc = vector3(-1191.62, -896.41, 13.95), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 35.0, slots = 20, weight = 100000, job = 'burgershot'},
             {label = 'Grab Food', loc = vector3(-1193.92, -905.43, 13.78), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 80.0, slots = 20, weight = 100000, job = 'burgershot'},
         }
-    }
+    },
+    consumables = {
+        bs_bleeder = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        bs_fries = {anim = 'eat', label = 'Eating', add = {hunger = 5}},
+        bs_heartstopper = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        bs_heartstopper_meal = {anim = 'eat', label = 'Consuming', add = {hunger = 25, thirst = 10}},
+        bs_moneyshot = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        bs_moneyshot_meal = {anim = 'eat', label = 'Eating', add = {hunger = 25, thirst = 10}},
+        bs_nuggets = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        bs_nugget_meal = {anim = 'eat', label = 'Eating', add = {hunger = 25, thirst = 10}},
+        bs_torpedo = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        bs_torpedo_meal = {anim = 'eat', label = 'Eating', add = {hunger = 25, thirst = 10}},
+        ecola = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        sprunk = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    },
 }

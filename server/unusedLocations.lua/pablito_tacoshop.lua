@@ -68,5 +68,10 @@ Jobs['tacoshop'] = {
         stash = {
             {label = 'Dry Storage', loc = vector3(20.51, -1601.69, 29.34), l = 0.7, w = 1.7, lwr = 0.25, upr = 0.50, r = 230, slots = 20, weight = 100000, job = 'tacoshop'},
         }
-    }
+    },
+    consumables = {
+        taco_beef = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        taco_chicken = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        taco_fish = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    },
 }

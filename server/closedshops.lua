@@ -30,7 +30,6 @@ if not Config.ClosedShopAlwaysActive then
 end
 
 function initializePeds()
-    local peds = {}
     for k, v in pairs (Jobs) do
         if v.closedShopsEnabled then
             for m, d in pairs (Jobs[k].closedShops) do

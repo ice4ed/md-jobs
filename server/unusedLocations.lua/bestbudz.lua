@@ -131,5 +131,17 @@ Jobs['bestbudz'] = {
             {label = 'Dry Storage', loc = vector3(375.7, -824.38, 29.09), l = 0.5, w = 0.7, lwr = 0.25, upr = 0.75, r = 180, slots = 20, weight = 100000, job = 'bestbudz'},
             {label = 'Dry Storage', loc = vector3(373.94, -827.81, 29.02), l = 0.5, w = 1.7, lwr = 0.25, upr = 0.75, r = 180, slots = 20, weight = 100000, job = 'bestbudz'},
         }
-    }
+    },
+    consumables = {
+        blunt_ak47 = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        blunt_og_kush = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        blunt_purple_haze = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        blunt_skunk = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, thirst = -10}},
+        blunt_white_widow = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        joint_ak47 = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        joint_og_kush = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        joint_purple_haze = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        joint_skunk = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, thirst = -10}},
+        joint_white_widow = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
+    },
 }

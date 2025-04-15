@@ -9,19 +9,37 @@ Jobs['hookies'] = {
         {ped = 'mp_m_freemode_01', loc = vector4(-2191.84, 4285.16, 49.18, 154.88), label = 'Hookies Shop'}
     },
     closedShopItems = {
-        coffee         =   {name = 'coffee',            price = 5},
-        banana_smoothie = {name = 'banana_smoothie',   price = 5},
-        blueberry_smoothie = {name = 'blueberry_smoothie', price = 5},
-        strawberry_smoothie = {name = 'strawberry_smoothie', price = 5},
-        mango_smoothie  = {name = 'mango_smoothie',    price = 5},
-        pomegranate_smoothie = {name = 'pomegranate_smoothie', price = 5},
-        lemonade       = {name = 'lemonade',          price = 5},
-        limeade        = {name = 'limeade',           price = 5},
+       coffee = {name = 'coffee', price = 5},
+        ecola = {name = 'ecola', price = 5},
+        sprunk = {name = 'sprunk', price = 5},
+        ambeer = {name = 'ambeer', price = 5},
+        beer = {name = 'beer', price = 5},
+        dusche = {name = 'dusche', price = 5},
+        logger = {name = 'logger', price = 5},
+        patochebeer = {name = 'patochebeer', price = 5},
+        pisswaser = {name = 'pisswaser', price = 5},
+        pisswaser_light = {name = 'pisswaser_light', price = 5},
+        pisswaser_dark = {name = 'pisswaser_dark', price = 5},
+        grilled_fish = {name = 'grilled_fish', price = 5},
+        seafood_lobster_plate = {name = 'seafood_lobster_plate', price = 5},
+        seafood_crabcakes = {name = 'seafood_crabcakes', price = 5},
+        fish_taco = {name = 'fish_taco', price = 5},
+        fishchips = {name = 'fishchips', price = 5},
+        seafood_batter_fish = {name = 'seafood_batter_fish', price = 5},
+        pinot_grigio = {name = 'pinot_grigio', price = 5},
+        chardoney = {name = 'chardoney', price = 5},
     },
     catering = {
         commission = 0.2,
         items = {
-
+            {name = 'grilled_fish',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'seafood_lobster_plate',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'seafood_crabcakes',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'fish_taco',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'fishchips',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'seafood_batter_fish',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'pinot_grigio',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'chardoney',     minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
         Van = {
             hookies = {model = 'burrito', label = 'Burrito', plate = 'Hookies', loc = vector4(-2178.88, 4266.74, 49.02, 125.58), heading = 125.0},
@@ -111,5 +129,15 @@ Jobs['hookies'] = {
         trays = {
             {prop = 'prop_food_tray_01', label = 'Grab Drinks!', loc = vector3(253.71, -1021.59, 29.5),  l = 0.5, w = 0.5, lwr = 0.25, upr = 0.25, r = 160, slots = 20, weight = 100000, job = 'tequilala'},
         }
-    }
+    },
+    consumables = {
+        chardoney = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        grilled_fish = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        fishchips = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        fish_taco = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        pinot_grigio = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        seafood_batter_fish = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        seafood_crabcakes = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        seafood_lobster_plate = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    },
 }

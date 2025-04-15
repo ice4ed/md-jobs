@@ -84,8 +84,13 @@ local options = {}
 			onSelect = v.action,data = v.data,canInteract = v.canInteract or nil, distance = 2.0,
 		})
 	end
+	if loc.w == nil then loc.w = 1.0 end
+	if loc.l == nil then loc.l = 1.0 end
+	if loc.lwr == nil then loc.lwr = 1.0 end
+	if loc.upr == nil then loc.upr = 1.0 end
+	if loc.r == nil then loc.r = 180.0 end
 	if Config.Target == 'qb' then
-		exports['qb-target']:AddBoxZone(name, loc.loc, loc.w, loc.l, {name = name, minZ = loc.loc.z-loc.lwr,maxZ = loc.loc.z + loc.upr, debugPoly = true, heading = loc.r + 0.0}, { options = options, distance = 2.5 })
+		exports['qb-target']:AddBoxZone(name, loc.loc, loc.w, loc.l, {name = name, minZ = loc.loc.z-loc.lwr,maxZ = loc.loc.z + loc.upr, debugPoly = false, heading = loc.r + 0.0}, { options = options, distance = 2.5 })
 	elseif Config.Target == 'ox' then
 		exports.ox_target:addBoxZone({coords = loc.loc, size = vec3(loc.l,loc.w,loc.lwr + loc.upr), rotation = loc.r + 0.0, options = options, debug = false})
 	end

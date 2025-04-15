@@ -15,10 +15,12 @@ Jobs['beanmachine'] = {
         americano     =    {name = 'americano',         price = 5},
         cappuccino    =    {name = 'cappuccino',        price = 5},
         caramel_macchiato = {name = 'caramelmacchiato',  price = 5},
-        mocha_latte     =   {name = 'mochalatte',        price = 5},
+        mochalatte     =   {name = 'mochalatte',        price = 5},
         hazelnut_latte  =   {name = 'hazelnutlatte',     price = 5},
         vanilla_frappe  =   {name = 'vanillafrappe',     price = 5},
         tiramisu_coffee =   {name = 'tiramisucoffee',    price = 5},
+        almond_croissant = {name = 'almond_croissant', price = 5},
+        butter_croissant = {name = 'butter_croissant', price = 5},
 
     },
     craftingStations = {
@@ -36,8 +38,14 @@ Jobs['beanmachine'] = {
     catering = {
         commission = 0.2,
         items = {
-            {name = 'coffee',       minPrice = 10, maxPrice = 20, maxAmount = 30},
-            {name = 'ice',          minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'coffee',        minPrice = 5, maxPrice = 10, maxAmount = 30},
+            {name = 'americano',     minPrice = 5, maxPrice = 10, maxAmount = 30},
+            {name = 'cappuccino',    minPrice = 5, maxPrice = 10, maxAmount = 30},
+            {name = 'caramel_macchiato', minPrice = 5, maxPrice = 10, maxAmount = 30},
+            {name = 'mochalatte',    minPrice = 5, maxPrice = 10, maxAmount = 30},
+            {name = 'hazelnut_latte', minPrice = 5, maxPrice = 10, maxAmount = 30},
+            {name = 'vanillafrappe',  minPrice = 5, maxPrice = 10, maxAmount = 30},
+            {name = 'tiramisu_coffee', minPrice = 5, maxPrice = 10, maxAmount = 30},
         },
         Van = {
             beanmachine = {model = 'burrito', label = 'Burrito', plate = 'BEANCATER', loc = vector4(277.6, -955.93, 29.29, 265.45), heading = 342.78},
@@ -85,5 +93,16 @@ Jobs['beanmachine'] = {
         trays = {
             {prop = 'prop_food_tray_01', label = 'Grab Drinks!', loc = vector3(280.47, -972.54, 29.59),  l = 0.5, w = 0.5, lwr = 0.25, upr = 0.25, r = 180, slots = 20, weight = 100000, job = 'beanmachine'},
         }
-    }
+    },
+    consumables = {
+        almond_croissant = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        butter_croissant = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        americano = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        cappuccino = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        caramel_macchiato = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        coffee = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        mocha_latte = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        tiramasu_coffee = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        vanilla_frappe = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    },
 }

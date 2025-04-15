@@ -8,7 +8,7 @@ Jobs['uwu'] = {
         {ped = 'mp_m_freemode_01', loc = vector4(-574.73, -1071.35, 22.33, 175.12), label = 'uwu Cafe Shop'}
     },
     closedShopItems = {
-       blueberry_uwu_tea = {name = 'blueberry_uwu_tea', price = 5},
+        blueberry_uwu_tea = {name = 'blueberry_uwu_tea', price = 5},
         chocolate_uwu_tea = {name = 'chocolate_uwu_tea', price = 5},
         uwu_iced_coffee = {name = 'uwu_iced_coffee', price = 5},
         matcha_uwu_tea = {name = 'matcha_uwu_tea', price = 5},
@@ -52,8 +52,20 @@ Jobs['uwu'] = {
     catering = {
             commission = 0.2,
             items = {
-                {name = 'vodka',        minPrice = 10, maxPrice = 20, maxAmount = 30},
-                {name = 'tequila',      minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'uwu_kare_curry',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'uwu_omurice',        minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'uwu_bento_box',      minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'blueberry_uwu_tea',   minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'chocolate_uwu_tea',   minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'uwu_iced_coffee',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'matcha_uwu_tea',       minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'peach_iced_tea',       minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'strawberry_uwu_tea',   minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'uwu_anpan',        minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'kitty_doughnut',   minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'uwu_cookie',       minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'uwu_creme_caramel',   minPrice = 10, maxPrice = 20, maxAmount = 30},
+
             },
             Van = {
                 vu = {model = 'burrito', label = 'Burrito', plate = 'TEQCATER', loc = vector4(-563.02, 287.51, 82.39, 180.0), heading = 28.78},
@@ -136,13 +148,28 @@ Jobs['uwu'] = {
             {loc = vector3(-584.05, -1061.44, 22.38), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 180,  commission = 0.2, job = 'uwu'},
         },
         stash = {
-            {label = 'Dry Storage', loc = vector3(-585.95, -1055.58, 22.43), l = 1.1, w = 0.5, lwr = 1.0, upr = 1.0, r = 180, slots = 20, weight = 100000, job = 'uwu'},
-            {label = 'Dry Storage', loc = vector3(-584.79, -1055.58, 22.47), l = 1.1, w = 0.5, lwr = 1.0, upr = 1.0, r = 180, slots = 20, weight = 100000, job = 'uwu'},
+            {label = 'Dry Storage', loc = vector3(-585.95, -1055.58, 22.43),slots = 20, weight = 100000, job = 'uwu'},
+            {label = 'Dry Storage', loc = vector3(-584.79, -1055.58, 22.47),slots = 20, weight = 100000, job = 'uwu'},
         },
         trays = { -- storages to place things for people | prop is only needed if you want to spawn an object | prop = 'prop_bar_fridge_01' for example
             {label = 'Grab Food', loc = vector3(-584.1, -1062.06, 22.42), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'uwu'},
             {label = 'Grab Food', loc = vector3(-584.03, -1059.24, 22.42), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'uwu'},
             {label = 'Grab Food', loc = vector3(-586.51, -1062.96, 22.42), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'uwu'},
         }
-    }
+    },
+    consumables = {
+        blueberry_uwu_tea = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        chocolate_uwu_tea = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        kitty_doughnut = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        matcha_uwu_tea = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        peach_iced_tea = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        strawberry_uwu_tea = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        uwu_anpan = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        uwu_bento_box = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        uwu_cookie = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        uwu_creme_caramel = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        uwu_iced_coffee = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        uwu_kare_curry = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        uwu_omurice = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    },
 }

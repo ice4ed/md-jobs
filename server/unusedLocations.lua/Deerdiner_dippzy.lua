@@ -17,6 +17,7 @@ Jobs['deerdiner'] = {
         sprunk = {name = 'sprunk', price = 5},
         sirloin_steak = {name = 'sirloin_steak', price = 5},
         bacon_and_eggs = {name = 'bacon_and_eggs', price = 5},
+        hashbrown = {name = 'hashbrowns', price = 5},
     },
     craftingStations = {
        coffee = {
@@ -31,7 +32,7 @@ Jobs['deerdiner'] = {
             {anim = 'uncuff',give = {raw_steak = 1}, take = {cooked_steak = 1}, progtext = 'Pouring'},
             {anim = 'uncuff',give = {raw_chicken = 1}, take = {cooked_chicken = 1}, progtext = 'Pouring'},
             {anim = 'uncuff',give = {raw_bacon = 1, eggs = 2}, take = {bacon_and_eggs = 1}, progtext = 'Pouring'},
-            {anim = 'uncuff',give = {potato = 1}, take = {hashbrowns = 1}, progtext = 'Pouring'},
+            {anim = 'uncuff',give = {potato = 1}, take = {hashbrown = 1}, progtext = 'Pouring'},
             {anim = 'uncuff', give = {sirloin_steak = 1}, take = {cooked_steak = 1}, progtext = 'Pouring'},
         },
         cuttingboard = {
@@ -62,6 +63,7 @@ Jobs['deerdiner'] = {
             {name = 'sprunk',     minPrice = 10, maxPrice = 20, maxAmount = 30},
             {name = 'sirloin_steak',     minPrice = 10, maxPrice = 20, maxAmount = 30},
             {name = 'bacon_and_eggs',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'hashbrown',     minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
         Van = {
             taxi = {model = 'burrito', label = 'Burrito', plate = 'DeerDin', loc = vector4(451.89, 118.57, 99.12, 71.32), heading = 71.00},
@@ -125,5 +127,14 @@ Jobs['deerdiner'] = {
             {label = 'Dry Storage', loc = vector3(456.64, 149.55, 98.92), l = 0.5, w = 0.7, lwr = 0.25, upr = 0.75, r = 180, slots = 20, weight = 100000, job = 'deerdiner'},
             {label = 'Dry Storage', loc = vector3(458.85, 137.51, 98.91), l = 0.5, w = 1.7, lwr = 0.25, upr = 0.75, r = 180, slots = 20, weight = 100000, job = 'deerdiner'},
         }
-    }
+    },
+    consumables = {
+        bacon_and_eggs = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        bacon_cheeseburger = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        basket_fries = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        deer_cheeseburger = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        hashbrown = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        hot_wings = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        sirloin_steak = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    },
 }

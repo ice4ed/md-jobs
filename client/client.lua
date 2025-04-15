@@ -44,7 +44,7 @@ CreateThread(function()
         end
         if v.Tills then
             for m, d in pairs(v.Tills) do
-                
+
                 local ops = {
                     {icon = Icons.till, label = L.T.till, action = function() TriggerServerEvent('md-jobs:server:billPlayer', k, m) end, canInteract = function() return hasJob(k) end},
                     {icon = Icons.till, label = L.T.managecat, action = function() manageCatering(k) end, canInteract = function() return hasJob(k) and GlobalState.Cater[k] end},
@@ -103,6 +103,7 @@ CreateThread(function()
         end
     end
 end)
+
 local blips = {}
 local peds = {}
 AddEventHandler('onResourceStop', function(resource)
@@ -115,7 +116,6 @@ AddEventHandler('onResourceStop', function(resource)
     end
     for k, v in pairs (peds) do
         DeleteEntity(v)
-        
     end
     blips = {}
     peds = {}

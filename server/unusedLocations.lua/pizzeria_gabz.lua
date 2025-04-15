@@ -11,13 +11,14 @@ Jobs['pizzeria'] = {
         coffee =        {name = 'coffee', price = 5},
         ecola =         {name = 'ecola', price = 5},
         sprunk =        {name = 'sprunk', price = 5},
-        bacon_cheese_fries = {name = 'bacon_cheese_fries', price = 5},
-        cheese_fries =  {name = 'cheese_fries', price = 5},
-        sirloin_burger = {name = 'sirloin_burger', price = 5},
-        bacon_cheeseburger = {name = 'bacon_cheeseburger', price = 5},
-        friedpick =     {name = 'friedpick', price = 5},
-        wings =         {name = 'wings', price = 5},
-        basket_fries =  {name = 'basket_fries', price = 5},
+        pepperoni_pizza = {name = 'pepperoni_pizza', price = 5},
+        sausage_pizza = {name = 'sausage_pizza', price = 5},
+        veggie_pizza =  {name = 'veggie_pizza', price = 5},
+        mushroom_pizza = {name = 'mushroom_pizza', price = 5},
+        margharita_pizza = {name = 'margharita_pizza', price = 5},
+        meatlovers_pizza = {name = 'meatlovers_pizza', price = 5},
+        caprese_proscuitto = {name = 'caprese_proscuitto', price = 5},
+
 
     },
     craftingStations = {
@@ -56,16 +57,14 @@ Jobs['pizzeria'] = {
     catering = {
             commission = 0.2,
             items = {
-                {name = 'bacon_cheese_fries', minPrice = 1, maxPrice = 4, maxAmount = 30},
-                {name = 'cheese_fries',      minPrice = 1, maxPrice = 4, maxAmount = 30},
-                {name = 'sirloin_burger',    minPrice = 1, maxPrice = 4, maxAmount = 30},
-                {name = 'bacon_cheeseburger',minPrice = 1, maxPrice = 4, maxAmount = 30},
-                {name = 'friedpick',        minPrice = 1, maxPrice = 4, maxAmount = 30},
-                {name = 'wings',            minPrice = 1, maxPrice = 4, maxAmount = 30},
-                {name = 'basket_fries',     minPrice = 1, maxPrice = 4, maxAmount = 30},
-                {name = 'coffee',           minPrice = 1, maxPrice = 4, maxAmount = 30},
-                {name = 'ecola',            minPrice = 1, maxPrice = 4, maxAmount = 30},
-                {name = 'sprunk',           minPrice = 1, maxPrice = 4, maxAmount = 30},
+               {name = 'pepperoni_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'sausage_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'veggie_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'mushroom_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'margharita_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'meatlovers_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
+                {name = 'caprese_proscuitto', minPrice = 10, maxPrice = 20, maxAmount = 30},
+        
             },
             Van = {model = 'burrito', label = 'Burrito', plate = 'PopCater', loc = vector4(1605.18, 6441.77, 25.47, 155.49), heading = 28.78},
     },
@@ -133,5 +132,14 @@ Jobs['pizzeria'] = {
             {prop = 'prop_food_tray_01', label = 'Grab Food', loc = vector3(810.91, -752.95, 27.03), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 90.0, slots = 20, weight = 100000, job = 'pizzeria'},
             {prop = 'prop_food_tray_01', label = 'Grab Food', loc = vector3(811.83, -749.82, 27.03), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 165, slots = 20, weight = 100000, job = 'pizzeria'},
         }
-    }
+    },
+    consumables = {
+        caprese_proscuitto = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        margharita_pizza = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        meatlovers_pizza = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        pepperoni_pizza = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        mushroom_pizza = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        sausage_pizza = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        veggie_pizza = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    },
 }

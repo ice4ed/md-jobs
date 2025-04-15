@@ -14,7 +14,7 @@ Jobs['popsdiner'] = {
         baked_potato =  {name = 'baked_potato',     price = 5},
         bacon_eggs =    {name = 'bacon_eggs',       price = 5},
         popsburger =    {name = 'popsburger',       price = 5},
-        steak_potato =  {name = 'steak_potato',     price = 5},
+        steak_and_potato =  {name = 'steak_and_potato',     price = 5},
         ecola =         {name = 'ecola',            price = 5},
         sprunk =        {name = 'sprunk',           price = 5},
         coffee =        {name = 'coffee',           price = 5},
@@ -51,7 +51,7 @@ Jobs['popsdiner'] = {
                 {name = 'baked_potato', minPrice = 1, maxPrice = 4, maxAmount = 30},
                 {name = 'bacon_eggs',   minPrice = 1, maxPrice = 4, maxAmount = 30},
                 {name = 'popsburger',   minPrice = 1, maxPrice = 4, maxAmount = 30},
-                {name = 'steak_potato', minPrice = 1, maxPrice = 4, maxAmount = 30},
+                {name = 'steak_and_potato', minPrice = 1, maxPrice = 4, maxAmount = 30},
                 {name = 'ecola',        minPrice = 1, maxPrice = 4, maxAmount = 30},
                 {name = 'coffee',       minPrice = 1, maxPrice = 4, maxAmount = 30},
                 {name = 'sprunk',       minPrice = 1, maxPrice = 4, maxAmount = 30},
@@ -113,5 +113,14 @@ Jobs['popsdiner'] = {
             {label = 'Grab Food', loc = vector3(1586.66, 6457.04, 26.21), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 150, slots = 20, weight = 100000, job = 'popsdiner'},
             {label = 'Grab Food', loc = vector3(1584.73, 6458.45, 26.21), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'popsdiner'},
         }
-    }
+    },
+    consumables = {
+        bacon_eggs = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        baked_potato = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        chicken_soup = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        chili = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        hotdog = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        popsburger = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        steak_and_potato = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    },
 }

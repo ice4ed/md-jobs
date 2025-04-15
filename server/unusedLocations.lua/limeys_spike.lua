@@ -89,5 +89,15 @@ Jobs['limeys'] = {
         trays = {
             {prop = 'prop_food_tray_01', label = 'Grab Drinks!', loc = vector3(253.71, -1021.59, 29.5),  l = 0.5, w = 0.5, lwr = 0.25, upr = 0.25, r = 160, slots = 20, weight = 100000, job = 'tequilala'},
         }
-    }
+    },
+    consumables = {
+        banana_smoothie = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        blueberry_smoothie = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        lemonade = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        limeade = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        mango_smoothie = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        pomegranate_smoothie = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        strawberry_lemonade = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        strawberry_smoothie = {anim = 'drink', label = 'Drinking', add = {hunger = 10}},
+    },
 }

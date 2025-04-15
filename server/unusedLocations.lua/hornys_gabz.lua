@@ -118,5 +118,17 @@ Jobs['hornys'] = {
             {label = 'Grab Food', loc = vector3(1251.44, -359.72, 68.99), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 165, slots = 20, weight = 100000, job = 'hornys'},
             {label = 'Grab Food', loc = vector3(1253.03, -358.89, 69.01), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 165, slots = 20, weight = 100000, job = 'hornys'},
         }
-    }
+    },
+    consumables = {
+        bacon_cheeseburger = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        bacon_cheese_fries = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        basket_fries = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        cheese_fries = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        ecola = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        sprunk = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        coffee = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        fried_pickles = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        sirloin_burger = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        wings = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    },
 }
