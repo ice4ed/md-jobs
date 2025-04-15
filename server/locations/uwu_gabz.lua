@@ -1,4 +1,4 @@
-Jobs['uwu'] = {
+Jobs['police'] = {
     CateringEnabled = true,
     closedShopsEnabled = true,
     Blip = {
@@ -17,7 +17,7 @@ Jobs['uwu'] = {
         uwu_kare_curry = {name = 'uwu_kare_curry', price = 5},
         uwu_omurice = {name = 'uwu_omurice', price = 5},
         uwu_bento_box = {name = 'uwu_bento_box', price = 5},
-        uwucremecaramel = {name = 'uwucremecaramel', price = 5},
+        uwu_creme_caramel = {name = 'uwu_creme_caramel', price = 5},
         kitty_doughnut = {name = 'kitty_doughnut', price = 5},
         uwu_cookie = {name = 'uwucookie', price = 5},
         uwu_anpan = {name = 'uwu_anpan', price = 5},
@@ -52,6 +52,7 @@ Jobs['uwu'] = {
     catering = {
             commission = 0.2,
             items = {
+<<<<<<< HEAD
                 {name = 'uwu_kare_curry',     minPrice = 10, maxPrice = 20, maxAmount = 30},
                 {name = 'uwu_omurice',        minPrice = 10, maxPrice = 20, maxAmount = 30},
                 {name = 'uwu_bento_box',      minPrice = 10, maxPrice = 20, maxAmount = 30},
@@ -66,9 +67,24 @@ Jobs['uwu'] = {
                 {name = 'uwu_cookie',       minPrice = 10, maxPrice = 20, maxAmount = 30},
                 {name = 'uwu_creme_caramel',   minPrice = 10, maxPrice = 20, maxAmount = 30},
 
+=======
+                {name = 'blueberry_uwu_tea', price = 5, amount = 5},
+                {name = 'chocolate_uwu_tea', price = 5, amount = 5},
+                {name = 'uwu_iced_coffee', price = 5, amount = 5},
+                {name = 'matcha_uwu_tea', price = 5, amount = 5},
+                {name = 'peach_iced_tea', price = 5, amount = 5},
+                {name = 'strawberry_uwu_tea', price = 5, amount = 5},
+                {name = 'uwu_kare_curry', price = 5, amount = 5},
+                {name = 'uwu_omurice', price = 5, amount = 5},
+                {name = 'uwu_bento_box', price = 5, amount = 5},
+                {name = 'uwu_creme_caramel', price = 5, amount = 5},
+                {name = 'kitty_doughnut', price = 5, amount = 5},
+                {name = 'uwu_cookie', price = 5, amount = 5},
+                {name = 'uwu_anpan', price = 5, amount = 5},
+>>>>>>> 3f95356d54b26cd24ed5ebe0c60d4c3c3cf284cf
             },
             Van = {
-                vu = {model = 'burrito', label = 'Burrito', plate = 'TEQCATER', loc = vector4(-563.02, 287.51, 82.39, 180.0), heading = 28.78},
+                vu = {model = 'burrito', label = 'Burrito', plate = 'uwucat', loc = vector4(-609.21, -1034.1, 21.79, 78.33), heading = 28.78},
             }
 
     },
@@ -102,59 +118,64 @@ Jobs['uwu'] = {
     locations = {
         Crafter = {
             {CraftData = {type = 'coffee', targetLabel = 'Pour Coffee', menuLabel = 'Pour Coffee!'},
-                loc = vector3(-586.83, -1061.9, 22.50), l = 0.65, w = 0.75, lwr = 0.05, upr = 0.75, r = 180, job = 'uwu'},
+                loc = vector3(-586.83, -1061.9, 22.50), l = 0.65, w = 0.75, lwr = 0.05, upr = 0.75, r = 180, job = 'police'},
 
             {CraftData = {type = 'boba', targetLabel = 'Pour Tea', menuLabel = 'Pour Tea!'},
-                loc = vector3(-584.22, -1058.19, 22.77),   l = 0.65, w = 0.5, lwr = 0.25, upr = 0.25, r = 180, job = 'uwu'},
+                loc = vector3(-584.22, -1058.19, 22.77),   l = 0.65, w = 0.5, lwr = 0.25, upr = 0.25, r = 180, job = 'police'},
 
             {CraftData = {type = 'oven', targetLabel = 'Bake Treats', menuLabel = 'Bake Treats!'},
-                loc = vector3(-590.63, -1059.79, 22.66),  l = 0.5, w = 0.75, lwr = 0.75, upr = 0.75, r = 180, job = 'uwu'},
+                loc = vector3(-590.63, -1059.79, 22.66),  l = 0.5, w = 0.75, lwr = 0.75, upr = 0.75, r = 180, job = 'police'},
 
             {CraftData = {type = 'chop', targetLabel = 'Chop Food', menuLabel = 'Chop Food!', prop = 'v_res_mchopboard'},
-                loc = vector3(-587.88, -1057.71, 22.26), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 180, job = 'uwu'},
+                loc = vector3(-587.88, -1057.71, 22.26), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 180, job = 'police'},
 
             {CraftData = {type = 'chop', targetLabel = 'Chop Food', menuLabel = 'Chop Food!'},
-                loc = vector3(-591.06, -1063.04, 22.32), l = 0.5, w = 0.6, lwr = 0.25, upr = 0.25, r = 180, job = 'uwu'},
+                loc = vector3(-591.06, -1063.04, 22.32), l = 0.5, w = 0.6, lwr = 0.25, upr = 0.25, r = 180, job = 'police'},
 
             {CraftData = {type = 'cocktail', targetLabel = 'Make Cocktail', menuLabel = 'Make Cocktail!'},
-                loc = vector3(-561.36, 286.65, 82.24), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 180, job = 'uwu'},
+                loc = vector3(-561.36, 286.65, 82.24), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 180, job = 'police'},
 
             {CraftData = {type = 'sautee', targetLabel = 'Sautee Food!', menuLabel = 'Sautee Food!'},
-                loc = vector3(-590.89, -1056.5, 22.38), l = 0.5, w = 0.75, lwr = 0.5, upr = 0.5, r = 180, job = 'uwu'},
+                loc = vector3(-590.89, -1056.5, 22.38), l = 0.5, w = 0.75, lwr = 0.5, upr = 0.5, r = 180, job = 'police'},
 
         },
         Stores = {
             {StoreData = {type = 'ingridients', targetLabel = 'Ingredient Shop', menuLabel = 'Ingredient Shop'},
-                loc =  vector3(-590.63, -1058.6, 22.57), l = 0.5, w = 1.1, lwr = 0.85, upr = 0.85, r = 180, job = 'uwu'},
+                loc =  vector3(-590.63, -1058.6, 22.57), l = 0.5, w = 1.1, lwr = 0.85, upr = 0.85, r = 180, job = 'police'},
             {StoreData = {type = 'ingridients', targetLabel = 'Freezer Department', menuLabel = 'Freezer Department'},
-                loc =  vector3(-588.24, -1067.09, 22.41), l = 0.50, w = 3.5, lwr = 0.75, upr = 0.75, r = 180, job = 'uwu'},
+                loc =  vector3(-588.24, -1067.09, 22.41), l = 0.50, w = 3.5, lwr = 0.75, upr = 0.75, r = 180, job = 'police'},
             {StoreData = {type = 'ingridients', targetLabel = 'Fridge Department', menuLabel = 'Fridge Department'},
-                loc =  vector3(-590.41, -1068.02, 22.35), l = 0.50, w = 1.75, lwr = 0.75, upr = 0.75, r = 180, job = 'uwu'},
+                loc =  vector3(-590.41, -1068.02, 22.35), l = 0.50, w = 1.75, lwr = 0.75, upr = 0.75, r = 180, job = 'police'},
             {StoreData = {type = 'dry', targetLabel = 'Fridge Department', menuLabel = 'Fridge Department'},
-                loc =  vector3(-598.36, -1067.86, 22.58), l = 4.0, w = 0.5, lwr = 1.25, upr = 1.25, r = 180, job = 'uwu'},
+                loc =  vector3(-598.36, -1067.86, 22.58), l = 4.0, w = 0.5, lwr = 1.25, upr = 1.25, r = 180, job = 'police'},
             {StoreData = {type = 'dry', targetLabel = 'Fridge Department', menuLabel = 'Fridge Department'},
-                loc =  vector3(-598.44, -1066.22, 22.63), l = 4.0, w = 0.5, lwr = 1.25, upr = 1.25, r = 180, job = 'uwu'},
+                loc =  vector3(-598.44, -1066.22, 22.63), l = 4.0, w = 0.5, lwr = 1.25, upr = 1.25, r = 180, job = 'police'},
             {StoreData = {type = 'dry', targetLabel = 'Fridge Department', menuLabel = 'Fridge Department'},
-                loc =  vector3(-598.05, -1065.0, 22.51), l = 4.0, w = 0.5, lwr = 1.25, upr = 1.25, r = 180, job = 'uwu'},
+                loc =  vector3(-598.05, -1065.0, 22.51), l = 4.0, w = 0.5, lwr = 1.25, upr = 1.25, r = 180, job = 'police'},
             {StoreData = {type = 'dry', targetLabel = 'Fridge Department', menuLabel = 'Fridge Department'},
-                loc =  vector3(-598.24, -1063.39, 22.58), l = 4.0, w = 0.5, lwr = 1.25, upr = 1.25, r = 180, job = 'uwu'},
+                loc =  vector3(-598.24, -1063.39, 22.58), l = 4.0, w = 0.5, lwr = 1.25, upr = 1.25, r = 180, job = 'police'},
             {StoreData = {type = 'dry', targetLabel = 'Fridge Department', menuLabel = 'Fridge Department'},
                 loc =  vector3(-598.23, -1062.17, 22.42), l = 4.0, w = 0.5, lwr = 1.25, upr = 1.25, r = 180, job = 'uwu'},
             {StoreData = {type = 'tea', targetLabel = 'Tea Department', menuLabel = 'Fridge Department'},
-                loc =  vector3(-584.45, -1058.14, 21.86), l = 0.5, w = 0.5, lwr = 0.25, upr = 0.25, r = 180, job = 'uwu'},
+                loc =  vector3(-584.45, -1058.14, 21.86), l = 0.5, w = 0.5, lwr = 0.25, upr = 0.25, r = 180, job = 'police'},
         },
         Tills = {
-            {loc = vector3(-584.06, -1058.73, 22.38), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 180,  commission = 0.2, job = 'uwu'},
-            {loc = vector3(-584.05, -1061.44, 22.38), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 180,  commission = 0.2, job = 'uwu'},
+            {loc = vector3(-584.06, -1058.73, 22.38), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 180,  commission = 0.2, job = 'police'},
+            {loc = vector3(-584.05, -1061.44, 22.38), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 180,  commission = 0.2, job = 'police'},
         },
         stash = {
+<<<<<<< HEAD
             {label = 'Dry Storage', loc = vector3(-585.95, -1055.58, 22.43),slots = 20, weight = 100000, job = 'uwu'},
             {label = 'Dry Storage', loc = vector3(-584.79, -1055.58, 22.47),slots = 20, weight = 100000, job = 'uwu'},
+=======
+            {label = 'Dry Storage', loc = vector3(-585.95, -1055.58, 22.43), l = 1.1, w = 0.5, lwr = 1.0, upr = 1.0, r = 180, slots = 20, weight = 100000, job = 'police'},
+            {label = 'Dry Storage', loc = vector3(-584.79, -1055.58, 22.47), l = 1.1, w = 0.5, lwr = 1.0, upr = 1.0, r = 180, slots = 20, weight = 100000, job = 'police'},
+>>>>>>> 3f95356d54b26cd24ed5ebe0c60d4c3c3cf284cf
         },
         trays = { -- storages to place things for people | prop is only needed if you want to spawn an object | prop = 'prop_bar_fridge_01' for example
-            {label = 'Grab Food', loc = vector3(-584.1, -1062.06, 22.42), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'uwu'},
-            {label = 'Grab Food', loc = vector3(-584.03, -1059.24, 22.42), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'uwu'},
-            {label = 'Grab Food', loc = vector3(-586.51, -1062.96, 22.42), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'uwu'},
+            {label = 'Grab Food', loc = vector3(-584.1, -1062.06, 22.42), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'police'},
+            {label = 'Grab Food', loc = vector3(-584.03, -1059.24, 22.42), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'police'},
+            {label = 'Grab Food', loc = vector3(-586.51, -1062.96, 22.42), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'police'},
         }
     },
     consumables = {

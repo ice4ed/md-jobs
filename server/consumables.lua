@@ -1,4 +1,115 @@
+<<<<<<< HEAD
 local consumables = {}
+=======
+local consumables = {
+    -- Bean Machine
+    coffee =             {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    espresso =           {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    americano =          {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    cappuccino =         {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    caramelmacchiato =   {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    mochalatte =         {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    hazelnutlatte =      {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    vanillafrappe =      {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    tiramisucoffee =     {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    almond_croissant =   {anim = 'eat', label = 'Eating', add = {hunger = 5}},
+    butter_croissant =   {anim = 'eat', label = 'Eating', add = {hunger = 5}},
+    -- burgershot 
+ 
+    ecola =              {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    sprunk =             {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    --coffee =             {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    heartstopper =       {anim = 'eat', label = 'Eating', add = {hunger = 20}}, 
+    bleeder =            {anim = 'eat', label = 'Eating', add = {hunger = 20}}, 
+    torpedo =            {anim = 'eat', label = 'Eating', add = {hunger = 20}}, 
+    moneyshot =          {anim = 'eat', label = 'Eating', add = {hunger = 20}}, 
+    bs_nuggets  =        {anim = 'eat', label = 'Eating', add = {hunger = 10}}, 
+    bs_fries    =        {anim = 'eat', label = 'Eating', add = {hunger = 10}}, 
+   -- hornys
+
+    --ecola =             {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    --sprunk =            {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    --coffee =            {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    bacon_cheese_fries = {anim = 'eat', label = 'Eating', add = {hunger = 15}},
+    bacon_cheeseburger = {anim = 'eat', label = 'Eating', add = {hunger = 15}},
+    cheese_fries =       {anim = 'eat', label = 'Eating', add = {hunger = 15}},
+    sirloin_burger =     {anim = 'eat', label = 'Eating', add = {hunger = 25}},
+    basket_fries =       {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    wings =              {anim = 'eat', label = 'Eating', add = {hunger = 15}},
+    friedpick =          {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+
+    -- pizzeria
+
+    -- ecola =            {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    -- sprunk =           {anim = 'drink', label = 'Drinking', add = {thirst = 10}},)
+    -- coffee =           {anim = 'drink', label = 'Drinking', add = {thirst = 10}},)
+    pepperoni_pizza =    {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    pvegpizza =          {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    sausage_pizza =      {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    pmushroompizza =     {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    pmargharita =        {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    meatlovers_pizza =   {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    caprese_proscuitto = {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+
+    -- pops diner
+    --ecola =              {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    --sprunk =             {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    --coffee =             {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    chicken_soup =      {anim = 'eat', label = 'Eating', add = {hunger = 15}},
+    chili =             {anim = 'eat', label = 'Eating', add = {hunger = 15}},
+    hotdog =            {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    baked_potato =      {anim = 'eat', label = 'Eating', add = {hunger = 15}},
+    bacon_eggs =        {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    popsburger =        {anim = 'eat', label = 'Eating', add = {hunger = 25}},
+    steak_potato =      {anim = 'eat', label = 'Eating', add = {hunger = 30}},
+
+    -- morpheous pub
+    ambeer =            {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    beer =              {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    dusche =            {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    logger =            {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    patochebeer =       {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    pisswasser =        {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    pisswaser_light =   {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    pisswaser_dark =    {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+   -- coffee =            {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    onion_rings =       {anim = 'eat',   label = 'Eating', add = {hunger = 10}},
+    mozzarella_stick =  {anim = 'eat',   label = 'Eating', add = {hunger = 10}},
+    fried_pickles =     {anim = 'eat',   label = 'Eating', add = {hunger = 10}},
+    buffalo_wings =     {anim = 'eat',   label = 'Eating', add = {hunger = 15}},
+    hamburger =         {anim = 'eat',   label = 'Eating', add = {hunger = 20}},
+    veggie_burger =     {anim = 'eat',   label = 'Eating', add = {hunger = 20}},
+    vegan_burger =      {anim = 'eat',   label = 'Eating', add = {hunger = 20}},
+    chicken_burger =    {anim = 'eat',   label = 'Eating', add = {hunger = 25}},
+    steak_sandwich =    {anim = 'eat',   label = 'Eating', add = {hunger = 30}},
+    vodka_soda =        {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    moscow_mule =       {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    tequila_sunrise =   {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    whiskey_sour =      {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    gin_and_tonic =     {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    rum_and_coke =      {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    gin_fizz =          {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    rum_punch =         {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    mojito =            {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    daiquiri =          {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+
+    -- uwu cafe
+    -- coffee =            {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    blueberry_uwu_tea   = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    chocolate_uwu_tea       = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    uwu_iced_coffee     = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    matcha_uwu_tea          = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    peach_iced_tea      = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    strawberry_uwu_tea  = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+    uwu_kare_curry      = {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    uwu_omurice        = {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    uwu_bento_box       = {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    uwu_anpan          = {anim = 'eat', label = 'Eating', add = {hunger = 20}},
+    kitty_doughnut       = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    uwu_cookie         = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+    uwu_creme_caramel   = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+}
+>>>>>>> 3f95356d54b26cd24ed5ebe0c60d4c3c3cf284cf
 
 local function handleConsumablePerks(source, type, amount)
     if Config.Framework == 'qb' then 

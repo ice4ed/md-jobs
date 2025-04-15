@@ -61,6 +61,7 @@ function generateCatering(src, job)
     repeat
         Wait(100)
         local git = Jobs[job].catering.items[math.random(1, #Jobs[job].catering.items)]
+
         local amount = math.random(1, git.maxAmount)
         weight = weight + (getWeight(git.name) * amount)
         if weight > Config.MaxCateringWeight then items = 0 end
