@@ -261,11 +261,7 @@ Jobs['bestbudz'] = {
   - sweet, now we need to add where the peds will be!
     ```lua
            Jobs['bestbudz'] = {
-            CateringEnabled = true,    
             closedShopsEnabled = true,
-            Blip = {
-                {sprite = 469, color = 2, scale = 0.8, label = 'Best Budz', loc = vector3(374.57, -825.79, 29.05)},
-            },
             closedShops = { -- allows multiple peds with their own inventory label MUST BE UNIQUE
                 {ped = 'mp_m_freemode_01', loc = vector4(129.02, -1283.25, 29.27, 120.67),  label = 'Best Budz Shop'},
                 {ped = 'mp_m_freemode_01', loc = vector4(523.02, 421.25, 65.27, 120.67),    label = 'Best Budz Beach Shop'},
@@ -280,11 +276,7 @@ Jobs['bestbudz'] = {
       |
     ```lua
         Jobs['police'] = {
-            CateringEnabled = true,    
             closedShopsEnabled = false,
-            Blip = {
-                {sprite = 469, color = 2, scale = 0.8, label = 'Best Budz', loc = vector3(374.57, -825.79, 29.05)},
-            },
             closedShops = {},
         }
     ```
@@ -293,9 +285,6 @@ Jobs['bestbudz'] = {
       Jobs['police'] = {
             CateringEnabled = true,    
             closedShopsEnabled = false,
-            Blip = { 
-                {sprite = 279, color = 2, scale = 0.5, label = 'Vanilla Unicorn', loc = vector3(129.02, -1283.25, 29.27)},
-            },
         }
     ```
 ## Adding What Can Be In a Closed Shop
@@ -304,9 +293,6 @@ Jobs['bestbudz'] = {
       Jobs['bestbudz'] = {
         CateringEnabled = false,
         closedShopsEnabled = true,
-        Blip = {
-            {sprite = 469, color = 2, scale = 0.8, label = 'Best Budz', loc = vector3(374.57, -825.79, 29.05)},
-        },
         closedShops = {
             {ped = 'mp_m_freemode_01', loc = vector4(379.71, -833.63, 29.29, 178.74), label = 'Best Budz Shop'}
         },
@@ -341,33 +327,6 @@ Jobs['bestbudz'] = {
    ```lua
       Jobs['police'] = {
         CateringEnabled = true,    -- if false catering can be catering = {} or not even there
-        closedShopsEnabled = true, -- if false than closedShops and closedShopItems can be {} or not even there
-        Blip = { -- Blip Creation (Not Required)
-            {sprite = 279, color = 2, scale = 0.5, label = 'Vanilla Unicorn', loc = vector3(129.02, -1283.25, 29.27)},
-        },
-        closedShops = { -- allows multiple peds with their own inventory label MUST BE UNIQUE
-            {ped = 'mp_m_freemode_01', loc = vector4(129.02, -1283.25, 29.27, 120.67), label = 'Vanilla Unicorn Shop'}
-        },
-        closedShopItems = { -- items allowed in closed shops
-            tequila        =   {name = 'tequila',      price = 5},
-            whiskey        =   {name = 'whiskey',      price = 5},
-            rum            =   {name = 'rum',          price = 5},
-            gin            =   {name = 'gin',          price = 5},
-            lime           =   {name = 'lime',         price = 5},
-            lemon          =   {name = 'lemon',        price = 5},
-            orange         =   {name = 'orange',       price = 5},
-            sugar          =   {name = 'sugar',        price = 5},
-            salt           =   {name = 'salt',         price = 5},
-            ice            =   {name = 'ice',          price = 5},
-            soda_water     =   {name = 'soda_water',   price = 5},
-            tonic_water    =   {name = 'tonic_water',  price = 5},
-            ecola          =   {name = 'ecola',        price = 5},
-            ginger_ale     =   {name = 'ginger_ale',   price = 5},
-            bitters        =   {name = 'bitters',      price = 5},
-            grenadine      =   {name = 'grenadine',    price = 5},
-            vermouth       =   {name = 'vermouth',     price = 5},
-            simple_syrup   =   {name = 'simple_syrup', price = 5}
-        },
         craftingStations = { --must match the key value in locations
             cocktail = {
                 {anim = 'cocktail', give = {ice = 1, soda_water = 1, vodka = 1},                    take = {vodka_soda = 1},        progtext = 'Making'},
@@ -427,54 +386,6 @@ Jobs['bestbudz'] = {
     ```lua
        Jobs['police'] = {
         CateringEnabled = true,    -- if false catering can be catering = {} or not even there
-        closedShopsEnabled = true, -- if false than closedShops and closedShopItems can be {} or not even there
-        Blip = { -- Blip Creation (Not Required)
-            {sprite = 279, color = 2, scale = 0.5, label = 'Vanilla Unicorn', loc = vector3(129.02, -1283.25, 29.27)},
-        },
-        closedShops = { -- allows multiple peds with their own inventory label MUST BE UNIQUE
-            {ped = 'mp_m_freemode_01', loc = vector4(129.02, -1283.25, 29.27, 120.67), label = 'Vanilla Unicorn Shop'}
-        },
-        closedShopItems = { -- items allowed in closed shops
-            tequila        =   {name = 'tequila',      price = 5},
-            whiskey        =   {name = 'whiskey',      price = 5},
-            rum            =   {name = 'rum',          price = 5},
-            gin            =   {name = 'gin',          price = 5},
-            lime           =   {name = 'lime',         price = 5},
-            lemon          =   {name = 'lemon',        price = 5},
-            orange         =   {name = 'orange',       price = 5},
-            sugar          =   {name = 'sugar',        price = 5},
-            salt           =   {name = 'salt',         price = 5},
-            ice            =   {name = 'ice',          price = 5},
-            soda_water     =   {name = 'soda_water',   price = 5},
-            tonic_water    =   {name = 'tonic_water',  price = 5},
-            ecola          =   {name = 'ecola',        price = 5},
-            ginger_ale     =   {name = 'ginger_ale',   price = 5},
-            bitters        =   {name = 'bitters',      price = 5},
-            grenadine      =   {name = 'grenadine',    price = 5},
-            vermouth       =   {name = 'vermouth',     price = 5},
-            simple_syrup   =   {name = 'simple_syrup', price = 5}
-        },
-        craftingStations = { --must match the key value in locations
-            cocktail = {
-                {anim = 'cocktail', give = {ice = 1, soda_water = 1, vodka = 1},                    take = {vodka_soda = 1},        progtext = 'Making'},
-                {anim = 'cocktail', give = {vodka = 1, ginger_ale = 1, lime = 1, ice = 1},          take = {moscow_mule = 1},       progtext = 'Making'},
-                {anim = 'cocktail', give = {tequila = 1, orange = 1, grenadine = 1, ice = 1},       take = {tequila_sunrise = 1},   progtext = 'Making'},
-                {anim = 'cocktail', give = {whiskey = 1, lemon = 1, sugar = 10, ice = 1},            take = {whiskey_sour = 1},      progtext = 'Making'},
-                {anim = 'cocktail', give = {gin = 1, tonic_water = 1, ice = 1, lime = 1},           take = {gin_and_tonic = 1},     progtext = 'Making'},
-                {anim = 'cocktail', give = {rum = 1, ecola = 1, ice = 1},                           take = {rum_and_coke = 1},      progtext = 'Making'},
-                {anim = 'cocktail', give = {gin = 1, soda_water = 1, lime = 1, sugar = 1, ice = 1}, take = {gin_fizz = 1},          progtext = 'Making'},
-                {anim = 'cocktail', give = {rum = 1, lime = 1, orange = 1, grenadine = 1, ice = 1}, take = {rum_punch = 1},         progtext = 'Making'},
-                {anim = 'cocktail', give = {vodka = 1, orange = 1, ice = 1},                        take = {screwdriver = 1},       progtext = 'Making'},
-                {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, soda_water = 1, ice = 1}, take = {mojito = 1},            progtext = 'Making'},
-                {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, ice = 1},                 take = {daiquiri = 1},          progtext = 'Making'}
-            },
-            coffee = {
-                {anim = 'uncuff',give = {}, take = {coffee = 1}, progtext = 'Pouring' }
-            },
-            ice = {
-                {anim = 'uncuff', give = {}, take = {ice = 1}, progtext = 'Scooping' }
-            }
-        },
         catering = { -- accessible in Till
             commission = 0.2,
             items = {
@@ -515,63 +426,6 @@ Jobs['bestbudz'] = {
 - lets start with adding the types of shops and what items it goes in 
   ```lua
     Jobs['police'] = {
-      CateringEnabled = true,    -- if false catering can be catering = {} or not even there
-      closedShopsEnabled = true, -- if false than closedShops and closedShopItems can be {} or not even there
-      Blip = { -- Blip Creation (Not Required)
-          {sprite = 279, color = 2, scale = 0.5, label = 'Vanilla Unicorn', loc = vector3(129.02, -1283.25, 29.27)},
-      },
-      closedShops = { -- allows multiple peds with their own inventory label MUST BE UNIQUE
-          {ped = 'mp_m_freemode_01', loc = vector4(129.02, -1283.25, 29.27, 120.67), label = 'Vanilla Unicorn Shop'}
-      },
-      closedShopItems = { -- items allowed in closed shops
-          tequila        =   {name = 'tequila',      price = 5},
-          whiskey        =   {name = 'whiskey',      price = 5},
-          rum            =   {name = 'rum',          price = 5},
-          gin            =   {name = 'gin',          price = 5},
-          lime           =   {name = 'lime',         price = 5},
-          lemon          =   {name = 'lemon',        price = 5},
-          orange         =   {name = 'orange',       price = 5},
-          sugar          =   {name = 'sugar',        price = 5},
-          salt           =   {name = 'salt',         price = 5},
-          ice            =   {name = 'ice',          price = 5},
-          soda_water     =   {name = 'soda_water',   price = 5},
-          tonic_water    =   {name = 'tonic_water',  price = 5},
-          ecola          =   {name = 'ecola',        price = 5},
-          ginger_ale     =   {name = 'ginger_ale',   price = 5},
-          bitters        =   {name = 'bitters',      price = 5},
-          grenadine      =   {name = 'grenadine',    price = 5},
-          vermouth       =   {name = 'vermouth',     price = 5},
-          simple_syrup   =   {name = 'simple_syrup', price = 5}
-      },
-      craftingStations = { --must match the key value in locations
-          cocktail = {
-              {anim = 'cocktail', give = {ice = 1, soda_water = 1, vodka = 1},                    take = {vodka_soda = 1},        progtext = 'Making'},
-              {anim = 'cocktail', give = {vodka = 1, ginger_ale = 1, lime = 1, ice = 1},          take = {moscow_mule = 1},       progtext = 'Making'},
-              {anim = 'cocktail', give = {tequila = 1, orange = 1, grenadine = 1, ice = 1},       take = {tequila_sunrise = 1},   progtext = 'Making'},
-              {anim = 'cocktail', give = {whiskey = 1, lemon = 1, sugar = 10, ice = 1},            take = {whiskey_sour = 1},      progtext = 'Making'},
-              {anim = 'cocktail', give = {gin = 1, tonic_water = 1, ice = 1, lime = 1},           take = {gin_and_tonic = 1},     progtext = 'Making'},
-              {anim = 'cocktail', give = {rum = 1, ecola = 1, ice = 1},                           take = {rum_and_coke = 1},      progtext = 'Making'},
-              {anim = 'cocktail', give = {gin = 1, soda_water = 1, lime = 1, sugar = 1, ice = 1}, take = {gin_fizz = 1},          progtext = 'Making'},
-              {anim = 'cocktail', give = {rum = 1, lime = 1, orange = 1, grenadine = 1, ice = 1}, take = {rum_punch = 1},         progtext = 'Making'},
-              {anim = 'cocktail', give = {vodka = 1, orange = 1, ice = 1},                        take = {screwdriver = 1},       progtext = 'Making'},
-              {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, soda_water = 1, ice = 1}, take = {mojito = 1},            progtext = 'Making'},
-              {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, ice = 1},                 take = {daiquiri = 1},          progtext = 'Making'}
-          },
-          coffee = {
-              {anim = 'uncuff',give = {}, take = {coffee = 1}, progtext = 'Pouring' }
-          },
-          ice = {
-              {anim = 'uncuff', give = {}, take = {ice = 1}, progtext = 'Scooping' }
-          }
-      },
-      catering = { -- accessible in Till
-          commission = 0.2,
-          items = {
-              {name = 'vodka',        minPrice = 10, maxPrice = 20, maxAmount = 30},
-              {name = 'tequila',      minPrice = 10, maxPrice = 20, maxAmount = 30},
-          },
-          Van = {model = 'burrito', label = 'Burrito', plate = 'policeCATER', loc = vector4(144.72, -1300.25, 28.89, 121.44), heading = 118.78},
-      },
       shops = { -- must match the key value in locations
           ingridients = {
               {name = 'vodka',        price = 5, amount = 50},
