@@ -52,7 +52,6 @@ Jobs['police'] = {
     catering = {
             commission = 0.2,
             items = {
-<<<<<<< HEAD
                 {name = 'uwu_kare_curry',     minPrice = 10, maxPrice = 20, maxAmount = 30},
                 {name = 'uwu_omurice',        minPrice = 10, maxPrice = 20, maxAmount = 30},
                 {name = 'uwu_bento_box',      minPrice = 10, maxPrice = 20, maxAmount = 30},
@@ -67,21 +66,6 @@ Jobs['police'] = {
                 {name = 'uwu_cookie',       minPrice = 10, maxPrice = 20, maxAmount = 30},
                 {name = 'uwu_creme_caramel',   minPrice = 10, maxPrice = 20, maxAmount = 30},
 
-=======
-                {name = 'blueberry_uwu_tea', price = 5, amount = 5},
-                {name = 'chocolate_uwu_tea', price = 5, amount = 5},
-                {name = 'uwu_iced_coffee', price = 5, amount = 5},
-                {name = 'matcha_uwu_tea', price = 5, amount = 5},
-                {name = 'peach_iced_tea', price = 5, amount = 5},
-                {name = 'strawberry_uwu_tea', price = 5, amount = 5},
-                {name = 'uwu_kare_curry', price = 5, amount = 5},
-                {name = 'uwu_omurice', price = 5, amount = 5},
-                {name = 'uwu_bento_box', price = 5, amount = 5},
-                {name = 'uwu_creme_caramel', price = 5, amount = 5},
-                {name = 'kitty_doughnut', price = 5, amount = 5},
-                {name = 'uwu_cookie', price = 5, amount = 5},
-                {name = 'uwu_anpan', price = 5, amount = 5},
->>>>>>> 3f95356d54b26cd24ed5ebe0c60d4c3c3cf284cf
             },
             Van = {
                 vu = {model = 'burrito', label = 'Burrito', plate = 'uwucat', loc = vector4(-609.21, -1034.1, 21.79, 78.33), heading = 28.78},
@@ -164,13 +148,8 @@ Jobs['police'] = {
             {loc = vector3(-584.05, -1061.44, 22.38), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 180,  commission = 0.2, job = 'police'},
         },
         stash = {
-<<<<<<< HEAD
-            {label = 'Dry Storage', loc = vector3(-585.95, -1055.58, 22.43),slots = 20, weight = 100000, job = 'uwu'},
-            {label = 'Dry Storage', loc = vector3(-584.79, -1055.58, 22.47),slots = 20, weight = 100000, job = 'uwu'},
-=======
             {label = 'Dry Storage', loc = vector3(-585.95, -1055.58, 22.43), l = 1.1, w = 0.5, lwr = 1.0, upr = 1.0, r = 180, slots = 20, weight = 100000, job = 'police'},
             {label = 'Dry Storage', loc = vector3(-584.79, -1055.58, 22.47), l = 1.1, w = 0.5, lwr = 1.0, upr = 1.0, r = 180, slots = 20, weight = 100000, job = 'police'},
->>>>>>> 3f95356d54b26cd24ed5ebe0c60d4c3c3cf284cf
         },
         trays = { -- storages to place things for people | prop is only needed if you want to spawn an object | prop = 'prop_bar_fridge_01' for example
             {label = 'Grab Food', loc = vector3(-584.1, -1062.06, 22.42), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'police'},

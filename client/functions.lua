@@ -467,12 +467,21 @@ function manageClosed(job,num)
 			description = L.Menus.rIdes,
 			onSelect = function()
 				lib.callback.await('md-jobs:server:removeItemsFromClosed', false, job, num)
-			end
+			end,
+			disabled = not isBoss()
 		},
 	} })
 	lib.showContext('closedShops')
 end
 
+lib.callback.register('md-jobs:client:adjustPrices', function(data)
+	local adjust = lib.inputDialog(L.Menus.adjustPrices, data)
+	return adjust
+end)
+function adjustPrices(job, num)
+	local data = lib.callback.await('md-jobs:server:adjustPrices', false, job, num)
+	
+end
 function openClosedShop(job, num)
 	local data = lib.callback.await('md-jobs:server:getClosedShops', false, job, num)
 	local options = {}

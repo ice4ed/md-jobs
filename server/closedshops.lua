@@ -35,7 +35,12 @@ function initializePeds()
             for m, d in pairs (Jobs[k].closedShops) do
                 local items = MySQL.query.await('SELECT * FROM mdjobs_closedshop WHERE label = ?', {d.label})
                 if #items == 0 then
-                    MySQL.insert('INSERT INTO mdjobs_closedshop (job, label, items) VALUES (?, ?, ?)', {k, d.label, json.encode({})})
+                    local itemPrices = {}
+                    for i, j in pairs (Jobs[k].closedShopItems) do
+                        if j.price == nil then j.price = 5 end
+                        itemPrices[i] = j.price
+                    end
+                    MySQL.insert('INSERT INTO mdjobs_closedshop (job, label, items, prices) VALUES (?, ?, ?,?)', {k, d.label, json.encode({}), json.encode(itemPrices)})
                 end
             end
         end
@@ -68,8 +73,9 @@ lib.callback.register('md-jobs:server:getClosedShops', function(source, job, loc
         local items = MySQL.query.await('SELECT * FROM mdjobs_closedshop WHERE job = ? and label = ?', {job, Jobs[job]['closedShops'][loc].label})
         local data = {}
         local has = json.decode(items[1].items)
+        local prices = json.decode(items[1].prices)
         for k, v in pairs (has) do
-           table.insert(data, {name = k, amount = v or 0, price = Jobs[job]['closedShopItems'][k].price or 999999})
+           table.insert(data, {name = k, amount = v or 0, price = prices[k] or 999999})
         end
         sorter(data, 'name')
         Log('Opened Closed Shop: ' .. job .. ' Name:' .. getName(src), 'closedshop')
@@ -154,8 +160,9 @@ lib.callback.register('md-jobs:server:purchaseClosedShops', function(source, job
     if #(location - vector3(data[loc].loc.x, data[loc].loc.y, data[loc].loc.z)) < 5.0 then
         local items = MySQL.query.await('SELECT * FROM mdjobs_closedshop WHERE job = ? and label = ?', {job, data[loc].label})
         local has = json.decode(items[1].items)
+        local prices = json.decode(items[1].prices)
         if has[item] >= amount then
-            local totalPrice = amount * Jobs[job]['closedShopItems'][item].price
+            local totalPrice = amount * prices[item]
             if billPlayer(src, type, totalPrice) then
                 has[item] = has[item] - amount
                 if has[item] <= 0 then has[item] = nil end
@@ -173,4 +180,29 @@ lib.callback.register('md-jobs:server:purchaseClosedShops', function(source, job
         end
     end
     return true
+end)
+
+lib.callback.register('md-jobs:server:adjustPrices', function(source, job, num)
+    local src = source
+    local Player = getPlayer(src)
+    if not isBoss() then return end
+    if getJobName(source) ~= job then return end
+    local location = GetEntityCoords(GetPlayerPed(src))
+    if #(location - vector3(Jobs[job]['closedShops'][num].loc.x,Jobs[job]['closedShops'][num].loc.y,Jobs[job]['closedShops'][num].loc.z)) < 5.0 then
+        local items = MySQL.query.await('SELECT * FROM mdjobs_closedshop WHERE job = ? and label = ?', {job, Jobs[job]['closedShops'][num].label})
+        local data = {}
+        local has = json.decode(items[1].prices)
+        for k, v in pairs (has) do
+           table.insert(data, {name = k, amount = v, type = 'number', placeholder = v, min = 0, max = 999999, label = GetLabels(k), default = v})
+        end
+        sort(data, 'name')
+        local updated =  lib.callback.await('md-jobs:client:adjustPrices', src, data)
+        if updated == nil then return end
+        for k, v in pairs (data) do
+            if updated[k] ~= nil then
+                has[v.name] = updated[k]
+            end
+        end
+        local update = MySQL.update('UPDATE mdjobs_closedshop SET prices = ? WHERE job = ? and label = ?', {json.encode(has), job, Jobs[job]['closedShops'][num].label})
+    end
 end)

@@ -48,6 +48,12 @@ function s(str, ...)
     return string.format(str, table.unpack(args))
 end
 
+function sort(tbl, key)
+    table.sort(tbl, function(a, b)
+        return a[key] < b[key]
+    end)
+end
+
 function Notifys(source, text, type)
     if notify == 'qb' then
         TriggerClientEvent("QBCore:Notify", source, text, type)
@@ -113,6 +119,16 @@ function getCid(source)
     end
 end
 
+function isBoss()
+    if Config.Framework == 'qb' then 
+        local Player = getPlayer(source)
+        return Player.PlayerData.job.isboss
+    elseif Config.Framework == 'esx' then
+        local Player = getPlayer(source)
+        return Player.getJob().isboss
+    end
+end
+
 function Itemcheck(source, item, amount, notify)
     if type(item) == 'table' then 
         if Config.Inv == 'ox' then
@@ -175,7 +191,8 @@ function GetLabels(item)
         if items[item] == nil then return 'missing item' end
         return items[item].label
     else
-        return QBCore.Shared.Items[item].label
+        if QBCore.Shared.Items[item] == nil then print(item)return 'missing item' end
+        return QBCore.Shared.Items[item].label or 'missing item'
     end
 end
 

@@ -132,6 +132,7 @@ local function spawnPeds()
         AddTargModel(peds[k], {
             {icon = Icons.shop, label =  L.T.shop, action = function() openClosedShop(v.job ,v.num) end, canInteract = function() return canOpenClosed(v.job) end,},
             {icon = Icons.shop, label =  L.T.manage, action = function() manageClosed(v.job, v.num) end, canInteract = function() return hasJob(v.job)end,},
+            {icon = Icons.shop, label =  "Adjust Prices", action = function() lib.callback.await('md-jobs:server:adjustPrices', false, v.job, v.num) end, canInteract = function() return isBoss() and hasJob(v.job) end,}
         })
     end
 end

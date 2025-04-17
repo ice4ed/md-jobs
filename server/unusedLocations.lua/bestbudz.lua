@@ -7,7 +7,7 @@ Jobs['bestbudz'] = {
         {sprite = 469, color = 2, scale = 0.8, label = 'Best Budz', loc = vector3(374.57, -825.79, 29.05)},
     },
     closedShops = {
-        {ped = 'mp_m_freemode_01', loc = vector4(-626.02, 287.51, 82.39, 180.0), label = 'Best Budz Shop'}
+        {ped = 'mp_m_freemode_01', loc = vector4(379.71, -833.63, 29.29, 178.74), label = 'Best Budz Shop'}
     },
     closedShopItems = {
         joint_whitewidow = {name = 'joint_whitewidow', price = 5},
