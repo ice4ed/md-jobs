@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `mdjobs_closedshop` (
   `job` text NOT NULL,
   `label` text NOT NULL,
   `items` text NOT NULL,
+  `prices` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
