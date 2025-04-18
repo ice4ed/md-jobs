@@ -21,7 +21,7 @@
 - **qb-core**, **qbx_core**, or **esx** (ESX support is experimental)
   - For ESX: `ox_inventory` and `ox_target` are required.
 - **ox_lib**
-
+- **rpemotes** or **scully_emotemenu**
 
 
 ## Installation
@@ -40,6 +40,8 @@
 ### Step 4: Add Emotes
 - The following emote is used for crafting animations. You can customize it if needed:
 ```lua
+ ["uncuff"] = {"mp_arresting","a_uncuff","Uncuff", AnimationOptions = {     EmoteLoop = true,     EmoteMoving = true } },
+
 ["cocktail"] = {
         'anim@scripted@freemode@postertag@graffiti_spray@male@',
         "shake_can_male",
@@ -57,7 +59,7 @@
     },
 ```
 # How to edit things around
-<h2> Now There is an easy way and a harder way</h2>
+## Now There is an easy way and a harder way
 
 ### Easy Way
 I (98% Ai) made this website. you upload the images for items and fill out the info.
@@ -221,187 +223,188 @@ Jobs['bestbudz'] = {
 ```
 
 ## making a job
- - in order to make the job you need to add it to the Jobs table. its very simple
-   ```lua
-     Jobs['bestbudz'] = {
+ #### in order to make the job you need to add it to the Jobs table. its very simple
 
-     }
-    ```
-     - now it **needs** to be the job  <b>NAME</b> not job label
+```lua
+    Jobs['bestbudz'] = {
+
+    }
+```
+ #### now it **needs** to be the job  <b>NAME</b> not job label
 
 ## enable catering or closed shop
-  - this is very simple as well, you are simply going to put the bools in the table you just make
-       ```lua
-          Jobs['bestbudz'] = {
-              CateringEnabled = true,
-              closedShopsEnabled = true,
-          }
-      ```
+#### this is very simple as well, you are simply going to put the bools in the table you just make
+```lua
+    Jobs['bestbudz'] = {
+        CateringEnabled = true,
+        closedShopsEnabled = true,
+    }
+```
 
 ## making a blip
- - lets make a blip for this job
-    ```lua
-        Jobs['bestbudz'] = {
-            CateringEnabled = true,    
-            closedShopsEnabled = true,
-            Blip = {
-                {sprite = 469, color = 2, scale = 0.8, label = 'Best Budz', loc = vector3(374.57, -825.79, 29.05)},
-            },
-          }
-    ```
-    | Parameter | Description | Required | Default |
-      |-----------|-------------|----------|---------|
-      | `sprite` | icon displayed | yes | - |
-      | `color` | color of blip | yes | - | 
-      | `scale` | size of blip  | Yes | - |
-      | `label` | name of blip  | Yes | - |
-      | `loc`   | location of blip | yes| -|
-
-## Making A closed shop
-  - sweet, now we need to add where the peds will be!
-    ```lua
-           Jobs['bestbudz'] = {
-            closedShopsEnabled = true,
-            closedShops = { -- allows multiple peds with their own inventory label MUST BE UNIQUE
-                {ped = 'mp_m_freemode_01', loc = vector4(129.02, -1283.25, 29.27, 120.67),  label = 'Best Budz Shop'},
-                {ped = 'mp_m_freemode_01', loc = vector4(523.02, 421.25, 65.27, 120.67),    label = 'Best Budz Beach Shop'},
-            },
-          }
-    ```
-       Parameter | Description | Required | Default |
-      |-----------|-------------|----------|---------|
-      | `ped` | Model of Ped| yes | - |
-      | `loc` | location of ped | yes | -       | 
-      | `label` | UNIQUE Name | Yes | - |
-      |
-    ```lua
-        Jobs['police'] = {
-            closedShopsEnabled = false,
-            closedShops = {},
-        }
-    ```
-    or 
-    ```lua
-      Jobs['police'] = {
-            CateringEnabled = true,    
-            closedShopsEnabled = false,
-        }
-    ```
-## Adding What Can Be In a Closed Shop
-  - this part is simple, add the items you want to sell and the price for them
-     ```lua
-      Jobs['bestbudz'] = {
-        CateringEnabled = false,
+#### lets make a blip for this job
+```lua
+    Jobs['bestbudz'] = {
+        CateringEnabled = true,    
         closedShopsEnabled = true,
-        closedShops = {
-            {ped = 'mp_m_freemode_01', loc = vector4(379.71, -833.63, 29.29, 178.74), label = 'Best Budz Shop'}
-        },
-        closedShopItems = {
-            joint_whitewidow = {name = 'joint_whitewidow', price = 5},
-            joint_ogkush = {name = 'joint_ogkush', price = 5},
-            joint_purplehaze = {name = 'joint_purplehaze', price = 5},
-            joint_skunk = {name = 'joint_skunk', price = 5},
-            joint_ak47 = {name = 'joint_ak47', price = 5},
-            blunt_whitewidow = {name = 'blunt_whitewidow', price = 5},
-            blunt_ogkush = {name = 'blunt_ogkush', price = 5},
-            blunt_purplehaze = {name = 'blunt_purplehaze', price = 5},
-            blunt_skunk = {name = 'blunt_skunk', price = 5},
-            blunt_ak47 = {name = 'blunt_ak47', price = 5},
-            weed_oil = {name = 'weed_oil', price = 5},
+        Blip = {
+            {sprite = 469, color = 2, scale = 0.8, label = 'Best Budz', loc = vector3(374.57, -825.79, 29.05)},
         },
       }
-      ```
-      - now if you have the closed shop enabled you add the items in the format above
-      - this is set to $5 but the owner of the business **can** change the prices in city :)
+```
 
-      | Parameter | Description | Required | Default |
-      |-----------|-------------|----------|---------|
-      | `key value (item)` | item added| yes | - |
-      | `name` | repeat item key | yes | -       | 
-      | `price` | deafult price | Yes | - |
-      |
+| Parameter | Description | Required | Default |
+|-----------|-------------|----------|---------|
+| `sprite` | icon displayed | yes | - |
+| `color` | color of blip | yes | - | 
+| `scale` | size of blip  | Yes | - |
+| `label` | name of blip  | Yes | - |
+| `loc`   | location of blip | yes| -|
+
+## Making A closed shop
+#### sweet, now we need to add where the peds will be!
+```lua
+       Jobs['bestbudz'] = {
+        closedShopsEnabled = true,
+        closedShops = { -- allows multiple peds with their own inventory label MUST BE UNIQUE
+            {ped = 'mp_m_freemode_01', loc = vector4(129.02, -1283.25, 29.27, 120.67),  label = 'Best Budz Shop'},
+            {ped = 'mp_m_freemode_01', loc = vector4(523.02, 421.25, 65.27, 120.67),    label = 'Best Budz Beach Shop'},
+        },
+      }
+```
+   Parameter | Description | Required | Default |
+  |-----------|-------------|----------|---------|
+  | `ped` | Model of Ped| yes | - |
+  | `loc` | location of ped | yes | -       | 
+  | `label` | UNIQUE Name | Yes | - |
+  |
+```lua
+    Jobs['police'] = {
+        closedShopsEnabled = false,
+        closedShops = {},
+    }
+```
+or 
+```lua
+  Jobs['police'] = {
+        closedShopsEnabled = false,
+    }
+```
+## Adding What Can Be In a Closed Shop
+### this part is simple, add the items you want to sell and the price for them to be defaulted to
+```lua
+ Jobs['bestbudz'] = {
+   closedShopsEnabled = true,
+   closedShops = {
+       {ped = 'mp_m_freemode_01', loc = vector4(379.71, -833.63, 29.29, 178.74), label = 'Best Budz Shop'}
+   },
+   closedShopItems = {
+       joint_whitewidow = {name = 'joint_whitewidow', price = 5},
+       joint_ogkush = {name = 'joint_ogkush', price = 5},
+       joint_purplehaze = {name = 'joint_purplehaze', price = 5},
+       joint_skunk = {name = 'joint_skunk', price = 5},
+       joint_ak47 = {name = 'joint_ak47', price = 5},
+       blunt_whitewidow = {name = 'blunt_whitewidow', price = 5},
+       blunt_ogkush = {name = 'blunt_ogkush', price = 5},
+       blunt_purplehaze = {name = 'blunt_purplehaze', price = 5},
+       blunt_skunk = {name = 'blunt_skunk', price = 5},
+       blunt_ak47 = {name = 'blunt_ak47', price = 5},
+       weed_oil = {name = 'weed_oil', price = 5},
+   },
+ }
+```
+###  now if you have the closed shop enabled you add the items in the format above
+###  this is set to $5 but the owner of the business **can** change the prices in city :)
+ | Parameter | Description | Required | Default |
+ |-----------|-------------|----------|---------|
+ | `key value (item)` | item added| yes | - |
+ | `name` | repeat item key | yes | -       | 
+ | `price` | deafult price | Yes | - |
+ |
 ### doing good so far! now you can see how to start a job and enable closedShops and blips. Lets get further in!
 
 ## Adding Crafting Stations
- - Sweet now lets look at making some crafting stations and recipes
-   ```lua
-      Jobs['police'] = {
-        CateringEnabled = true,    -- if false catering can be catering = {} or not even there
-        craftingStations = { --must match the key value in locations
-            cocktail = {
-                {anim = 'cocktail', give = {ice = 1, soda_water = 1, vodka = 1},                    take = {vodka_soda = 1},        progtext = 'Making'},
-                {anim = 'cocktail', give = {vodka = 1, ginger_ale = 1, lime = 1, ice = 1},          take = {moscow_mule = 1},       progtext = 'Making'},
-                {anim = 'cocktail', give = {tequila = 1, orange = 1, grenadine = 1, ice = 1},       take = {tequila_sunrise = 1},   progtext = 'Making'},
-                {anim = 'cocktail', give = {whiskey = 1, lemon = 1, sugar = 10, ice = 1},            take = {whiskey_sour = 1},      progtext = 'Making'},
-                {anim = 'cocktail', give = {gin = 1, tonic_water = 1, ice = 1, lime = 1},           take = {gin_and_tonic = 1},     progtext = 'Making'},
-                {anim = 'cocktail', give = {rum = 1, ecola = 1, ice = 1},                           take = {rum_and_coke = 1},      progtext = 'Making'},
-                {anim = 'cocktail', give = {gin = 1, soda_water = 1, lime = 1, sugar = 1, ice = 1}, take = {gin_fizz = 1},          progtext = 'Making'},
-                {anim = 'cocktail', give = {rum = 1, lime = 1, orange = 1, grenadine = 1, ice = 1}, take = {rum_punch = 1},         progtext = 'Making'},
-                {anim = 'cocktail', give = {vodka = 1, orange = 1, ice = 1},                        take = {screwdriver = 1},       progtext = 'Making'},
-                {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, soda_water = 1, ice = 1}, take = {mojito = 1},            progtext = 'Making'},
-                {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, ice = 1},                 take = {daiquiri = 1},          progtext = 'Making'}
-            },
-            coffee = {
-                {anim = 'uncuff',give = {}, take = {coffee = 1}, progtext = 'Pouring' }
-            },
-            ice = {
-                {anim = 'uncuff', give = {}, take = {ice = 1}, progtext = 'Scooping' }
-            }
+###  Sweet now lets look at making some crafting stations and recipes
+```lua
+   Jobs['police'] = {
+     CateringEnabled = true,    -- if false catering can be catering = {} or not even there
+     craftingStations = { --must match the key value in locations
+         cocktail = {
+             {anim = 'cocktail', give = {ice = 1, soda_water = 1, vodka = 1},                    take = {vodka_soda = 1},        progtext = 'Making'},
+             {anim = 'cocktail', give = {vodka = 1, ginger_ale = 1, lime = 1, ice = 1},          take = {moscow_mule = 1},       progtext = 'Making'},
+             {anim = 'cocktail', give = {tequila = 1, orange = 1, grenadine = 1, ice = 1},       take = {tequila_sunrise = 1},   progtext = 'Making'},
+             {anim = 'cocktail', give = {whiskey = 1, lemon = 1, sugar = 10, ice = 1},            take = {whiskey_sour = 1},      progtext = 'Making'},
+             {anim = 'cocktail', give = {gin = 1, tonic_water = 1, ice = 1, lime = 1},           take = {gin_and_tonic = 1},     progtext = 'Making'},
+             {anim = 'cocktail', give = {rum = 1, ecola = 1, ice = 1},                           take = {rum_and_coke = 1},      progtext = 'Making'},
+             {anim = 'cocktail', give = {gin = 1, soda_water = 1, lime = 1, sugar = 1, ice = 1}, take = {gin_fizz = 1},          progtext = 'Making'},
+             {anim = 'cocktail', give = {rum = 1, lime = 1, orange = 1, grenadine = 1, ice = 1}, take = {rum_punch = 1},         progtext = 'Making'},
+             {anim = 'cocktail', give = {vodka = 1, orange = 1, ice = 1},                        take = {screwdriver = 1},       progtext = 'Making'},
+             {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, soda_water = 1, ice = 1}, take = {mojito = 1},            progtext = 'Making'},
+             {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, ice = 1},                 take = {daiquiri = 1},          progtext = 'Making'}
+         },
+         coffee = {
+             {anim = 'uncuff',give = {}, take = {coffee = 1}, progtext = 'Pouring' }
+         },
+         ice = {
+             {anim = 'uncuff', give = {}, take = {ice = 1}, progtext = 'Scooping' }
+         }
+     },
+   }
+```
+###  ok i admit thats a lot of changes really quick. lets break it down 
+###  so we are making three crafting stations.
+### they can be any name like 
+```lua
+    cocktail = {},
+    coffee = {},
+    ice = {},
+    tswiftIsForTheHomies = {},
+```
+### so the tables above are what type of crafting it is. lets add data
+```lua
+    cocktail = {
+       {anim = 'cocktail', give = {ice = 1, soda_water = 1, vodka = 1}, take = {vodka_soda = 1}, progtext = 'Making', time = 5000, max = 10000},
+    },
+  coffee = {
+       {anim = 'uncuff',give = {}, take = {coffee = 1}, progtext = 'Pouring' }
+   },
+   ice = {
+       {anim = 'uncuff', give = {}, take = {ice = 1}, progtext = 'Scooping' }
+   }
+```
+
+| Parameter | Description | Required | Default |
+|-----------|-------------|----------|---------|
+| `anim` | Animation to play during crafting | no | 'uncuff' |
+| `give` | Required items with quantities | yes/no | give = {} will not require item removal |
+| `take` | Produced items with quantities | Yes | take needs an item to give |
+| `progtext` | Text shown on the progress bar | no | "Crafting"  |
+| `time` | Duration in milliseconds | No | `Config.DefaultCraftTime` |
+| `max` | Maximum quantity craftable at once | No | `Config.MultiCraftDefault` |
+
+### Now all you need to do is fill out as many crafting things as you want!
+
+## Setting Up Catering!
+### going off assuming you want to use catering for this job lets add it in
+```lua
+   Jobs['police'] = {
+    CateringEnabled = true,    -- if false catering can be catering = {} or not even there
+    catering = { -- accessible in Till
+        commission = 0.2, -- 20%
+        items = {
+            {name = 'vodka',        minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'tequila',      minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
-      }
-    ```
-    - ok i admit thats a lot of changes really quick. lets break it down 
-
-    - so we are making three crafting stations.
-      ```lua
-          cocktail = {},
-          coffee = {},
-          ice = {},
-      ```
-    - so the tables above are what type of crafting it is. lets add data
-         ```lua
-             cocktail = {
-                {anim = 'cocktail', give = {ice = 1, soda_water = 1, vodka = 1}, take = {vodka_soda = 1}, progtext = 'Making', time = 5000},
-             },
-           coffee = {
-                {anim = 'uncuff',give = {}, take = {coffee = 1}, progtext = 'Pouring' }
-            },
-            ice = {
-                {anim = 'uncuff', give = {}, take = {ice = 1}, progtext = 'Scooping' }
-            }
-        ```
-      | Parameter | Description | Required | Default |
-      |-----------|-------------|----------|---------|
-      | `anim` | Animation to play during crafting | no | 'uncuff' |
-      | `give` | Required items with quantities | yes/no | give = {} will not require item removal |
-      | `take` | Produced items with quantities | Yes | take needs an item to give |
-      | `progtext` | Text shown on the progress bar | no | "Crafting"  |
-      | `time` | Duration in milliseconds | No | `Config.DefaultCraftTime` |
-      | `max` | Maximum quantity craftable at once | No | `Config.MultiCraftDefault` |
-
- - Now all you need to do is fill out as many crafting things as you want!
-
- ## Setting Up Catering!
-  - going off assuming you want to use catering for this job lets add it in
-    ```lua
-       Jobs['police'] = {
-        CateringEnabled = true,    -- if false catering can be catering = {} or not even there
-        catering = { -- accessible in Till
-            commission = 0.2,
-            items = {
-                {name = 'vodka',        minPrice = 10, maxPrice = 20, maxAmount = 30},
-                {name = 'tequila',      minPrice = 10, maxPrice = 20, maxAmount = 30},
-            },
-            Van = {model = 'burrito', label = 'Burrito', plate = 'policeCATER', loc = vector4(144.72, -1300.25, 28.89, 121.44), heading = 118.78},
-        },
-    }
-    ```
+        Van = {model = 'burrito', label = 'Burrito', plate = 'policeCATER', loc = vector4(144.72, -1300.25, 28.89, 121.44)},
+    },
+}
+```
    ### Catering Parameters   
 | Parameter | Description | Required | Default |
 |-----------|-------------|----------|---------|
 | `commission` | Commission rate (0.0-1.0) paid to employee | Yes | - |
-| `items` | Array of items available for catering | Yes | - |
-| `Van` | Delivery vehicle configuration | Yes | - |   
+| `items` | Table of items available for catering see below| Yes | - |
+| `Van` | Delivery vehicle configuration See Below | Yes | - |   
 ### Items Parameters   
 | Parameter | Description | Required | Default |
 |-----------|-------------|----------|---------|
@@ -416,89 +419,86 @@ Jobs['bestbudz'] = {
 | `label` | Display name for the vehicle | Yes | - |
 | `plate` | License plate text | Yes | - |
 | `loc` | Vector4 spawn location (x, y, z, heading) | Yes | - |
-| `heading` | Vehicle orientation | No | From `loc` |
-
-
 
 ## Setting up Shops!
 ### is this closed shops? we did this already? nope. this is to get ingridients
 
-- lets start with adding the types of shops and what items it goes in 
-  ```lua
-    Jobs['police'] = {
-      shops = { -- must match the key value in locations
-          ingridients = {
-              {name = 'vodka',        price = 5, amount = 50},
-              {name = 'tequila',      price = 5, amount = 50},
-              {name = 'whiskey',      price = 5, amount = 50},
-              {name = 'rum',          price = 5, amount = 50},
-              {name = 'gin',          price = 5, amount = 50},
-              {name = 'lime',         price = 5, amount = 50},
-              {name = 'lemon',        price = 5, amount = 50},
-              {name = 'orange',       price = 5, amount = 50},
-              {name = 'sugar',        price = 5, amount = 50},
-              {name = 'salt',         price = 5, amount = 50},
-              {name = 'ice',          price = 5, amount = 50},
-              {name = 'soda_water',   price = 5, amount = 50},
-              {name = 'tonic_water',  price = 5, amount = 50},
-              {name = 'ecola',        price = 5, amount = 50},
-              {name = 'ginger_ale',   price = 5, amount = 50},
-              {name = 'bitters',      price = 5, amount = 50},
-              {name = 'grenadine',    price = 5, amount = 50},
-              {name = 'vermouth',     price = 5, amount = 50},
-              {name = 'simple_syrup', price = 5, amount = 50},
-          }
-      },
-    }
-    ```
-- so lets break this down more
-  ```lua
-      shops = { -- must match the key value in locations
-          ingridients = {
-              {name = 'vodka',        price = 5, amount = 50},
-          }
-      },
-  ```
-  - we need to make a table for the type of shop it is 
-    - so the key is the type and the value is the items
-    ```lua
-      shops = {
-         -- KEY      | Value
-         ingridients = {}
+### lets start with adding the types of shops and what items it goes in 
+```lua
+Jobs['police'] = {
+  shops = { -- must match the key value in locations
+      ingridients = {
+          {name = 'vodka',        price = 5, amount = 50},
+          {name = 'tequila',      price = 5, amount = 50},
+          {name = 'whiskey',      price = 5, amount = 50},
+          {name = 'rum',          price = 5, amount = 50},
+          {name = 'gin',          price = 5, amount = 50},
+          {name = 'lime',         price = 5, amount = 50},
+          {name = 'lemon',        price = 5, amount = 50},
+          {name = 'orange',       price = 5, amount = 50},
+          {name = 'sugar',        price = 5, amount = 50},
+          {name = 'salt',         price = 5, amount = 50},
+          {name = 'ice',          price = 5, amount = 50},
+          {name = 'soda_water',   price = 5, amount = 50},
+          {name = 'tonic_water',  price = 5, amount = 50},
+          {name = 'ecola',        price = 5, amount = 50},
+          {name = 'ginger_ale',   price = 5, amount = 50},
+          {name = 'bitters',      price = 5, amount = 50},
+          {name = 'grenadine',    price = 5, amount = 50},
+          {name = 'vermouth',     price = 5, amount = 50},
+          {name = 'simple_syrup', price = 5, amount = 50},
       }
-    ```
-  - and now we just add the items that go inside the ingridients shop
-    ```lua
-       shops = { -- must match the key value in locations
-          ingridients = {
-              {name = 'vodka',        price = 5, amount = 50},
-              {name = 'tequila',      price = 5, amount = 50},
-              {name = 'whiskey',      price = 5, amount = 50},
-              {name = 'rum',          price = 5, amount = 50},
-              {name = 'gin',          price = 5, amount = 50},
-              {name = 'lime',         price = 5, amount = 50},
-              {name = 'lemon',        price = 5, amount = 50},
-              {name = 'orange',       price = 5, amount = 50},
-              {name = 'sugar',        price = 5, amount = 50},
-              {name = 'salt',         price = 5, amount = 50},
-              {name = 'ice',          price = 5, amount = 50},
-              {name = 'soda_water',   price = 5, amount = 50},
-              {name = 'tonic_water',  price = 5, amount = 50},
-              {name = 'ecola',        price = 5, amount = 50},
-              {name = 'ginger_ale',   price = 5, amount = 50},
-              {name = 'bitters',      price = 5, amount = 50},
-              {name = 'grenadine',    price = 5, amount = 50},
-              {name = 'vermouth',     price = 5, amount = 50},
-              {name = 'simple_syrup', price = 5, amount = 50},
-          }
-      },
-    ```
-### Shop Parameters
+  },
+}
+```
+### so lets break this down more
+```lua
+    shops = { -- must match the key value in locations
+        ingridients = {
+            {name = 'vodka',        price = 5, amount = 50},
+        }
+    },
+```
+### we need to make a table for the type of shop it is 
+#### so the key is the type and the value is the items
+```lua
+  shops = {
+     -- KEY      | Value
+     ingridients = {}
+  }
+```
+### and now we just add the items that go inside the ingridients shop
+```lua
+   shops = { -- must match the key value in locations
+      ingridients = {
+          {name = 'vodka',        price = 5, amount = 50},
+          {name = 'tequila',      price = 5, amount = 50},
+          {name = 'whiskey',      price = 5, amount = 50},
+          {name = 'rum',          price = 5, amount = 50},
+          {name = 'gin',          price = 5, amount = 50},
+          {name = 'lime',         price = 5, amount = 50},
+          {name = 'lemon',        price = 5, amount = 50},
+          {name = 'orange',       price = 5, amount = 50},
+          {name = 'sugar',        price = 5, amount = 50},
+          {name = 'salt',         price = 5, amount = 50},
+          {name = 'ice',          price = 5, amount = 50},
+          {name = 'soda_water',   price = 5, amount = 50},
+          {name = 'tonic_water',  price = 5, amount = 50},
+          {name = 'ecola',        price = 5, amount = 50},
+          {name = 'ginger_ale',   price = 5, amount = 50},
+          {name = 'bitters',      price = 5, amount = 50},
+          {name = 'grenadine',    price = 5, amount = 50},
+          {name = 'vermouth',     price = 5, amount = 50},
+          {name = 'simple_syrup', price = 5, amount = 50},
+      }
+  },
+```
+### shops = {} Parameters
 
 | Parameter | Description | Required | Default |
 |-----------|-------------|----------|---------|
 | `[category]` | Category name (must match location key) | Yes | - |
-| `items` | Array of items in this shop category | Yes | - |
+| `items` | Table of items in this shop category see below | Yes | - |
 
 ### Item Parameters
 
@@ -510,131 +510,71 @@ Jobs['bestbudz'] = {
 
 
 ## Adding Locations!
-- so this is the hardest part since there is multiple formats here. ill break them down one by one but here is the way it should look
+### so this is the hardest part since there is multiple formats here. ill break them down one by one but here is the way it should look
 ```lua
-Jobs['police'] = {
-    CateringEnabled = true,    -- if false catering can be catering = {} or not even there
-    closedShopsEnabled = true, -- if false than closedShops and closedShopItems can be {} or not even there
-    Blip = { -- Blip Creation (Not Required)
-        {sprite = 279, color = 2, scale = 0.5, label = 'Vanilla Unicorn', loc = vector3(129.02, -1283.25, 29.27)},
+craftingStations = { --must match the key value in locations
+    cocktail = {
+        {anim = 'cocktail', give = {ice = 1, soda_water = 1, vodka = 1},                    take = {vodka_soda = 1},        progtext = 'Making'},
+        {anim = 'cocktail', give = {vodka = 1, ginger_ale = 1, lime = 1, ice = 1},          take = {moscow_mule = 1},       progtext = 'Making'},
+        {anim = 'cocktail', give = {tequila = 1, orange = 1, grenadine = 1, ice = 1},       take = {tequila_sunrise = 1},   progtext = 'Making'},
+        {anim = 'cocktail', give = {whiskey = 1, lemon = 1, sugar = 10, ice = 1},            take = {whiskey_sour = 1},      progtext = 'Making'},
+        {anim = 'cocktail', give = {gin = 1, tonic_water = 1, ice = 1, lime = 1},           take = {gin_and_tonic = 1},     progtext = 'Making'},
+        {anim = 'cocktail', give = {rum = 1, ecola = 1, ice = 1},                           take = {rum_and_coke = 1},      progtext = 'Making'},
+        {anim = 'cocktail', give = {gin = 1, soda_water = 1, lime = 1, sugar = 1, ice = 1}, take = {gin_fizz = 1},          progtext = 'Making'},
+        {anim = 'cocktail', give = {rum = 1, lime = 1, orange = 1, grenadine = 1, ice = 1}, take = {rum_punch = 1},         progtext = 'Making'},
+        {anim = 'cocktail', give = {vodka = 1, orange = 1, ice = 1},                        take = {screwdriver = 1},       progtext = 'Making'},
+        {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, soda_water = 1, ice = 1}, take = {mojito = 1},            progtext = 'Making'},
+        {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, ice = 1},                 take = {daiquiri = 1},          progtext = 'Making'}
     },
-    closedShops = { -- allows multiple peds with their own inventory label MUST BE UNIQUE
-        {ped = 'mp_m_freemode_01', loc = vector4(129.02, -1283.25, 29.27, 120.67), label = 'Vanilla Unicorn Shop'}
+    coffee = {
+        {anim = 'uncuff',give = {}, take = {coffee = 1}, progtext = 'Pouring' }
     },
-    closedShopItems = { -- items allowed in closed shops
-        tequila        =   {name = 'tequila',      price = 5},
-        whiskey        =   {name = 'whiskey',      price = 5},
-        rum            =   {name = 'rum',          price = 5},
-        gin            =   {name = 'gin',          price = 5},
-        lime           =   {name = 'lime',         price = 5},
-        lemon          =   {name = 'lemon',        price = 5},
-        orange         =   {name = 'orange',       price = 5},
-        sugar          =   {name = 'sugar',        price = 5},
-        salt           =   {name = 'salt',         price = 5},
-        ice            =   {name = 'ice',          price = 5},
-        soda_water     =   {name = 'soda_water',   price = 5},
-        tonic_water    =   {name = 'tonic_water',  price = 5},
-        ecola          =   {name = 'ecola',        price = 5},
-        ginger_ale     =   {name = 'ginger_ale',   price = 5},
-        bitters        =   {name = 'bitters',      price = 5},
-        grenadine      =   {name = 'grenadine',    price = 5},
-        vermouth       =   {name = 'vermouth',     price = 5},
-        simple_syrup   =   {name = 'simple_syrup', price = 5}
+    ice = {
+        {anim = 'uncuff', give = {}, take = {ice = 1}, progtext = 'Scooping' }
+    }
+},
+--- in CraftData/StoreData YOU DO NOT NEED prop or heading as these are not needed for the interaction. If you want to spawn an Object, They ARE needed
+locations = { -- l = length, w = width, lwr = (for target) lower height, upr = (for target)  upper height, r = rotation
+    Crafter = { -- CraftData.type MUST MATCH A KEY VALUE IN craftStations ABOVE so type = 'cocktail' will look for cocktail in craftingStations
+        {CraftData = {type = 'coffee', targetLabel = 'Make Coffee', menuLabel = 'Make Coffee!',prop = 'prop_coffee_mac_02'},
+            loc = vector3(130.66, -1281.72, 29.5), l = 0.5, w = 0.4, lwr = 0.25, upr = 0.25, r = 40, job = 'police'},
+        {CraftData = {type = 'ice', targetLabel = 'Grab Ice', menuLabel = 'Grab Ice!' }, 
+            loc = vector3(127.95, -1281.9, 28.99), l = 1.25, w = 0.65, lwr = 0.5, upr = 0.5, r = 40, job = 'police'},
+        {CraftData = {type = 'cocktail', targetLabel = 'Make Cocktail', menuLabel = 'Make Cocktail!' },
+            loc = vector3(128.19, -1282.81, 29.44), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 120, job = 'police'},
+        {CraftData = {type = 'cocktail', targetLabel = 'Make Cocktail', menuLabel = 'Make Cocktail!'},
+            loc = vector3(128.57, -1283.46, 29.42), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 120, job = 'police'},
     },
-    craftingStations = { --must match the key value in locations
-        cocktail = {
-            {anim = 'cocktail', give = {ice = 1, soda_water = 1, vodka = 1},                    take = {vodka_soda = 1},        progtext = 'Making'},
-            {anim = 'cocktail', give = {vodka = 1, ginger_ale = 1, lime = 1, ice = 1},          take = {moscow_mule = 1},       progtext = 'Making'},
-            {anim = 'cocktail', give = {tequila = 1, orange = 1, grenadine = 1, ice = 1},       take = {tequila_sunrise = 1},   progtext = 'Making'},
-            {anim = 'cocktail', give = {whiskey = 1, lemon = 1, sugar = 10, ice = 1},            take = {whiskey_sour = 1},      progtext = 'Making'},
-            {anim = 'cocktail', give = {gin = 1, tonic_water = 1, ice = 1, lime = 1},           take = {gin_and_tonic = 1},     progtext = 'Making'},
-            {anim = 'cocktail', give = {rum = 1, ecola = 1, ice = 1},                           take = {rum_and_coke = 1},      progtext = 'Making'},
-            {anim = 'cocktail', give = {gin = 1, soda_water = 1, lime = 1, sugar = 1, ice = 1}, take = {gin_fizz = 1},          progtext = 'Making'},
-            {anim = 'cocktail', give = {rum = 1, lime = 1, orange = 1, grenadine = 1, ice = 1}, take = {rum_punch = 1},         progtext = 'Making'},
-            {anim = 'cocktail', give = {vodka = 1, orange = 1, ice = 1},                        take = {screwdriver = 1},       progtext = 'Making'},
-            {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, soda_water = 1, ice = 1}, take = {mojito = 1},            progtext = 'Making'},
-            {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, ice = 1},                 take = {daiquiri = 1},          progtext = 'Making'}
-        },
-        coffee = {
-            {anim = 'uncuff',give = {}, take = {coffee = 1}, progtext = 'Pouring' }
-        },
-        ice = {
-            {anim = 'uncuff', give = {}, take = {ice = 1}, progtext = 'Scooping' }
-        }
+    Stores = { -- prop is only needed if you want to spawn an object | prop = 'prop_bar_fridge_01' for example
+        {StoreData = {type = 'ingridients', targetLabel = 'Get Ingredients', menuLabel = 'Get Ingredients!'},
+            loc = vector3(132.64, -1286.02, 28.84), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 40, job = 'police'},
+        {StoreData = {type = 'ingridients', targetLabel = 'Get Ingredients', menuLabel = 'Get Ingredients!'},
+            loc = vector3(131.99, -1284.91, 28.73), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 40, job = 'police'},
+        {StoreData = {type = 'ingridients', targetLabel = 'Get Ingredients', menuLabel = 'Get Ingredients!'},
+            loc = vector3(129.97, -1281.44, 28.74), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 40, job = 'police'},
+        {StoreData = {type = 'ingridients', targetLabel = 'Get Ingredients', menuLabel = 'Get Ingredients!'},
+            loc = vector3(129.14, -1279.99, 28.68), l = 0.7, w = 1.0, lwr = 0.50, upr = 0.5, r = 120, job = 'police'},
     },
-    catering = { -- accessible in Till
-        commission = 0.2,
-        items = {
-            {name = 'vodka',        minPrice = 10, maxPrice = 20, maxAmount = 30},
-            {name = 'tequila',      minPrice = 10, maxPrice = 20, maxAmount = 30},
-        },
-        Van = {model = 'burrito', label = 'Burrito', plate = 'policeCATER', loc = vector4(144.72, -1300.25, 28.89, 121.44), heading = 118.78},
+    Tills = { -- prop is only needed if you want to spawn an object | prop = 'prop_till_03' for example
+        {loc = vec3(130.83, -1282.33, 29.42), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 40,  commission = 0.2, job = 'police'},
+        {loc = vec3(129.32, -1284.75, 29.44), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 40,  commission = 0.2, job = 'police'},
+        {loc = vec3(133.31, -1286.82, 29.4),  l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 40,  commission = 0.2, job = 'police'},
     },
-    shops = { -- must match the key value in locations
-        ingridients = {
-            {name = 'vodka',        price = 5, amount = 50},
-            {name = 'tequila',      price = 5, amount = 50},
-            {name = 'whiskey',      price = 5, amount = 50},
-            {name = 'rum',          price = 5, amount = 50},
-            {name = 'gin',          price = 5, amount = 50},
-            {name = 'lime',         price = 5, amount = 50},
-            {name = 'lemon',        price = 5, amount = 50},
-            {name = 'orange',       price = 5, amount = 50},
-            {name = 'sugar',        price = 5, amount = 50},
-            {name = 'salt',         price = 5, amount = 50},
-            {name = 'ice',          price = 5, amount = 50},
-            {name = 'soda_water',   price = 5, amount = 50},
-            {name = 'tonic_water',  price = 5, amount = 50},
-            {name = 'ecola',        price = 5, amount = 50},
-            {name = 'ginger_ale',   price = 5, amount = 50},
-            {name = 'bitters',      price = 5, amount = 50},
-            {name = 'grenadine',    price = 5, amount = 50},
-            {name = 'vermouth',     price = 5, amount = 50},
-            {name = 'simple_syrup', price = 5, amount = 50},
-        }
+    stash = { -- prop is only needed if you want to spawn an object | prop = 'prop_lev_crate_01' for example
+        {prop = 'prop_drop_crate_01',loc = vec3(131.6136, -1287.2435, 28.2753), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 120,slots = 20, weight = 100000, job = 'police'},
     },
-        --- in CraftData/StoreData YOU DO NOT NEED prop or heading as these are not needed for the interaction. If you want to spawn an Object, They ARE needed
-    locations = { -- l = length, w = width, lwr = (for target) lower height, upr = (for target)  upper height, r = rotation
-        Crafter = { -- CraftData.type MUST MATCH A KEY VALUE IN craftStations ABOVE so type = 'cocktail' will look for cocktail in craftingStations
-            {CraftData = {type = 'coffee', targetLabel = 'Make Coffee', menuLabel = 'Make Coffee!',prop = 'prop_coffee_mac_02'},
-                loc = vector3(130.66, -1281.72, 29.5), l = 0.5, w = 0.4, lwr = 0.25, upr = 0.25, r = 40, job = 'police'},
-            {CraftData = {type = 'ice', targetLabel = 'Grab Ice', menuLabel = 'Grab Ice!' }, 
-                loc = vector3(127.95, -1281.9, 28.99), l = 1.25, w = 0.65, lwr = 0.5, upr = 0.5, r = 40, job = 'police'},
-            {CraftData = {type = 'cocktail', targetLabel = 'Make Cocktail', menuLabel = 'Make Cocktail!' },
-                loc = vector3(128.19, -1282.81, 29.44), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 120, job = 'police'},
-            {CraftData = {type = 'cocktail', targetLabel = 'Make Cocktail', menuLabel = 'Make Cocktail!'},
-                loc = vector3(128.57, -1283.46, 29.42), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 120, job = 'police'},
-        },
-        Stores = { -- prop is only needed if you want to spawn an object | prop = 'prop_bar_fridge_01' for example
-            {StoreData = {type = 'ingridients', targetLabel = 'Get Ingredients', menuLabel = 'Get Ingredients!'},
-                loc = vector3(132.64, -1286.02, 28.84), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 40, job = 'police'},
-            {StoreData = {type = 'ingridients', targetLabel = 'Get Ingredients', menuLabel = 'Get Ingredients!'},
-                loc = vector3(131.99, -1284.91, 28.73), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 40, job = 'police'},
-            {StoreData = {type = 'ingridients', targetLabel = 'Get Ingredients', menuLabel = 'Get Ingredients!'},
-                loc = vector3(129.97, -1281.44, 28.74), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 40, job = 'police'},
-            {StoreData = {type = 'ingridients', targetLabel = 'Get Ingredients', menuLabel = 'Get Ingredients!'},
-                loc = vector3(129.14, -1279.99, 28.68), l = 0.7, w = 1.0, lwr = 0.50, upr = 0.5, r = 120, job = 'police'},
-        },
-        Tills = { -- prop is only needed if you want to spawn an object | prop = 'prop_till_03' for example
-            {loc = vec3(130.83, -1282.33, 29.42), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 40,  commission = 0.2, job = 'police'},
-            {loc = vec3(129.32, -1284.75, 29.44), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 40,  commission = 0.2, job = 'police'},
-            {loc = vec3(133.31, -1286.82, 29.4),  l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 40,  commission = 0.2, job = 'police'},
-        },
-        stash = { -- prop is only needed if you want to spawn an object | prop = 'prop_lev_crate_01' for example
-            {prop = 'prop_drop_crate_01',loc = vec3(131.6136, -1287.2435, 28.2753), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 120,slots = 20, weight = 100000, job = 'police'},
-        },
-        trays = { -- storages to place things for people | prop is only needed if you want to spawn an object | prop = 'prop_bar_fridge_01' for example
-            {prop = 'prop_food_tray_01', label = 'Grab Food', loc = vector3(129.6180, -1286.6339, 29.2904), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'police'},
-        }
+    trays = { -- storages to place things for people | prop is only needed if you want to spawn an object | prop = 'prop_bar_fridge_01' for example
+        {prop = 'prop_food_tray_01', label = 'Grab Food', loc = vector3(129.6180, -1286.6339, 29.2904), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'police'},
     }
 }
+
 ```
 
-- yeah this locations table is scary so lets break it down option by option!
+### yeah this locations table is scary so lets break it down option by option!
 
 ## Crafter
- - so we have locations.Crafter now but how do we format it and what is all these numbers. im lost!
- - each crafter location needs a craftdata table like this
+###  so we have locations.Crafter now but how do we format it and what is all these numbers. im lost!
+###  each crafter location needs a craftdata table like this
 
 ### CrafterData Parameters
 
@@ -643,22 +583,22 @@ Jobs['police'] = {
 | `type` | Category name (must match craftStations key) | Yes | - |
 | `targetLabel` | Target Label | No | "Craft" |
 | `menuLabel`  | Menu Label  |  No|  "Craft!"|
-| `prop`       | prop you want to spawn | no | - |
+| `prop`       | prop you want to spawn (if you want) | no | - |
 
 ### location Parameters
 
-| Parameter | Description                     | Required | Default                     |
-|-----------|---------------------------------|----------|-----------------------------|
-| `loc`       | Location coordinates (x, y, z)  | Yes      | - |
-| `l`        | Length of target zone           | No       | 1.0                        |
-| `w`        | Width of target zone            | No       | 1.0                        |
-| `lwr `    | Lower range of target zone      | No       | 1.0                        |
-| `upr  `     | Upper range of target zone      | No       | 1.0                        |
-| `r     `    | Radius  of target zone          | No       | 180.0                         |
-| `job    `   | Job type                        | Yes      | -                   |
+| Parameter | Description                       | Required | Default|
+|-----------|---------------------------------  |----------|--------|
+| `loc`       | Location coordinates (x, y, z)  | Yes      | -      |
+| `l`        | Length of target zone            | No       | 1.0    |
+| `w`        | Width of target zone             | No       | 1.0    |
+| `lwr `    | Lower range of target zone        | No       | 1.0    |
+| `upr  `     | Upper range of target zone      | No       | 1.0    |
+| `r     `    | Radius  of target zone          | No       | 180.0  |
+| `job    `   | Job type                        | Yes      | -      |
 
 
-so the smallest code block should look this this
+### so the smallest code block should look this this
 ```lua
 locations = {
      Crafters = {
@@ -667,7 +607,7 @@ locations = {
 }
 ```
 
-While the biggest should be
+### While the biggest should be
 ```lua
 locations = {
      Crafters = {
@@ -676,49 +616,49 @@ locations = {
      }
 }
 ```
-so this doesnt seem to hard! 
+### so this doesnt seem to hard! 
 
-now lets look again at Crafters 
-  ```lua
-    Crafter = { -- CraftData.type MUST MATCH A KEY VALUE IN craftStations ABOVE so type = 'cocktail' will look for cocktail in craftingStations
-            {CraftData = {type = 'coffee', targetLabel = 'Make Coffee', menuLabel = 'Make Coffee!',prop = 'prop_coffee_mac_02'},
-                loc = vector3(130.66, -1281.72, 29.5), l = 0.5, w = 0.4, lwr = 0.25, upr = 0.25, r = 40, job = 'police'},
-            {CraftData = {type = 'ice', targetLabel = 'Grab Ice', menuLabel = 'Grab Ice!' }, 
-                loc = vector3(127.95, -1281.9, 28.99), l = 1.25, w = 0.65, lwr = 0.5, upr = 0.5, r = 40, job = 'police'},
-            {CraftData = {type = 'cocktail', targetLabel = 'Make Cocktail', menuLabel = 'Make Cocktail!' },
-                loc = vector3(128.19, -1282.81, 29.44), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 120, job = 'police'},
-            {CraftData = {type = 'cocktail', targetLabel = 'Make Cocktail', menuLabel = 'Make Cocktail!'},
-                loc = vector3(128.57, -1283.46, 29.42), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 120, job = 'police'},
-        },
-  ```
+### now lets look again at Crafters 
+```lua
+  Crafter = { -- CraftData.type MUST MATCH A KEY VALUE IN craftStations ABOVE so type = 'cocktail' will look for cocktail in craftingStations
+          {CraftData = {type = 'coffee', targetLabel = 'Make Coffee', menuLabel = 'Make Coffee!',prop = 'prop_coffee_mac_02'},
+              loc = vector3(130.66, -1281.72, 29.5), l = 0.5, w = 0.4, lwr = 0.25, upr = 0.25, r = 40, job = 'police'},
+          {CraftData = {type = 'ice', targetLabel = 'Grab Ice', menuLabel = 'Grab Ice!' }, 
+              loc = vector3(127.95, -1281.9, 28.99), l = 1.25, w = 0.65, lwr = 0.5, upr = 0.5, r = 40, job = 'police'},
+          {CraftData = {type = 'cocktail', targetLabel = 'Make Cocktail', menuLabel = 'Make Cocktail!' },
+              loc = vector3(128.19, -1282.81, 29.44), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 120, job = 'police'},
+          {CraftData = {type = 'cocktail', targetLabel = 'Make Cocktail', menuLabel = 'Make Cocktail!'},
+              loc = vector3(128.57, -1283.46, 29.42), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 120, job = 'police'},
+      },
+```
 - this means there are 4 locations to craft at
   - 2 cocktails
   - 1 ice
   - 1 coffee
 - and if we look back at craftStations we should have 
-   ```lua
-     craftingStations = { --must match the key value in locations
-        cocktail = {
-            {anim = 'cocktail', give = {ice = 1, soda_water = 1, vodka = 1},                    take = {vodka_soda = 1},        progtext = 'Making'},
-            {anim = 'cocktail', give = {vodka = 1, ginger_ale = 1, lime = 1, ice = 1},          take = {moscow_mule = 1},       progtext = 'Making'},
-            {anim = 'cocktail', give = {tequila = 1, orange = 1, grenadine = 1, ice = 1},       take = {tequila_sunrise = 1},   progtext = 'Making'},
-            {anim = 'cocktail', give = {whiskey = 1, lemon = 1, sugar = 10, ice = 1},            take = {whiskey_sour = 1},      progtext = 'Making'},
-            {anim = 'cocktail', give = {gin = 1, tonic_water = 1, ice = 1, lime = 1},           take = {gin_and_tonic = 1},     progtext = 'Making'},
-            {anim = 'cocktail', give = {rum = 1, ecola = 1, ice = 1},                           take = {rum_and_coke = 1},      progtext = 'Making'},
-            {anim = 'cocktail', give = {gin = 1, soda_water = 1, lime = 1, sugar = 1, ice = 1}, take = {gin_fizz = 1},          progtext = 'Making'},
-            {anim = 'cocktail', give = {rum = 1, lime = 1, orange = 1, grenadine = 1, ice = 1}, take = {rum_punch = 1},         progtext = 'Making'},
-            {anim = 'cocktail', give = {vodka = 1, orange = 1, ice = 1},                        take = {screwdriver = 1},       progtext = 'Making'},
-            {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, soda_water = 1, ice = 1}, take = {mojito = 1},            progtext = 'Making'},
-            {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, ice = 1},                 take = {daiquiri = 1},          progtext = 'Making'}
-        },
-        coffee = {
-            {anim = 'uncuff',give = {}, take = {coffee = 1}, progtext = 'Pouring' }
-        },
-        ice = {
-            {anim = 'uncuff', give = {}, take = {ice = 1}, progtext = 'Scooping' }
-        }
-    },
-  ```
+```lua
+  craftingStations = { --must match the key value in locations
+     cocktail = {
+         {anim = 'cocktail', give = {ice = 1, soda_water = 1, vodka = 1},                    take = {vodka_soda = 1},        progtext = 'Making'},
+         {anim = 'cocktail', give = {vodka = 1, ginger_ale = 1, lime = 1, ice = 1},          take = {moscow_mule = 1},       progtext = 'Making'},
+         {anim = 'cocktail', give = {tequila = 1, orange = 1, grenadine = 1, ice = 1},       take = {tequila_sunrise = 1},   progtext = 'Making'},
+         {anim = 'cocktail', give = {whiskey = 1, lemon = 1, sugar = 10, ice = 1},            take = {whiskey_sour = 1},      progtext = 'Making'},
+         {anim = 'cocktail', give = {gin = 1, tonic_water = 1, ice = 1, lime = 1},           take = {gin_and_tonic = 1},     progtext = 'Making'},
+         {anim = 'cocktail', give = {rum = 1, ecola = 1, ice = 1},                           take = {rum_and_coke = 1},      progtext = 'Making'},
+         {anim = 'cocktail', give = {gin = 1, soda_water = 1, lime = 1, sugar = 1, ice = 1}, take = {gin_fizz = 1},          progtext = 'Making'},
+         {anim = 'cocktail', give = {rum = 1, lime = 1, orange = 1, grenadine = 1, ice = 1}, take = {rum_punch = 1},         progtext = 'Making'},
+         {anim = 'cocktail', give = {vodka = 1, orange = 1, ice = 1},                        take = {screwdriver = 1},       progtext = 'Making'},
+         {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, soda_water = 1, ice = 1}, take = {mojito = 1},            progtext = 'Making'},
+         {anim = 'cocktail', give = {rum = 1, lime = 1, sugar = 1, ice = 1},                 take = {daiquiri = 1},          progtext = 'Making'}
+     },
+     coffee = {
+         {anim = 'uncuff',give = {}, take = {coffee = 1}, progtext = 'Pouring' }
+     },
+     ice = {
+         {anim = 'uncuff', give = {}, take = {ice = 1}, progtext = 'Scooping' }
+     }
+ },
+```
   showing that we have all the types we made!
 
 ## Stores
@@ -779,17 +719,16 @@ just to re-iterate
     },
 ```
 
-
-| Parameter | Description                     | Required | Default                     |
-|-----------|---------------------------------|----------|-----------------------------|
-| `loc`       | Location coordinates (x, y, z)  | Yes      | - |
-| `l`        | Length of target zone           | No       | 1.0                        |
-| `w`        | Width of target zone            | No       | 1.0                        |
-| `lwr `    | Lower range of target zone      | No       | 1.0                        |
-| `upr  `     | Upper range of target zone      | No       | 1.0                        |
-| `r     `    | Radius  of target zone          | No       | 180.0                         |
-| `commission` | how much commission player gets (0.0-1.0) (0.2 is 20%) | yes| - |
-| `job    `   | Job type                        | Yes      | -                   |
+| Parameter    | Description                                      | Required | Default  |
+|--------------|--------------------------------------------------|----------|----------|
+| `loc`        | Location coordinates (x, y, z)                  | Yes      | -        |
+| `l`          | Length of target zone                           | No       | 1.0      |
+| `w`          | Width of target zone                            | No       | 1.0      |
+| `lwr`        | Lower range of target zone                      | No       | 1.0      |
+| `upr`        | Upper range of target zone                      | No       | 1.0      |
+| `r`          | Radius of target zone                           | No       | 180.0    |
+| `commission` | How much commission player gets (0.0-1.0) (0.2 is 20%) | Yes  | -      |
+| `job`        | Job type                                         | Yes      | -        |
 
 
 this one is fairly straight forward! 
@@ -801,7 +740,7 @@ this one is fairly straight forward!
        {prop = 'prop_drop_crate_01',loc = vec3(131.6136, -1287.2435, 28.2753), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 120,slots = 20, weight = 100000, job = 'police'},
    },
    trays = { -- storages to place things for people | prop is only needed if you want to spawn an object | prop = 'prop_bar_fridge_01' for example
-       {prop = 'prop_food_tray_01', label = 'Grab Food', loc = vector3(129.6180, -1286.6339, 29.2904), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000, job = 'police'},
+       {prop = 'prop_food_tray_01', label = 'Grab Food', loc = vector3(129.6180, -1286.6339, 29.2904), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000,},
    }
 ```
 | Parameter | Description                                      | Required | Default       |
@@ -815,6 +754,9 @@ this one is fairly straight forward!
 | r         | Rotation of target                                | No       | 180.0             |
 | slots     | How many slots the stash or tray will have        | Yes      | N/A           |
 | weight    | How much weight the stash or tray can carry       | Yes      | N/A           |
+|job (if stash)| What job can open this? | Yes (for stashes) | N/A|
 
 # the hardest part is here
 - make sure to add this file into server/locations folder. it will populate all that data you made on the next restart! 
+
+
