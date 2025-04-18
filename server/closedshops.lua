@@ -32,14 +32,6 @@ if Config.ClosedShopAlwaysActive then return end
     until false
 end)
 
-CreateThread(function()
-if not Config.ClosedShopAlwaysActive then
-    repeat
-        Wait(1000)
-        print('Closed Shop Players: ' .. json.encode(GlobalState.MDJobsCount))
-    until false
-end
-end)
 function initializePeds()
     for k, v in pairs (Jobs) do
         if v.closedShopsEnabled then
