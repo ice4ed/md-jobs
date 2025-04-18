@@ -78,8 +78,8 @@ end
 
 function AddBoxZone(name, loc, data)
 local options = {}
-	for k, v in pairs (data) do 
-		table.insert(options,{	
+	for k, v in pairs (data) do
+		table.insert(options,{
 			icon = v.icon, label = v.label, event = v.event or nil, action = v.action or nil,
 			onSelect = v.action,data = v.data,canInteract = v.canInteract or nil, distance = 2.0,
 		})
@@ -153,6 +153,8 @@ end
 function getJobName()
 	if Config.Framework == 'qb' then 
 		return QBCore.Functions.GetPlayerData().job.name
+	elseif Config.Framework == 'qbx' then
+		return QBX.PlayerData.job.name
 	elseif Config.Framework == 'esx' then
 		return ESX.PlayerData.job.name
 	end
@@ -161,6 +163,8 @@ end
 function isBoss()
 	if Config.Framework == 'qb' then 
 		return QBCore.Functions.GetPlayerData().job.isboss
+	elseif Config.Framework == 'qbx' then
+		return QBX.PlayerData.job.isboss
 	elseif Config.Framework == 'esx' then
 		if ESX.PlayerData.job.grade_name == 'boss' then
 			return true
@@ -178,6 +182,8 @@ end
 function openBossMenu(job)
 	if Config.Framework == 'qb' then 
 		TriggerEvent('qb-bossmenu:client:openMenu', job)
+	elseif Config.Framework == 'qbx' then
+		exports.qbx_management:OpenBossMenu('job')
 	elseif Config.Framework == 'esx' then
 		TriggerEvent('esx_society:openBossMenu', job, function(data, menu) end)
 	end
@@ -186,6 +192,8 @@ end
 function getItems()
 	if Config.Framework == 'qb' then 
 		return QBCore.Functions.GetPlayerData().items
+	elseif Config.Framework == 'qbx' then
+		return QBX.PlayerData.items
 	elseif Config.Framework == 'esx' then
 		return ESX.PlayerData.inventory
 	end
@@ -266,7 +274,6 @@ function makeCrafter(items, text, job, num)
         Notify(s(L.Error.no_job, job), 'error') 
         return
     end
-
     local options = {}
     local recipes = lib.callback.await('md-jobs:server:getRecipes', false, job, items)
 	if not recipes then Notify('Something Went Wrong, Tell Your Dev To Check Crafters For ' .. job, 'error') return end
@@ -274,13 +281,8 @@ function makeCrafter(items, text, job, num)
 		if not v.time then v.time = 5000 end
         local label, item = {}, ''
         v.progtext = v.progtext or 'Crafting '
-
-        for m, d in pairs(v.give) do 
-            table.insert(label, hasItem(m, d) .. GetLabel(m) .. ' X ' .. d)  
-        end
-        for m, d in pairs(v.take) do 
-            item = m
-        end
+        for m, d in pairs(v.give) do  table.insert(label, hasItem(m, d) .. GetLabel(m) .. ' X ' .. d) end
+        for m, d in pairs(v.take) do item = m end
         table.insert(options, {
             icon = GetImage(item),
             description = table.concat(label, ", \n"),

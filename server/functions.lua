@@ -70,6 +70,8 @@ function getPlayer(source)
     local src = source
     if Config.Framework == 'qb' then 
         return QBCore.Functions.GetPlayer(src)
+    elseif Config.Framework == 'qbx' then
+        return QBOX:GetPlayer(src)
     elseif Config.Framework == 'esx' then
         return ESX.GetPlayerFromId(src)
     end
@@ -78,6 +80,8 @@ end
 function getPlayers()
     if Config.Framework == 'qb' then 
         return QBCore.Functions.GetQBPlayers()
+    elseif Config.Framework == 'qbx' then
+        return QBOX:GetQBPlayers()
     elseif Config.Framework == 'esx' then
         return ESX.GetPlayers()
     end
@@ -86,6 +90,8 @@ end
 function getSource(cid)
     if Config.Framework == 'qb' then
         return QBCore.Functions.GetPlayerByCitizenId(cid).PlayerData.source
+    elseif Config.Framework == 'qbx' then
+        return QBOX:GetPlayerByCitizenId(cid).PlayerData.source
     elseif Config.Framework == 'esx' then
         return ESX.GetPlayerFromIdentifier(cid).source
     end
@@ -94,6 +100,8 @@ end
 function getPlayerByCid(cid)
     if Config.Framework == 'qb' then 
         return QBCore.Functions.GetPlayerByCitizenId(cid)
+    elseif Config.Framework == 'qbx' then
+        return QBOX:GetPlayerByCitizenId(cid)
     elseif Config.Framework == 'esx' then
         return ESX.GetPlayerFromIdentifier(cid)
     end
@@ -101,6 +109,9 @@ end
 
 function getJobName(source)
     if Config.Framework == 'qb' then 
+        local Player = getPlayer(source)
+        return Player.PlayerData.job.name
+    elseif Config.Framework == 'qbx' then
         local Player = getPlayer(source)
         return Player.PlayerData.job.name
     elseif Config.Framework == 'esx' then
@@ -113,6 +124,9 @@ function getCid(source)
     if Config.Framework == 'qb' then 
         local Player = getPlayer(source)
         return Player.PlayerData.citizenid
+    elseif Config.Framework == 'qbx' then
+        local Player = getPlayer(source)
+        return Player.PlayerData.citizenid
     elseif Config.Framework == 'esx' then
         local Player = getPlayer(source)
         return Player.getIdentifier()
@@ -121,6 +135,9 @@ end
 
 function isBoss()
     if Config.Framework == 'qb' then 
+        local Player = getPlayer(source)
+        return Player.PlayerData.job.isboss
+    elseif Config.Framework == 'qbx' then
         local Player = getPlayer(source)
         return Player.PlayerData.job.isboss
     elseif Config.Framework == 'esx' then
@@ -264,6 +281,10 @@ function getName(source)
         local src = source
         local Player = QBCore.Functions.GetPlayer(src)
         return Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname
+    elseif Config.Framework == 'qbx' then
+        local src = source
+        local Player = QBOX:GetPlayer(src)
+        return Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname
     elseif Config.Framework == 'esx' then
         local src = source
         local Player = ESX.GetPlayerFromId(src)
@@ -274,6 +295,8 @@ end
 function getSRC(player)
     if Config.Framework == 'qb' then
         return player.PlayerData.source
+    elseif Config.Framework == 'qbx' then
+        return player.PlayerData.source
     elseif Config.Framework == 'esx' then
         return player.source
     end
@@ -283,6 +306,13 @@ function billPlayer(src, type, amount)
     if Config.Framework == 'qb' then 
         local Player = getPlayer(src)
         if Player.Functions.RemoveMoney(type, amount) then
+            return true
+        else
+            Notifys(src, L.Error.too_poor, 'error')
+            return false
+        end
+    elseif Config.Framework == 'qbx' then
+        if QBOX:RemoveMoney(src, type, amount) then
             return true
         else
             Notifys(src, L.Error.too_poor, 'error')
@@ -319,6 +349,13 @@ function removeMoney(source, amount, type)
             Notifys(source, L.Error.too_poor, 'error')
             return false
         end
+    elseif Config.Framework == 'qbx' then
+        if QBOX:RemoveMoney(source, type, amount) then
+            return true
+        else
+            Notifys(source, L.Error.too_poor, 'error')
+            return false
+        end
     elseif Config.Framework == 'esx' then
         if type == 'bank' then  
             if Player.getAccount('bank').money >= amount then
@@ -344,7 +381,15 @@ function getNear(source)
     local peeps = {}
     if Config.Framework == 'qb' then 
         local src = source
-        local Player = getPlayer(src)
+        for k, v in pairs (getPlayers()) do
+            local ped, ped2 = GetPlayerPed(src), GetPlayerPed(v.PlayerData.source)
+            local loc1, loc2 = GetEntityCoords(ped), GetEntityCoords(ped2)
+            if #(loc1 - loc2) < 10 then 
+                table.insert(peeps, {label =  getName(v.PlayerData.source), value = v.PlayerData.citizenid,})
+            end
+        end
+    elseif Config.Framework == 'qbx' then
+        local src = source
         for k, v in pairs (getPlayers()) do
             local ped, ped2 = GetPlayerPed(src), GetPlayerPed(v.PlayerData.source)
             local loc1, loc2 = GetEntityCoords(ped), GetEntityCoords(ped2)
@@ -354,7 +399,6 @@ function getNear(source)
         end
     elseif Config.Framework == 'esx' then
         local src = source
-        local Player = getPlayer(src)
         for k, v in pairs (getPlayers()) do
             local ped, ped2 = GetPlayerPed(src), GetPlayerPed(v)
             local loc1, loc2 = GetEntityCoords(ped), GetEntityCoords(ped2)
@@ -371,6 +415,8 @@ function addMoney(source, amount)
     if Config.Framework == 'qb' then 
         local Player = getPlayer(source)
         Player.Functions.AddMoney('cash', amount)
+    elseif Config.Framework == 'qbx' then
+       QBOX:AddMoney(source,'cash', amount)
     elseif Config.Framework == 'esx' then
         local Player = getPlayer(source)
         Player.addMoney(amount)
@@ -412,6 +458,8 @@ end
 function getAllJobs()
     if Config.Framework == 'qb' then
         return QBCore.Shared.Jobs
+    elseif Config.Framework == 'qbx' then
+        return QBOX:GetJobs()
     elseif Config.Framework == 'esx' then
         return ESX.Jobs
     end

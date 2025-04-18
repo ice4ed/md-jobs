@@ -1,34 +1,45 @@
 
-if not Config.ClosedShopAlwaysActive then
-    CreateThread(function()
-        local ClosedShopPlayers = {}
-        for k, v in pairs (getAllJobs()) do 
+CreateThread(function()
+if Config.ClosedShopAlwaysActive then return end
+    local ClosedShopPlayers = {}
+    for k, v in pairs (getAllJobs()) do 
+        ClosedShopPlayers[k] = 0
+    end
+    repeat
+        for k, v in pairs (ClosedShopPlayers) do
             ClosedShopPlayers[k] = 0
         end
-        repeat
-            for k, v in pairs (ClosedShopPlayers) do
-                ClosedShopPlayers[k] = 0
-            end
-            local players = GetPlayers()
-            for k, v in pairs (players) do
-                local src = v
-                local job = getJobName(src)
-                if Config.Framework == 'qb' then
-                    if job and getPlayer(src).PlayerData.job.onduty == true then
-                        ClosedShopPlayers[job] = ClosedShopPlayers[job] + 1 or 0
-                    end
-                elseif Config.Framework == 'esx' then
-                    if job then 
-                        ClosedShopPlayers[job] = ClosedShopPlayers[job] + 1 or 0
-                    end
+        local players = GetPlayers()
+        for k, v in pairs (players) do
+            local src = v
+            local job = getJobName(src)
+            if Config.Framework == 'qb' then
+                if job and getPlayer(src).PlayerData.job.onduty == true then
+                    ClosedShopPlayers[job] = ClosedShopPlayers[job] + 1 or 0
+                end
+            elseif Config.Framework == 'qbx' then
+                if job and getPlayer(src).PlayerData.job.onduty == true then
+                    ClosedShopPlayers[job] = ClosedShopPlayers[job] + 1 or 0
+                end
+            elseif Config.Framework == 'esx' then
+                if job then 
+                    ClosedShopPlayers[job] = ClosedShopPlayers[job] + 1 or 0
                 end
             end
-            GlobalState.MDJobsCount = ClosedShopPlayers
-            Wait(1000 * 60 * Config.ClosedShopLoop)
-        until false
-    end)
-end
+        end
+        GlobalState.MDJobsCount = ClosedShopPlayers
+        Wait(1000 * 60 * Config.ClosedShopLoop)
+    until false
+end)
 
+CreateThread(function()
+if not Config.ClosedShopAlwaysActive then
+    repeat
+        Wait(1000)
+        print('Closed Shop Players: ' .. json.encode(GlobalState.MDJobsCount))
+    until false
+end
+end)
 function initializePeds()
     for k, v in pairs (Jobs) do
         if v.closedShopsEnabled then
