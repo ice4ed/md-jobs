@@ -655,6 +655,7 @@ function canOpenClosed(job)
 	if Config.ClosedShopAlwaysActive then
 		return true
 	else
+		if not GlobalState.MDJobsCount then return false end
 		if GlobalState.MDJobsCount[job] > Config.ClosedShopCount then
 			return false
 		else
