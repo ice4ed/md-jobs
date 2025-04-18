@@ -10,25 +10,29 @@ if Config.ClosedShopAlwaysActive then return end
             ClosedShopPlayers[k] = 0
         end
         local players = GetPlayers()
+        if not next(players) then goto continue end
         for k, v in pairs (players) do
-            local src = v
-            local job = getJobName(src)
-            if Config.Framework == 'qb' then
-                if job and getPlayer(src).PlayerData.job.onduty == true then
-                    ClosedShopPlayers[job] = ClosedShopPlayers[job] + 1 or 0
-                end
-            elseif Config.Framework == 'qbx' then
-                if job and getPlayer(src).PlayerData.job.onduty == true then
-                    ClosedShopPlayers[job] = ClosedShopPlayers[job] + 1 or 0
-                end
-            elseif Config.Framework == 'esx' then
-                if job then 
-                    ClosedShopPlayers[job] = ClosedShopPlayers[job] + 1 or 0
+            if v then
+                local src = v
+                local job = getJobName(src)
+                if Config.Framework == 'qb' then
+                    if job and getPlayer(src).PlayerData.job.onduty == true then
+                        ClosedShopPlayers[job] = ClosedShopPlayers[job] + 1 or 0
+                    end
+                elseif Config.Framework == 'qbx' then
+                    if job and getPlayer(src).PlayerData.job.onduty == true then
+                        ClosedShopPlayers[job] = ClosedShopPlayers[job] + 1 or 0
+                    end
+                elseif Config.Framework == 'esx' then
+                    if job then 
+                        ClosedShopPlayers[job] = ClosedShopPlayers[job] + 1 or 0
+                    end
                 end
             end
         end
+        ::continue::
         GlobalState.MDJobsCount = ClosedShopPlayers
-        Wait(1000 * 60 * Config.ClosedShopLoop)
+        Wait(1000 * 60 * Config.ClosedShopLoop )
     until false
 end)
 

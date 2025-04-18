@@ -498,7 +498,9 @@ end)
 
 function CUI(item, fun) 
     if Config.Framework == 'qb' then 
-        QBCore.Functions.CreateUseableItem(item, fun) 
+        QBCore.Functions.CreateUseableItem(item, fun)
+    elseif Config.Framework == 'qbx' then
+        QBOX:CreateUseableItem(item, fun)
     elseif Config.Framework == 'esx' then
         ESX.RegisterUsableItem(item, fun)
     end

@@ -11,7 +11,7 @@ shared_scripts {
 
 client_script {
     'client/**.lua',
-    --' @qbx_core/modules/playerdata.lua',
+    '@qbx_core/modules/playerdata.lua',
 }
 server_script{
     '@oxmysql/lib/MySQL.lua',

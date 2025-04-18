@@ -1,7 +1,23 @@
 
 Jobs = Jobs or {}
 
---start location stuff
+--debug jobs
+for k, v in pairs (Jobs) do
+    if Config.Framework == 'qb' then
+        if not QBCore.Shared.Jobs[k] then 
+            print('MD-Jobs: Job ' .. k .. ' does not exist in qb-core jobs.lua')
+        end
+    elseif Config.Framework == 'qbx' then
+        local jobs = QBOX:GetJobs()
+        if not jobs[k] then 
+            print('MD-Jobs: Job ' .. k .. ' does not exist in qbx-core jobs.lua')
+        end
+    elseif Config.Framework == 'esx' then
+        if not ESX.GetJobs()[k] then 
+            print('MD-Jobs: Job ' .. k .. ' does not exist in es_extended jobs.lua')
+        end
+    end
+end
 
 lib.callback.register('md-jobs:server:getLocations', function(source)
     local data = {}

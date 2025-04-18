@@ -20,34 +20,54 @@ end)
 
 function progressbar(text, time, anim)
 	TriggerEvent('animations:client:EmoteCommandStart', {anim})
+	if GetResourceState('scully_emotemenu') == 'started' then
+		exports.scully_emotemenu:playEmoteByCommand(anim)
+	end
 	if progressbartype == 'oxbar' then 
 	  if lib.progressBar({ duration = time, label = text, useWhileDead = false, canCancel = true, disable = { car = true, move = true},}) then 
-		TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+		if GetResourceState('scully_emotemenu') == 'started' then
+			exports.scully_emotemenu:cancelEmote()
+		else
+			TriggerEvent('animations:client:EmoteCommandStart', {"c"}) 
+		end
 		return true
-	  end
+	end
 	elseif progressbartype == 'oxcir' then
 	  if lib.progressCircle({ duration = time, label = text, useWhileDead = false, canCancel = true, position = 'bottom', disable = { car = true,move = true},}) then 
-		TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+		if GetResourceState('scully_emotemenu') == 'started' then
+			exports.scully_emotemenu:cancelEmote()
+		else
+			TriggerEvent('animations:client:EmoteCommandStart', {"c"}) 
+		end
 		return true
 	  end
 	elseif progressbartype == 'qb' then
-		local test = false
+	local test = false
 		local cancelled = false
-	  	QBCore.Functions.Progressbar("drink_something", text, time, false, true, { disableMovement = true, disableCarMovement = true, disableMouse = false, disableCombat = true, disableInventory = true,
-	  	}, {}, {}, {}, function()
-			test = true
-			TriggerEvent('animations:client:EmoteCommandStart', {"c"})
-	  	end, function()
-			cancelled = true
-		end)
-	  	repeat
-			Wait(100)
-	  	until cancelled or test
-	  	if test then return true end
+	  QBCore.Functions.Progressbar("drink_something", text, time, false, true, { disableMovement = true, disableCarMovement = true, disableMouse = false, disableCombat = true, disableInventory = true,
+	  }, {}, {}, {}, function()-- Done
+		test = true
+		if GetResourceState('scully_emotemenu') == 'started' then
+			exports.scully_emotemenu:cancelEmote()
+		else
+			TriggerEvent('animations:client:EmoteCommandStart', {"c"}) 
+		end
+	  end, function()
+		cancelled = true
+		if GetResourceState('scully_emotemenu') == 'started' then
+			exports.scully_emotemenu:cancelEmote()
+		else
+			TriggerEvent('animations:client:EmoteCommandStart', {"c"}) 
+		end
+	end)
+	  repeat 
+		Wait(100)
+	  until cancelled or test
+	  if test then return true end
 	else
-		print"dude, it literally tells you what you need to set it as in the config"
-	end
-end
+			print"^1 SCRIPT ERROR: Md-DRUGS set your progressbar with one of the options!"
+	end	  
+  end
 
 function Notify(text, type)
 	if notifytype =='ox' then
@@ -646,7 +666,7 @@ end
 lib.callback.register('md-jobs:client:consume', function(item, data)
    if not data.label then data.label = 'Consuming ' end
    if not data.time then data.time = 5000 end -- Default consume time if not provided
-   if not data.anim then data.anim = 'pflag' end -- Default animation if not provided
+   if not data.anim then data.anim = 'uncuff' end -- Default animation if not provided
    if not progressbar(data.label .. ' ' .. GetLabel(item), data.time, data.anim) then
 	  return false -- If the progress bar is cancelled, stop consuming
    end

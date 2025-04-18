@@ -10,8 +10,8 @@ local cateringDetails = {
         {loc = vector4(236.56, -409.57, 47.92, 337.28),  label = 'Courthouse',                  model = 's_m_m_janitor'},
         {loc = vector4(-1681.28, -290.94, 51.88, 231.5), label = 'Sister Deloris Gospel Choir', model = 'cs_priest'},
         {loc = vector4(217.99, -1647.05, 29.79, 320.57), label = 'Fire Department',             model = 's_m_y_fireman_01'},
-        {loc = vector4(897.7, -174.69, 73.81, 236.47),   label = 'Taxi Depot',                  model = 'csb_prologuedrive'},
-        {loc = vector4(559.23, 2741.34, 42.2, 186.05),   label = 'Animal Shop',                 model = 'csb_screen_writer'},
+        {loc = vector4(897.7, -174.69, 73.81, 236.47),   label = 'Taxi Depot',                  model = 's_m_m_janitor'},
+        {loc = vector4(559.23, 2741.34, 42.2, 186.05),   label = 'Animal Shop',                 model = 's_m_m_janitor'},
         {loc = vector4(1216.86, 2727.55, 38.0, 177.02),  label = 'Larrys Auto Sales',           model = 'csb_cletus'},
         {loc = vector4(-1043.68, 4918.7, 208.32, 277.83),label = 'Children Of The Son',         model = 'a_m_y_acult_01'},
         {loc = vector4(1696.03, 4783.06, 42.0, 100.48),  label = 'Arcade',                      model = 's_m_y_clown_01'},
@@ -149,7 +149,7 @@ end)
 
 lib.callback.register('md-jobs:server:cateringVan', function(source, job)
     if getJobName(source) ~= job then return end
-    local tb = Jobs[job]['catering'].Van
+    local tb = Jobs[job]['catering'].Van[job]
     local van = CreateVehicle(tb.model, tb.loc.x, tb.loc.y, tb.loc.z, tb.loc.w, true, true)
     SetVehicleNumberPlateText(van, tb.plate)
     SetEntityHeading(van, tb.loc.w)
