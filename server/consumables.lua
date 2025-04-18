@@ -1,7 +1,7 @@
 local consumables = {}
 
 local function handleConsumablePerks(source, type, amount)
-    if Config.Framework == 'qb' then 
+    if Config.Framework == 'qb' or Config.Framework == 'qbx' then 
         local Player = getPlayer(source)
         if type == 'thirst' then
            local meta = Player.PlayerData.metadata
@@ -27,6 +27,7 @@ local function handleConsumablePerks(source, type, amount)
             Player.Functions.SetMetaData(type, new)
             TriggerClientEvent('hud:client:UpdateStress', source, new)
         end
+    
     elseif Config.Framework  == 'esx' then 
         if type == 'thirst' then
             TriggerClientEvent('esx_status:add', source, 'thirst', amount)

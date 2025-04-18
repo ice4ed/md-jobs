@@ -1,19 +1,25 @@
 
-if not Config.ClosedShopAlwaysActive then
-    CreateThread(function()
-        local ClosedShopPlayers = {}
-        for k, v in pairs (getAllJobs()) do 
+CreateThread(function()
+if Config.ClosedShopAlwaysActive then return end
+    local ClosedShopPlayers = {}
+    for k, v in pairs (getAllJobs()) do 
+        ClosedShopPlayers[k] = 0
+    end
+    repeat
+        for k, v in pairs (ClosedShopPlayers) do
             ClosedShopPlayers[k] = 0
         end
-        repeat
-            for k, v in pairs (ClosedShopPlayers) do
-                ClosedShopPlayers[k] = 0
-            end
-            local players = GetPlayers()
-            for k, v in pairs (players) do
+        local players = GetPlayers()
+        if not next(players) then goto continue end
+        for k, v in pairs (players) do
+            if v then
                 local src = v
                 local job = getJobName(src)
                 if Config.Framework == 'qb' then
+                    if job and getPlayer(src).PlayerData.job.onduty == true then
+                        ClosedShopPlayers[job] = ClosedShopPlayers[job] + 1 or 0
+                    end
+                elseif Config.Framework == 'qbx' then
                     if job and getPlayer(src).PlayerData.job.onduty == true then
                         ClosedShopPlayers[job] = ClosedShopPlayers[job] + 1 or 0
                     end
@@ -23,11 +29,12 @@ if not Config.ClosedShopAlwaysActive then
                     end
                 end
             end
-            GlobalState.MDJobsCount = ClosedShopPlayers
-            Wait(1000 * 60 * Config.ClosedShopLoop)
-        until false
-    end)
-end
+        end
+        ::continue::
+        GlobalState.MDJobsCount = ClosedShopPlayers
+        Wait(1000 * 60 * Config.ClosedShopLoop )
+    until false
+end)
 
 function initializePeds()
     for k, v in pairs (Jobs) do

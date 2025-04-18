@@ -20,34 +20,54 @@ end)
 
 function progressbar(text, time, anim)
 	TriggerEvent('animations:client:EmoteCommandStart', {anim})
+	if GetResourceState('scully_emotemenu') == 'started' then
+		exports.scully_emotemenu:playEmoteByCommand(anim)
+	end
 	if progressbartype == 'oxbar' then 
 	  if lib.progressBar({ duration = time, label = text, useWhileDead = false, canCancel = true, disable = { car = true, move = true},}) then 
-		TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+		if GetResourceState('scully_emotemenu') == 'started' then
+			exports.scully_emotemenu:cancelEmote()
+		else
+			TriggerEvent('animations:client:EmoteCommandStart', {"c"}) 
+		end
 		return true
-	  end
+	end
 	elseif progressbartype == 'oxcir' then
 	  if lib.progressCircle({ duration = time, label = text, useWhileDead = false, canCancel = true, position = 'bottom', disable = { car = true,move = true},}) then 
-		TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+		if GetResourceState('scully_emotemenu') == 'started' then
+			exports.scully_emotemenu:cancelEmote()
+		else
+			TriggerEvent('animations:client:EmoteCommandStart', {"c"}) 
+		end
 		return true
 	  end
 	elseif progressbartype == 'qb' then
-		local test = false
+	local test = false
 		local cancelled = false
-	  	QBCore.Functions.Progressbar("drink_something", text, time, false, true, { disableMovement = true, disableCarMovement = true, disableMouse = false, disableCombat = true, disableInventory = true,
-	  	}, {}, {}, {}, function()
-			test = true
-			TriggerEvent('animations:client:EmoteCommandStart', {"c"})
-	  	end, function()
-			cancelled = true
-		end)
-	  	repeat
-			Wait(100)
-	  	until cancelled or test
-	  	if test then return true end
+	  QBCore.Functions.Progressbar("drink_something", text, time, false, true, { disableMovement = true, disableCarMovement = true, disableMouse = false, disableCombat = true, disableInventory = true,
+	  }, {}, {}, {}, function()-- Done
+		test = true
+		if GetResourceState('scully_emotemenu') == 'started' then
+			exports.scully_emotemenu:cancelEmote()
+		else
+			TriggerEvent('animations:client:EmoteCommandStart', {"c"}) 
+		end
+	  end, function()
+		cancelled = true
+		if GetResourceState('scully_emotemenu') == 'started' then
+			exports.scully_emotemenu:cancelEmote()
+		else
+			TriggerEvent('animations:client:EmoteCommandStart', {"c"}) 
+		end
+	end)
+	  repeat 
+		Wait(100)
+	  until cancelled or test
+	  if test then return true end
 	else
-		print"dude, it literally tells you what you need to set it as in the config"
-	end
-end
+			print"^1 SCRIPT ERROR: Md-DRUGS set your progressbar with one of the options!"
+	end	  
+  end
 
 function Notify(text, type)
 	if notifytype =='ox' then
@@ -78,8 +98,8 @@ end
 
 function AddBoxZone(name, loc, data)
 local options = {}
-	for k, v in pairs (data) do 
-		table.insert(options,{	
+	for k, v in pairs (data) do
+		table.insert(options,{
 			icon = v.icon, label = v.label, event = v.event or nil, action = v.action or nil,
 			onSelect = v.action,data = v.data,canInteract = v.canInteract or nil, distance = 2.0,
 		})
@@ -153,6 +173,8 @@ end
 function getJobName()
 	if Config.Framework == 'qb' then 
 		return QBCore.Functions.GetPlayerData().job.name
+	elseif Config.Framework == 'qbx' then
+		return QBX.PlayerData.job.name
 	elseif Config.Framework == 'esx' then
 		return ESX.PlayerData.job.name
 	end
@@ -161,6 +183,8 @@ end
 function isBoss()
 	if Config.Framework == 'qb' then 
 		return QBCore.Functions.GetPlayerData().job.isboss
+	elseif Config.Framework == 'qbx' then
+		return QBX.PlayerData.job.isboss
 	elseif Config.Framework == 'esx' then
 		if ESX.PlayerData.job.grade_name == 'boss' then
 			return true
@@ -178,6 +202,8 @@ end
 function openBossMenu(job)
 	if Config.Framework == 'qb' then 
 		TriggerEvent('qb-bossmenu:client:openMenu', job)
+	elseif Config.Framework == 'qbx' then
+		exports.qbx_management:OpenBossMenu('job')
 	elseif Config.Framework == 'esx' then
 		TriggerEvent('esx_society:openBossMenu', job, function(data, menu) end)
 	end
@@ -186,6 +212,8 @@ end
 function getItems()
 	if Config.Framework == 'qb' then 
 		return QBCore.Functions.GetPlayerData().items
+	elseif Config.Framework == 'qbx' then
+		return QBX.PlayerData.items
 	elseif Config.Framework == 'esx' then
 		return ESX.PlayerData.inventory
 	end
@@ -266,7 +294,6 @@ function makeCrafter(items, text, job, num)
         Notify(s(L.Error.no_job, job), 'error') 
         return
     end
-
     local options = {}
     local recipes = lib.callback.await('md-jobs:server:getRecipes', false, job, items)
 	if not recipes then Notify('Something Went Wrong, Tell Your Dev To Check Crafters For ' .. job, 'error') return end
@@ -274,13 +301,8 @@ function makeCrafter(items, text, job, num)
 		if not v.time then v.time = 5000 end
         local label, item = {}, ''
         v.progtext = v.progtext or 'Crafting '
-
-        for m, d in pairs(v.give) do 
-            table.insert(label, hasItem(m, d) .. GetLabel(m) .. ' X ' .. d)  
-        end
-        for m, d in pairs(v.take) do 
-            item = m
-        end
+        for m, d in pairs(v.give) do  table.insert(label, hasItem(m, d) .. GetLabel(m) .. ' X ' .. d) end
+        for m, d in pairs(v.take) do item = m end
         table.insert(options, {
             icon = GetImage(item),
             description = table.concat(label, ", \n"),
@@ -644,7 +666,7 @@ end
 lib.callback.register('md-jobs:client:consume', function(item, data)
    if not data.label then data.label = 'Consuming ' end
    if not data.time then data.time = 5000 end -- Default consume time if not provided
-   if not data.anim then data.anim = 'pflag' end -- Default animation if not provided
+   if not data.anim then data.anim = 'uncuff' end -- Default animation if not provided
    if not progressbar(data.label .. ' ' .. GetLabel(item), data.time, data.anim) then
 	  return false -- If the progress bar is cancelled, stop consuming
    end

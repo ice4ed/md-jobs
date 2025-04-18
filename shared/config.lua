@@ -1,9 +1,9 @@
 Config = {}
 Jobs = {} -- no touch if you do I will need therapy even more.
-Config.Target = 'qb' -- qb or ox
-Config.Inv = 'qb' -- qb or ox 
-Config.Framework = 'qb' -- qb or esx
-Config.Banking = 'qb' -- qb, qb-management, renewed, fd, tgg
+Config.Target = 'ox' -- qb or ox
+Config.Inv = 'ox' -- qb or ox 
+Config.Framework = 'qbx' -- qb or esx
+Config.Banking = 'renewed' -- qb, qb-management, renewed, fd, tgg
 Config.ClosedShopFee = 0.2 -- 20% of the total price
 Config.progressbartype = 'oxbar' -- oxcir, oxbar or qb
 Config.Notify = 'ox' -- qb or ox or okok
@@ -20,4 +20,6 @@ if Config.Framework == 'qb' then
     QBCore = exports['qb-core']:GetCoreObject()
 elseif Config.Framework == 'esx' then
     ESX = exports['es_extended']:getSharedObject()
+elseif Config.Framework == 'qbx' then
+    QBOX = exports.qbx_core
 end

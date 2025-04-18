@@ -1,7 +1,7 @@
 -- https://www.gta5-mods.com/maps/mlo-legion-weed-clinic
 
 Jobs['bestbudz'] = {
-    CateringEnabled = false,
+    CateringEnabled = true,
     closedShopsEnabled = true,
     Blip = {
         {sprite = 469, color = 2, scale = 0.8, label = 'Best Budz', loc = vector3(374.57, -825.79, 29.05)},
@@ -17,7 +17,7 @@ Jobs['bestbudz'] = {
         joint_ak47 = {name = 'joint_ak47', price = 5},
         blunt_whitewidow = {name = 'blunt_whitewidow', price = 5},
         blunt_ogkush = {name = 'blunt_ogkush', price = 5},
-        blunt_purplehaze = {name = 'blunt_purplehaze', price = 5},
+        blunt_purple_haze = {name = 'blunt_purple_haze', price = 5},
         blunt_skunk = {name = 'blunt_skunk', price = 5},
         blunt_ak47 = {name = 'blunt_ak47', price = 5},
         weed_oil = {name = 'weed_oil', price = 5},
@@ -62,19 +62,19 @@ Jobs['bestbudz'] = {
         commission = 0.2,
         items = {
             {name = 'joint_whitewidow', minPrice = 10, maxPrice = 20, maxAmount = 30},
-            {name = 'joint_ogkush', minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'blunt_og_kush', minPrice = 10, maxPrice = 20, maxAmount = 30},
             {name = 'joint_purplehaze', minPrice = 10, maxPrice = 20, maxAmount = 30},
             {name = 'joint_skunk',  minPrice = 10, maxPrice = 20, maxAmount = 30},
             {name = 'joint_ak47',   minPrice = 10, maxPrice = 20, maxAmount = 30},
-            {name = 'blunt_whitewidow', minPrice = 10, maxPrice = 20, maxAmount = 30},
-            {name = 'blunt_ogkush', minPrice = 10, maxPrice = 20, maxAmount = 30},
-            {name = 'blunt_purplehaze', minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'blunt_white_widow', minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'blunt_og_kush', minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'blunt_purple_haze', minPrice = 10, maxPrice = 20, maxAmount = 30},
             {name = 'blunt_skunk',  minPrice = 10, maxPrice = 20, maxAmount = 30},
             {name = 'blunt_ak47',   minPrice = 10, maxPrice = 20, maxAmount = 30},
             {name = 'weed_oil',     minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
         Van = {
-            taxi = {model = 'burrito', label = 'Burrito', plate = 'WeedMan', loc = vector4(364.85, -829.15, 29.29, 192.0), heading = 192.00},
+            bestbudz = {model = 'burrito', label = 'Burrito', plate = 'WeedMan', loc = vec4(368.19, -831.13, 29.29, 203.18), heading = 203.00},
         }
     },
     shops = {
@@ -133,15 +133,15 @@ Jobs['bestbudz'] = {
         }
     },
     consumables = {
-        blunt_ak47 = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
-        blunt_og_kush = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
-        blunt_purple_haze = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
-        blunt_skunk = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, thirst = -10}},
-        blunt_white_widow = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
-        joint_ak47 = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
-        joint_og_kush = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
-        joint_purple_haze = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
-        joint_skunk = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, thirst = -10}},
-        joint_white_widow = {anim = 'smoke', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        blunt_ak47 = {anim = 'smoke2', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        blunt_og_kush = {anim = 'smoke2', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        blunt_purple_haze = {anim = 'smoke2', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        blunt_skunk = {anim = 'smoke2', label = 'Smoking', add = {hunger = -3, thirst = -10}},
+        blunt_white_widow = {anim = 'smoke2', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        joint_ak47 = {anim = 'smoke2', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        joint_og_kush = {anim = 'smoke2', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        joint_purple_haze = {anim = 'smoke2', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        joint_skunk = {anim = 'smoke2', label = 'Smoking', add = {hunger = -3, thirst = -10}},
+        joint_white_widow = {anim = 'smoke2', label = 'Smoking', add = {hunger = -3, stress = -10}},
     },
 }
