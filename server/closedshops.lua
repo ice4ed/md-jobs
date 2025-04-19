@@ -14,6 +14,8 @@ if Config.ClosedShopAlwaysActive then return end
         for k, v in pairs (players) do
             if v then
                 local src = v
+                local Player = getPlayer(src)
+                if not Player then goto playerContinue end
                 local job = getJobName(src)
                 if Config.Framework == 'qb' then
                     if job and getPlayer(src).PlayerData.job.onduty == true then
@@ -29,10 +31,11 @@ if Config.ClosedShopAlwaysActive then return end
                     end
                 end
             end
+            ::playerContinue::
         end
         ::continue::
         GlobalState.MDJobsCount = ClosedShopPlayers
-        Wait(1000 * 60 * Config.ClosedShopLoop )
+        Wait(1000 * 60 * Config.ClosedShopLoop)
     until false
 end)
 
