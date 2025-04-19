@@ -27,7 +27,6 @@ local function handleConsumablePerks(source, type, amount)
             Player.Functions.SetMetaData(type, new)
             TriggerClientEvent('hud:client:UpdateStress', source, new)
         end
-    
     elseif Config.Framework  == 'esx' then 
         if type == 'thirst' then
             TriggerClientEvent('esx_status:add', source, 'thirst', amount)
@@ -52,8 +51,6 @@ for k, v in pairs (Jobs) do
 end
 for k, v in pairs (consumables) do
     CUI(k, function(source, item)
-        local Player = getPlayer(source)
-        print('consumable: ' .. k)
         if not consumables[k] then return end
         local progressbar = lib.callback.await('md-jobs:client:consume', source, k, v)
         if not progressbar then return end
@@ -64,7 +61,7 @@ for k, v in pairs (consumables) do
                 end
             end
             if v.action then
-                v.action(source, item)
+                v.action(source, k)
             end
         end
     end)
