@@ -55,12 +55,13 @@ for k, v in pairs (consumables) do
         local progressbar = lib.callback.await('md-jobs:client:consume', source, k, v)
         if not progressbar then return end
         if RemoveItem(source, k, 1) then
+            if not v.add then v.add = {} end
             if next(v.add) then
                 for m, d in pairs (v.add) do
                    handleConsumablePerks(source, m, d)
                 end
             end
-            if v.action then
+            if v.action ~= nil then
                 v.action(source, k)
             end
         end
