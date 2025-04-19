@@ -194,8 +194,7 @@ end)
 
 lib.callback.register('md-jobs:server:adjustPrices', function(source, job, num)
     local src = source
-    local Player = getPlayer(src)
-    if not isBoss() then return end
+    if not isBoss(src) then return end
     if getJobName(source) ~= job then return end
     local location = GetEntityCoords(GetPlayerPed(src))
     if #(location - vector3(Jobs[job]['closedShops'][num].loc.x,Jobs[job]['closedShops'][num].loc.y,Jobs[job]['closedShops'][num].loc.z)) < 5.0 then

@@ -97,6 +97,32 @@ function getSource(cid)
     end
 end
 
+function getName(source)
+    if Config.Framework == 'qb' then 
+        local src = source
+        local Player = QBCore.Functions.GetPlayer(src)
+        return Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname
+    elseif Config.Framework == 'qbx' then
+        local src = source
+        local Player = QBOX:GetPlayer(src)
+        return Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname
+    elseif Config.Framework == 'esx' then
+        local src = source
+        local Player = ESX.GetPlayerFromId(src)
+        return Player.getName()
+    end
+end
+
+function getSRC(player)
+    if Config.Framework == 'qb' then
+        return player.PlayerData.source
+    elseif Config.Framework == 'qbx' then
+        return player.PlayerData.source
+    elseif Config.Framework == 'esx' then
+        return player.source
+    end
+end
+
 function getPlayerByCid(cid)
     if Config.Framework == 'qb' then 
         return QBCore.Functions.GetPlayerByCitizenId(cid)
@@ -133,7 +159,7 @@ function getCid(source)
     end
 end
 
-function isBoss()
+function isBoss(source)
     if Config.Framework == 'qb' then 
         local Player = getPlayer(source)
         return Player.PlayerData.job.isboss
@@ -145,6 +171,8 @@ function isBoss()
         return Player.getJob().isboss
     end
 end
+
+
 
 function Itemcheck(source, item, amount, notify)
     if type(item) == 'table' then 
@@ -268,6 +296,8 @@ function AddJobMoney(job, amount)
         exports['qb-management']:AddMoney(job, amount, 'Services Rendered At ' .. job)
    elseif Config.Banking == 'tgg' then
         exports['tgg-banking']:AddSocietyMoney(job, amount)
+   elseif Config.Banking == 'okok' then
+        exports['okokBanking']:AddMoney(job, amount)
    end
 end
 
@@ -276,31 +306,7 @@ function sorter(tbl, key)
         return a[key] < b[key]
     end)
 end
-function getName(source)
-    if Config.Framework == 'qb' then 
-        local src = source
-        local Player = QBCore.Functions.GetPlayer(src)
-        return Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname
-    elseif Config.Framework == 'qbx' then
-        local src = source
-        local Player = QBOX:GetPlayer(src)
-        return Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname
-    elseif Config.Framework == 'esx' then
-        local src = source
-        local Player = ESX.GetPlayerFromId(src)
-        return Player.getName()
-    end
-end
 
-function getSRC(player)
-    if Config.Framework == 'qb' then
-        return player.PlayerData.source
-    elseif Config.Framework == 'qbx' then
-        return player.PlayerData.source
-    elseif Config.Framework == 'esx' then
-        return player.source
-    end
-end
 
 function billPlayer(src, type, amount)
     if Config.Framework == 'qb' then 
@@ -424,7 +430,6 @@ function addMoney(source, amount)
 end
 
 function dispenseCommission(source, amount, data)
-    local Player = getPlayer(source)
     if data == nil then
         AddJobMoney(getJobName(source), amount)
         return
