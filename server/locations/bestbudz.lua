@@ -21,6 +21,11 @@ Jobs['bestbudz'] = {
         blunt_skunk = {name = 'blunt_skunk', price = 5},
         blunt_ak47 = {name = 'blunt_ak47', price = 5},
         weed_oil = {name = 'weed_oil', price = 5},
+        weed_gummies = {name = 'weed_gummies', price = 5},
+        empty_weed_bag = {name = 'empty_weed_bag', price = 5},
+        rolling_paper = {name = 'rolling_paper', price = 5},
+        bluntwrap = {name = 'bluntwrap', price = 5},
+        weed_nutrition = {name = 'weed_nutrition', price = 5},
     },
     craftingStations = {
         whitewidow = {
@@ -56,6 +61,7 @@ Jobs['bestbudz'] = {
             {anim = 'uncuff',give = {weed_job_purplehaze = 1}, take = {weed_oil=1}, progtext = 'Pouring' },
             {anim = 'uncuff',give = {weed_job_ak47 = 1}, take = {weed_oil=1}, progtext = 'Pouring' },
             {anim = 'uncuff',give = {weed_job_skunk = 1}, take = {weed_oil=1}, progtext = 'Pouring' },
+            {anim = 'uncuff',give = {weed_oil = 1, candy_gummies = 1}, take = {weed_gummies =1}, progtext = 'mixing' },
         }
     },
     catering = {
@@ -72,6 +78,7 @@ Jobs['bestbudz'] = {
             {name = 'blunt_skunk',  minPrice = 10, maxPrice = 20, maxAmount = 30},
             {name = 'blunt_ak47',   minPrice = 10, maxPrice = 20, maxAmount = 30},
             {name = 'weed_oil',     minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'weed_gummies', minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
         Van = {
             bestbudz = {model = 'burrito', label = 'Burrito', plate = 'WeedMan', loc = vec4(368.19, -831.13, 29.29, 203.18), heading = 203.00},
@@ -83,6 +90,7 @@ Jobs['bestbudz'] = {
             {name = 'rolling_paper', price = 5, amount = 50},
             {name = 'bluntwrap', price = 5, amount = 50},
             {name = 'weed_nutrition' , price = 5, amount = 50},
+            {name = 'candy_gummies', price = 5, amount = 50},
         },
     },
     locations = {
@@ -143,5 +151,6 @@ Jobs['bestbudz'] = {
         joint_purple_haze = {anim = 'smoke2', label = 'Smoking', add = {hunger = -3, stress = -10}},
         joint_skunk = {anim = 'smoke2', label = 'Smoking', add = {hunger = -3, thirst = -10}},
         joint_white_widow = {anim = 'smoke2', label = 'Smoking', add = {hunger = -3, stress = -10}},
+        weed_gummies = {anim = 'eat', label = 'Eating', add = {hunger = 1, stress = -10}},
     },
 }

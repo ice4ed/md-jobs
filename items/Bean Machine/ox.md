@@ -79,6 +79,14 @@
     close = true, 
     client = { image = 'coffee.png' } 
 },
+["cold_brew"] = { 
+    label = 'Cold Brew', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'cold_brew.png' } 
+},
 ["espresso"] = { 
     label = 'Espresso', 
     description = "", 
@@ -110,6 +118,14 @@
     stack = true, 
     close = true, 
     client = { image = 'ice.png' } 
+},
+["iced_cafe"] = { 
+    label = 'Iced Cafe', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'iced_cafe.png' } 
 },
 ["mocha_latte"] = { 
     label = 'Mocha Latte', 
@@ -158,14 +174,6 @@
     stack = true, 
     close = true, 
     client = { image = 'vanilla_syrup.png' } 
-},
-["vanilla_syrup.png"] = { 
-    label = 'Vanilla Syrup.Png', 
-    description = "", 
-    weight = 100, 
-    stack = true, 
-    close = true, 
-    client = { image = 'vanilla_syrup.png.png' } 
 },
 ["whipped_cream"] = { 
     label = 'Whipped Cream', 

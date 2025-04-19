@@ -53,12 +53,18 @@ end
 for k, v in pairs (consumables) do
     CUI(k, function(source, item)
         local Player = getPlayer(source)
+        print('consumable: ' .. k)
         if not consumables[k] then return end
         local progressbar = lib.callback.await('md-jobs:client:consume', source, k, v)
         if not progressbar then return end
         if RemoveItem(source, k, 1) then
-            for m, d in pairs (v.add) do
-               handleConsumablePerks(source, m, d)
+            if next(v.add) then
+                for m, d in pairs (v.add) do
+                   handleConsumablePerks(source, m, d)
+                end
+            end
+            if v.action then
+                v.action(source, item)
             end
         end
     end)
