@@ -6,7 +6,7 @@ Jobs['hookies'] = {
         {sprite = 214, color = 2, scale = 0.5, label = 'Hookies', loc = vector3(-2187.99, 4290.71, 49.17)},
     },
     closedShops = {
-        {ped = 'mp_m_freemode_01', loc = vector4(-2191.84, 4285.16, 49.18, 154.88), label = 'Hookies Shop'}
+        {ped = 'mp_m_freemode_01', loc = vec4(-2191.51, 4285.47, 49.18, 156.08), label = 'Hookies Shop'}
     },
     closedShopItems = {
         coffee = {name = 'coffee', price = 5},
@@ -42,7 +42,7 @@ Jobs['hookies'] = {
             {name = 'chardoney',     minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
         Van = {
-            hookies = {model = 'burrito', label = 'Burrito', plate = 'Hookies', loc = vector4(-2178.88, 4266.74, 49.02, 125.58), heading = 125.0},
+            hookies = {model = 'burrito', label = 'Burrito', plate = 'Hookies', loc = vec4(-2192.05, 4265.3, 48.58, 338.28)},
         }
     },
     craftingStations = {

@@ -32,6 +32,9 @@ Jobs['tacoshop'] = {
             {name = 'ecola',     minPrice = 10, maxPrice = 20, maxAmount = 30},
             {name = 'sprunk',     minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
+        Van = {
+            tacoshop = {model = 'burrito', label = 'Burrito', plate = 'taco4lf', loc = vec4(16.63, -1594.74, 29.28, 50.18)}
+        }
     },
     shops = {
         ingridients={
@@ -73,5 +76,7 @@ Jobs['tacoshop'] = {
         taco_beef = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
         taco_chicken = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
         taco_fish = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        ecola = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        sprunk = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
     },
 }

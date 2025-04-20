@@ -5,10 +5,10 @@ Jobs['burgershot'] = {
     CateringEnabled = true,
     closedShopsEnabled = true,
     Blip = {
-        {sprite = 106, color = 2, scale = 0.5, label = 'Burger Shot', loc = vector3(-1191.14, -897.66, 13.35)},
+        {sprite = 106, color = 2, scale = 0.5, label = 'Burger Shot', loc = vec3(-1178.93, -888.79, 13.95)},
     },
     closedShops = {
-        {ped = 'mp_m_freemode_01', loc = vector4(-1179.12, -890.81, 13.76, 305.83), label = 'Uwu Cafe Shop'}
+        {ped = 'mp_m_freemode_01', loc = vec4(-1178.93, -888.79, 13.95, 304.48), label = 'Burgershot Shop'}
     },
     closedShopItems = {
         bs_fries = {name = 'bs_fries', price = 5},
@@ -62,7 +62,7 @@ Jobs['burgershot'] = {
                 {name = 'tequila',      minPrice = 10, maxPrice = 20, maxAmount = 30},
             },
             Van = {
-                vu = {model = 'burrito', label = 'Burrito', plate = 'TEQCATER', loc = vector4(-563.02, 287.51, 82.39, 180.0), heading = 28.78},
+                burgershot = {model = 'burrito', label = 'Burrito', plate = 'BSCater', loc = vec4(-1171.46, -880.38, 14.1, 302.39)},
             }
 
     },

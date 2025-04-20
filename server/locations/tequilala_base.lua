@@ -2,10 +2,10 @@ Jobs['tequilala'] = {
     CateringEnabled = true,
     closedShopsEnabled = true,
     Blip = {
-        {sprite = 93, color = 2, scale = 0.5, label = 'Tequila La', loc = vector3(-563.02, 287.51, 82.39)},
+        {sprite = 93, color = 2, scale = 0.5, label = 'Tequila La', loc =vec3(-554.26, 285.53, 82.18)},
     },
     closedShops = {
-        {ped = 'mp_m_freemode_01', loc = vector4(-561.38, 274.31, 83.02, 170.65), label = 'Tequila La Shop'}
+        {ped = 'mp_m_freemode_01', loc = vec4(-559.73, 274.44, 83.02, 183.77), label = 'Tequila La Shop'}
     },
     closedShopItems = {
         ambeer         =   {name = 'ambeer',       price = 5},
@@ -44,7 +44,7 @@ Jobs['tequilala'] = {
             {name = 'pisswaser_dark',   minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
         Van = {
-            vu = {model = 'burrito', label = 'Burrito', plate = 'TEQCATER', loc = vector4(-563.02, 287.51, 82.39, 180.0), heading = 28.78},
+            vu = {model = 'burrito', label = 'Burrito', plate = 'TEQCATER', loc = vec4(-554.47, 301.66, 83.2, 270.4)},
         }
 
     },

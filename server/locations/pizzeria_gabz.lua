@@ -5,7 +5,7 @@ Jobs['pizzeria'] = {
         {sprite = 889, color = 2, scale = 0.5, label = 'pizzeria', loc = vector3(804.71, -748.85, 32.8)},
     },
     closedShops = {
-        {ped = 'mp_m_freemode_01', loc = vector4(1591.95, 6447.57, 25.32, 143.8), label = 'Pops Diner Shop'}
+        {ped = 'mp_m_freemode_01', loc = vec4(793.87, -746.23, 27.19, 86.08), label = 'Pizzeria'}
     },
     closedShopItems = {
         coffee =        {name = 'coffee', price = 5},
@@ -18,8 +18,6 @@ Jobs['pizzeria'] = {
         margharita_pizza = {name = 'margharita_pizza', price = 5},
         meatlovers_pizza = {name = 'meatlovers_pizza', price = 5},
         caprese_proscuitto = {name = 'caprese_proscuitto', price = 5},
-
-
     },
     craftingStations = {
         coffee = {
@@ -55,18 +53,20 @@ Jobs['pizzeria'] = {
        
     },
     catering = {
-            commission = 0.2,
-            items = {
-               {name = 'pepperoni_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
-                {name = 'sausage_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
-                {name = 'veggie_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
-                {name = 'mushroom_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
-                {name = 'margharita_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
-                {name = 'meatlovers_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
-                {name = 'caprese_proscuitto', minPrice = 10, maxPrice = 20, maxAmount = 30},
-        
-            },
-            Van = {model = 'burrito', label = 'Burrito', plate = 'PopCater', loc = vector4(1605.18, 6441.77, 25.47, 155.49), heading = 28.78},
+        commission = 0.2,
+        items = {
+           {name = 'pepperoni_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'sausage_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'veggie_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'mushroom_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'margharita_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'meatlovers_pizza', minPrice = 10, maxPrice = 20, maxAmount = 30},
+            {name = 'caprese_proscuitto', minPrice = 10, maxPrice = 20, maxAmount = 30},
+    
+        },
+        Van = {
+            pizzeria = {model = 'burrito', label = 'Burrito', plate = 'PizzaCat', loc = vec4(784.47, -741.57, 27.43, 317.7)},
+        }
     },
     shops = {
         dough = {

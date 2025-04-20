@@ -7,7 +7,7 @@ Jobs['beanmachine'] = {
         {sprite = 214, color = 2, scale = 0.5, label = 'Bean Machine', loc = vector4(278.03, -963.77, 29.39, 351.03)},
     },
     closedShops = {
-        {ped = 'mp_m_freemode_01', loc = vector4(278.03, -963.77, 29.39, 351.03), label = 'Bean Machine Shop Two'}
+        {ped = 'mp_m_freemode_01', loc = vec4(279.09, -963.87, 29.4, 358.69), label = 'Bean Machine Cafe'}
     },
     closedShopItems = {
         almond_croissant = {name = 'almond_croissant', price = 5},
@@ -54,7 +54,7 @@ Jobs['beanmachine'] = {
             {name = 'vanilla_frappe', minPrice = 10, maxPrice = 50, price = 10},
         },
         Van = {
-            beanmachine = {model = 'burrito', label = 'Burrito', plate = 'BEANCATER', loc = vector4(277.6, -955.93, 29.29, 265.45), heading = 342.78},
+            beanmachine = {model = 'burrito', label = 'Burrito', plate = 'BEANCATER', loc = vec4(279.14, -956.64, 29.28, 273.42)},
         }
     },
     shops = {

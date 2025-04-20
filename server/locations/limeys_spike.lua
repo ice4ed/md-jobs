@@ -6,7 +6,7 @@ Jobs['limeys'] = {
         {sprite = 214, color = 2, scale = 0.5, label = 'Limeys', loc = vector3(253.36, -1019.27, 29.54)},
     },
     closedShops = {
-        {ped = 'mp_m_freemode_01', loc = vector4(250.55, -1027.67, 29.28, 118.66), label = 'Bean  Shop'}
+        {ped = 'mp_m_freemode_01', loc = vec4(249.7, -1025.82, 29.25, 120.7), label = 'Limeys Juice Shop'}
     },
     closedShopItems = {
         coffee         =   {name = 'coffee',            price = 5},
@@ -58,7 +58,7 @@ Jobs['limeys'] = {
             {name = 'limeade',      minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
         Van = {
-            limeys_spike = {model = 'burrito', label = 'Burrito', plate = 'LIMEYSPK', loc = vector4(242.05, -1019.3, 29.19, 344.52), heading = 344.0},
+            limeys = {model = 'burrito', label = 'Burrito', plate = 'LIMEYSPK', loc = vec4(245.28, -1012.76, 29.14, 342.51)},
         }
     },
     locations = {

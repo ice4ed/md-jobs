@@ -5,7 +5,7 @@ Jobs['deerdiner'] = {
         {sprite = 469, color = 2, scale = 0.8, label = 'Deer Diner', loc = vector3(454.46, 131.0, 99.4)},
     },
     closedShops = {
-        {ped = 'mp_m_freemode_01', loc = vector4(454.46, 131.0, 99.4, 160.78), label = 'Deer Diner Shop'}
+        {ped = 'mp_m_freemode_01', loc = vec4(454.52, 131.05, 99.4, 151.87), label = 'Deer Diner Shop'}
     },
     closedShopItems = {
         deer_cheeseburger = {name = 'deer_cheeseburger', price = 5},
@@ -66,7 +66,7 @@ Jobs['deerdiner'] = {
             {name = 'hashbrown',     minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
         Van = {
-            taxi = {model = 'burrito', label = 'Burrito', plate = 'DeerDin', loc = vector4(451.89, 118.57, 99.12, 71.32), heading = 71.00},
+            deerdiner = {model = 'burrito', label = 'Burrito', plate = 'DeerDin', loc = vec4(452.42, 118.26, 99.08, 74.45)},
         }
     },
     shops = {
@@ -106,7 +106,6 @@ Jobs['deerdiner'] = {
                 loc = vector3(462.43, 151.47, 99.31), l = 0.8, w = 1.2, lwr = 0.25, upr = 0.75, r = 250, job = 'deerdiner'},
             {CraftData = {type = 'fryer', targetLabel = 'Fry Food', menuLabel = 'Fry Food!'},  
                 loc = vector3(465.44, 150.32, 99.34), l = 0.5, w = 0.7, lwr = 0.25, upr = 0.75, r = 250, job = 'deerdiner'},
-            
         },
         Stores = {
             {StoreData = {type = 'ingridients', targetLabel = 'Open Shop', menuLabel = 'Open Shop!'},
@@ -136,5 +135,9 @@ Jobs['deerdiner'] = {
         hashbrown = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
         hot_wings = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
         sirloin_steak = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        sprunk = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        ecola = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        coffee = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        
     },
 }

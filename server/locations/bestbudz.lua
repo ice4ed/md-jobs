@@ -4,10 +4,10 @@ Jobs['bestbudz'] = {
     CateringEnabled = true,
     closedShopsEnabled = true,
     Blip = {
-        {sprite = 469, color = 2, scale = 0.8, label = 'Best Budz', loc = vector3(374.57, -825.79, 29.05)},
+        {sprite = 469, color = 2, scale = 0.8, label = 'Best Budz', loc = vec3(381.92, -833.4, 29.29)},
     },
     closedShops = {
-        {ped = 'mp_m_freemode_01', loc = vector4(379.71, -833.63, 29.29, 178.74), label = 'Best Budz Shop'}
+        {ped = 'mp_m_freemode_01', loc = vec4(381.92, -833.4, 29.29, 184.21), label = 'Best Budz Shop'}
     },
     closedShopItems = {
         joint_whitewidow = {name = 'joint_whitewidow', price = 5},
@@ -81,7 +81,7 @@ Jobs['bestbudz'] = {
             {name = 'weed_gummies', minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
         Van = {
-            bestbudz = {model = 'burrito', label = 'Burrito', plate = 'WeedMan', loc = vec4(368.19, -831.13, 29.29, 203.18), heading = 203.00},
+            bestbudz = {model = 'burrito', label = 'Burrito', plate = 'WeedMan', loc = vec4(370.64, -829.05, 29.29, 179.82)},
         }
     },
     shops = {

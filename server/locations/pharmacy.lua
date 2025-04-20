@@ -4,10 +4,10 @@ Jobs['pharmacy'] = {
     CateringEnabled = false,
     closedShopsEnabled = true,
     Blip = {
-        {sprite = 52, color = 2, scale = 0.5, label = 'Pharmacy', loc = vector3(174.11, -1801.95, 29.26)},
+        {sprite = 52, color = 2, scale = 0.5, label = 'Pharmacy', loc = vec3(-507.56, 278.91, 83.33)},
     },
     closedShops = {
-        {ped = 's_m_m_doctor_01', loc = vector4(174.11, -1801.95, 29.26, 321.03), label = 'Pharmacy Shop'}
+        {ped = 's_m_m_doctor_01', loc = vec4(-507.56, 278.91, 83.33, 179.96), label = 'Pharmacy Shop'}
     },
     closedShopItems = {
        bandage = {name = 'bandage', price = 15},

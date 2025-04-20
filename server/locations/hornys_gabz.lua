@@ -5,7 +5,7 @@ Jobs['hornys'] = {
         {sprite = 80, color = 2, scale = 0.5, label = 'hornys', loc = vector4(1251.36, -353.5, 74.02, 96.8)},
     },
     closedShops = {
-        {ped = 'mp_m_freemode_01', loc = vector4(1236.95, -368.27, 69.09, 163.04), label = 'Pops Diner Shop'}
+        {ped = 'mp_m_freemode_01', loc = vec4(1239.19, -367.96, 69.21, 217.86), label = 'Horny Little Shop'}
     },
     closedShopItems = {
         coffee =        {name = 'coffee', price = 5},
@@ -39,6 +39,7 @@ Jobs['hornys'] = {
             {anim = 'uncuff', give = {burger_meat = 1, burger_bun = 1, lettuce = 1, raw_bacon = 1, sliced_onion = 1, sliced_tomato = 1}, take = {bacon_cheeseburger=1}, progtext = 'Grilling' },
             {anim = 'uncuff', give = {basket_fries = 1, burger_cheese = 1}, take = {cheese_fries=1}, progtext = 'Grilling' },
             {anim = 'uncuff', give = {burger_meat = 1, burger_bun = 1, sliced_onion = 1, sliced_tomato = 1}, take = {sirloin_burger=1}, progtext = 'Grilling' },
+            {anim = 'uncuff', give = {tortilla = 1, chicken_strips = 1}, take = {chicken_fajita=1}, progtext = 'Grilling' },
         },
         fryer = {
             {anim = 'uncuff', give = {uncooked_fries = 1}, take = {basket_fries=1}, progtext = 'Frying' },
@@ -60,7 +61,9 @@ Jobs['hornys'] = {
                 {name = 'ecola',            minPrice = 1, maxPrice = 4, maxAmount = 30},
                 {name = 'sprunk',           minPrice = 1, maxPrice = 4, maxAmount = 30},
             },
-            Van = {model = 'burrito', label = 'Burrito', plate = 'PopCater', loc = vector4(1605.18, 6441.77, 25.47, 155.49), heading = 28.78},
+            Van = {
+                hornys = {model = 'burrito', label = 'Burrito', plate = 'Horny1', loc = vec4(1242.17, -333.7, 69.08, 354.92)},
+            }
     },
     shops = {
         ingridients = {

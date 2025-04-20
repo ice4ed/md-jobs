@@ -7,7 +7,7 @@ Jobs['pub'] = {
         {sprite = 93, color = 2, scale = 0.5, label = 'pub', loc = vector3(-578.47, -695.18, 32.52)},
     },
     closedShops = {
-        {ped = 'mp_m_freemode_01', loc = vector4(-578.47, -695.18, 32.52, 180.0), label = 'pub'}
+        {ped = 'mp_m_freemode_01', loc = vec4(-577.17, -678.2, 32.37, 263.23), label = 'Pub Shop'}
     },
     closedShopItems = {
         ambeer         =   {name = 'ambeer',       price = 5},
@@ -128,7 +128,7 @@ Jobs['pub'] = {
 
         },
         Van = {
-            vu = {model = 'burrito', label = 'Burrito', plate = 'pubdel', loc = vector4(-578.47, -695.18, 32.52, 180.0), heading = 28.78},
+            pub = {model = 'burrito', label = 'Burrito', plate = 'pubdel', loc = vec4(-569.71, -668.62, 33.03, 278.89)},
         }
     },
     shops = {

@@ -63,6 +63,14 @@
     close = true, 
     client = { image = 'cheese_fries.png' } 
 },
+["chicken_fajita"] = { 
+    label = 'Chicken Fajita', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'chicken_fajita.png' } 
+},
 ["chicken_strips"] = { 
     label = 'Chicken Strips', 
     description = "", 
@@ -87,13 +95,21 @@
     close = true, 
     client = { image = 'coffee.png' } 
 },
-["cola"] = { 
-    label = 'Cola', 
+["cooked_chicken"] = { 
+    label = 'Cooked Chicken', 
     description = "", 
     weight = 100, 
     stack = true, 
     close = true, 
-    client = { image = 'cola.png' } 
+    client = { image = 'cooked_chicken.png' } 
+},
+["ecola"] = { 
+    label = 'Ecola', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'ecola.png' } 
 },
 ["fried_pickles"] = { 
     label = 'Fried Pickles', 
@@ -151,6 +167,14 @@
     close = true, 
     client = { image = 'raw_bacon.png' } 
 },
+["raw_chicken"] = { 
+    label = 'Raw Chicken', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'raw_chicken.png' } 
+},
 ["sirloin_burger"] = { 
     label = 'Sirloin Burger', 
     description = "", 
@@ -190,6 +214,14 @@
     stack = true, 
     close = true, 
     client = { image = 'tomato.png' } 
+},
+["tortilla"] = { 
+    label = 'Tortilla', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'tortilla.png' } 
 },
 ["uncooked_fries"] = { 
     label = 'Uncooked Fries', 
