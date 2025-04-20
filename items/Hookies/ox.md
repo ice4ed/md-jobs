@@ -1,4 +1,20 @@
 ```lua
+["ambeer"] = { 
+    label = 'Ambeer', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'ambeer.png' } 
+},
+["beer"] = { 
+    label = 'Beer', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'beer.png' } 
+},
 ["bread"] = { 
     label = 'Bread', 
     description = "", 
@@ -15,6 +31,14 @@
     close = true, 
     client = { image = 'chardoney.png' } 
 },
+["coffee"] = { 
+    label = 'Coffee', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'coffee.png' } 
+},
 ["cooked_fish"] = { 
     label = 'Cooked Fish', 
     description = "", 
@@ -22,6 +46,22 @@
     stack = true, 
     close = true, 
     client = { image = 'cooked_fish.png' } 
+},
+["dusche"] = { 
+    label = 'Dusche', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'dusche.png' } 
+},
+["ecola"] = { 
+    label = 'Ecola', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'ecola.png' } 
 },
 ["fish"] = { 
     label = 'Fish', 
@@ -71,6 +111,14 @@
     close = true, 
     client = { image = 'lobster.png' } 
 },
+["logger"] = { 
+    label = 'Logger', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'logger.png' } 
+},
 ["onion"] = { 
     label = 'Onion', 
     description = "", 
@@ -79,6 +127,14 @@
     close = true, 
     client = { image = 'onion.png' } 
 },
+["patochebeer"] = { 
+    label = 'Patochebeer', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'patochebeer.png' } 
+},
 ["pinot_grigio"] = { 
     label = 'Pinot Grigio', 
     description = "", 
@@ -86,6 +142,30 @@
     stack = true, 
     close = true, 
     client = { image = 'pinot_grigio.png' } 
+},
+["pisswaser"] = { 
+    label = 'Pisswaser', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'pisswaser.png' } 
+},
+["pisswaser_dark"] = { 
+    label = 'Pisswaser Dark', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'pisswaser_dark.png' } 
+},
+["pisswaser_light"] = { 
+    label = 'Pisswaser Light', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'pisswaser_light.png' } 
 },
 ["potato"] = { 
     label = 'Potato', 
@@ -110,6 +190,14 @@
     stack = true, 
     close = true, 
     client = { image = 'seafood_crabcakes.png' } 
+},
+["seafood_kingcrab"] = { 
+    label = 'Seafood Kingcrab', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'seafood_kingcrab.png' } 
 },
 ["seafood_lobster_plate"] = { 
     label = 'Seafood Lobster Plate', 
@@ -142,6 +230,14 @@
     stack = true, 
     close = true, 
     client = { image = 'snowcrab.png' } 
+},
+["sprunk"] = { 
+    label = 'Sprunk', 
+    description = "", 
+    weight = 100, 
+    stack = true, 
+    close = true, 
+    client = { image = 'sprunk.png' } 
 },
 ["tomato"] = { 
     label = 'Tomato', 

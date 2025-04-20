@@ -9,7 +9,7 @@ Jobs['hookies'] = {
         {ped = 'mp_m_freemode_01', loc = vector4(-2191.84, 4285.16, 49.18, 154.88), label = 'Hookies Shop'}
     },
     closedShopItems = {
-       coffee = {name = 'coffee', price = 5},
+        coffee = {name = 'coffee', price = 5},
         ecola = {name = 'ecola', price = 5},
         sprunk = {name = 'sprunk', price = 5},
         ambeer = {name = 'ambeer', price = 5},
@@ -47,54 +47,55 @@ Jobs['hookies'] = {
     },
     craftingStations = {
         coffee = {
-            {anim = 'uncuff',give = {}, take = {coffee=1}, progtext = 'Pouring' },
+            {anim = 'uncuff',give = {}, take = {coffee=1}, progtext = 'Pouring'}
         },
         soda = {
-            {anim = 'uncuff', give = {}, take = {ecola=1}, progtext = 'Pouring' },
-            {anim = 'uncuff', give = {}, take = {sprunk=1}, progtext = 'Pouring' },
+            {anim = 'uncuff',give = {}, take = {ecola=1}, progtext = 'Pouring'},
+            {anim = 'uncuff',give = {}, take = {sprunk=1}, progtext = 'Pouring'}
         },
         beer = {
-            {anim = 'uncuff',give = {}, take = {ambeer = 1}, progtext = 'Pouring' },
-            {anim = 'uncuff',give = {}, take = {beer = 1}, progtext = 'Pouring' },
-            {anim = 'uncuff',give = {}, take = {dusche = 1}, progtext = 'Pouring' },
-            {anim = 'uncuff',give = {}, take = {logger = 1}, progtext = 'Pouring' },
-            {anim = 'uncuff',give = {}, take = {patochebeer = 1}, progtext = 'Pouring' },
-            {anim = 'uncuff',give = {}, take = {pisswaser = 1}, progtext = 'Pouring' },
-            {anim = 'uncuff',give = {}, take = {pisswaser_light = 1}, progtext = 'Pouring' },
-            {anim = 'uncuff',give = {}, take = {pisswaser_dark = 1}, progtext = 'Pouring' },
+            {anim = 'uncuff',give = {}, take = {ambeer=1}, progtext = 'Pouring'},
+            {anim = 'uncuff',give = {}, take = {beer=1}, progtext = 'Pouring'},
+            {anim = 'uncuff',give = {}, take = {dusche=1}, progtext = 'Pouring'},
+            {anim = 'uncuff',give = {}, take = {logger=1}, progtext = 'Pouring'},
+            {anim = 'uncuff',give = {}, take = {patochebeer=1}, progtext = 'Pouring'},
+            {anim = 'uncuff',give = {}, take = {pisswaser=1}, progtext = 'Pouring'},
+            {anim = 'uncuff',give = {}, take = {pisswaser_dark=1}, progtext = 'Pouring'},
+            {anim = 'uncuff',give = {}, take = {pisswaser_light=1}, progtext = 'Crafting'}
         },
         cuttingboard = {
-            {anim = 'uncuff', give = {onion = 1}, take = {sliced_onion = 1}, progtext = 'Chopping' },
-            {anim = 'uncuff', give = {tomato = 1}, take = {sliced_tomato = 1}, progtext = 'Chopping' },
-            {anim = 'uncuff', give = {potato = 1}, take = {uncooked_fries = 1}, progtext = 'Chopping'},
-            {anim = 'uncuff', give = {fish = 1}, take = {fish_fillet = 1}, progtext = 'Chopping' },
+            {anim = 'uncuff',give = { onion = 1}, take = {sliced_onion=1}, progtext = 'Chopping'},
+            {anim = 'uncuff',give = { fish = 1}, take = {fish_fillet=1}, progtext = 'Chopping'},
+            {anim = 'uncuff',give = { potato = 1}, take = {uncooked_fries=1}, progtext = 'Chopping'},
+            {anim = 'uncuff',give = { tomato = 1}, take = {sliced_tomato=1}, progtext = 'Chopping'}
         },
         grill = {
-            {anim = 'uncuff', give = {fish_fillet = 1}, take = {grilled_fish = 1}, progtext = 'Grilling' },
-            {anim = 'uncuff', give = {lobster = 1}, take = {seafood_lobster_plate = 1}, progtext = 'Grilling' },
-            {anim = 'uncuff', give = {bread = 1, snowcrab = 1}, take = {seafood_crabcakes = 1}, progtext = 'Grilling' },
+            {anim = 'uncuff',give = { fish = 1}, take = {grilled_fish=1}, progtext = 'Cooking'},
+            {anim = 'uncuff',give = { lobster = 1}, take = {seafood_lobster_plate=1}, progtext = 'Cooking'},
+            {anim = 'uncuff',give = { bread = 1, snowcrab = 1}, take = {seafood_crabcakes=1}, progtext = 'Cooking'},
+            {anim = 'uncuff',give = { snowcrab = 1}, take = {seafood_kingcrab=1}, progtext = 'Cooking'},
+            {anim = 'uncuff',give = { fish = 1}, take = {cooked_fish=1}, progtext = 'Cooking'}
         },
         stove = {
-            {anim = 'uncuff', give = {sliced_onion = 1, sliced_tomato = 1, cooked_fish = 1, tortilla = 1}, take = {fish_taco = 1}, progtext = 'Cooking' },
-            {anim = 'uncuff', give = {uncooked_fries = 1,  fish = 1}, take = {fishchips = 1}, progtext = 'Cooking' },
-            {anim = 'uncuff', give = {fish_fillet = 1, uncooked_fries = 1}, take = {seafood_batter_fish = 1}, progtext = 'Cooking' },
+            {anim = 'uncuff',give = { sliced_tomato = 1, sliced_onion = 1, cooked_fish = 1, tortilla = 1}, take = {fish_taco=1}, progtext = 'Cooking'},
+            {anim = 'uncuff',give = { uncooked_fries = 1, fish_fillet = 1}, take = {fishchips=1}, progtext = 'Cooking'},
+            {anim = 'uncuff',give = { fish_fillet = 1, uncooked_fries = 1}, take = {seafood_batter_fish=1}, progtext = 'Cooking'}
         },
         wine = {
-            {anim = 'uncuff', give = {}, take = {pinot_grigio = 1}, progtext = 'Pouring' },
-            {anim = 'uncuff', give = {}, take = {chardoney = 1}, progtext = 'Pouring' },
-           
+            {anim = 'uncuff',give = {}, take = {chardoney=1}, progtext = 'Pouring'},
+            {anim = 'uncuff',give = {}, take = {pinot_grigio=1}, progtext = 'Pouring'}
         }
     },
     shops = {
         ingridients={
-            {name = 'fish',            price = 2, amount = 50},
-            {name = 'lobster',         price = 10, amount = 50},
-            {name = 'bread',           price = 1, amount = 50},
-            {name = 'tortilla',       price = 1, amount = 50},
-            {name = 'onion',          price = 1, amount = 50},
-            {name = 'tomato',         price = 1, amount = 50},
-            {name = 'potato',         price = 1, amount = 50},
-            {name = 'snowcrab',      price = 15, amount = 50},
+            {name = 'bread', price = 5, amount = 50},
+            {name = 'fish', price = 5, amount = 50},
+            {name = 'lobster', price = 5, amount = 50},
+            {name = 'onion', price = 5, amount = 50},
+            {name = 'potato', price = 5, amount = 50},
+            {name = 'snowcrab', price = 5, amount = 50},
+            {name = 'tortilla', price = 5, amount = 50},
+            {name = 'tomato', price = 5, amount = 50}
         },
     },
     locations = {
@@ -131,13 +132,25 @@ Jobs['hookies'] = {
         }
     },
     consumables = {
+        beer = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        ambeer = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
         chardoney = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
-        grilled_fish = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        coffee = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        dusche = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        ecola = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
         fishchips = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
         fish_taco = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        grilled_fish = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        logger = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        patochebeer = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
         pinot_grigio = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        pisswaser = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        pisswaser_dark = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
+        pisswaser_light = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
         seafood_batter_fish = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
         seafood_crabcakes = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        seafood_kingcrab = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
         seafood_lobster_plate = {anim = 'eat', label = 'Eating', add = {hunger = 10}},
+        sprunk = {anim = 'drink', label = 'Drinking', add = {thirst = 10}},
     },
 }
