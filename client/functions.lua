@@ -8,7 +8,7 @@ function s(st, ...)
 	return string.format(st, table.unpack(args))
 end
 
-CreateThread(function()
+if Config.Framework == 'qb' then
     if GetResourceState('qb-inventory') == 'started' then
 		invcall = 'qb-inventory'
 	elseif GetResourceState('ps-inventory') == 'started' then
@@ -16,7 +16,7 @@ CreateThread(function()
 	elseif GetResourceState('lj-inventory') == 'started' then
 		invcall = 'inventory'
 	end
-end)
+end
 
 function progressbar(text, time, anim)
 	TriggerEvent('animations:client:EmoteCommandStart', {anim})
@@ -42,7 +42,7 @@ function progressbar(text, time, anim)
 		return true
 	  end
 	elseif progressbartype == 'qb' then
-	local test = false
+		local test = false
 		local cancelled = false
 	  QBCore.Functions.Progressbar("drink_something", text, time, false, true, { disableMovement = true, disableCarMovement = true, disableMouse = false, disableCombat = true, disableInventory = true,
 	  }, {}, {}, {}, function()-- Done
@@ -60,13 +60,13 @@ function progressbar(text, time, anim)
 			TriggerEvent('animations:client:EmoteCommandStart', {"c"}) 
 		end
 	end)
-	  repeat 
-		Wait(100)
-	  until cancelled or test
-	  if test then return true end
+	  	repeat 
+			Wait(100)
+	  	until cancelled or test
+	  	if test then return true end
 	else
-			print"^1 SCRIPT ERROR: Md-DRUGS set your progressbar with one of the options!"
-	end	  
+		print"^1 SCRIPT ERROR: Md-DRUGS set your progressbar with one of the options!"
+	end
   end
 
 function Notify(text, type)
@@ -77,7 +77,7 @@ function Notify(text, type)
 	elseif notifytype == 'okok' then
 		exports['okokNotify']:Alert('', text, 4000, type, false)
 	else
-      print"dude, it literally tells you what you need to set it as in the config"
+      	print"dude, it literally tells you what you need to set it as in the config"
     end
 end
 
@@ -100,8 +100,8 @@ function AddBoxZone(name, loc, data)
 local options = {}
 	for k, v in pairs (data) do
 		table.insert(options,{
-			icon = v.icon, label = v.label, event = v.event or nil, action = v.action or nil,
-			onSelect = v.action,data = v.data,canInteract = v.canInteract or nil, distance = 2.0,
+			icon = v.icon or "fa-solid fa-eye", label = v.label, event = v.event or nil, action = v.action or nil,
+			onSelect = v.action or nil,data = v.data,canInteract = v.canInteract or nil, distance = 2.0,
 		})
 	end
 	if loc.w == nil then loc.w = 1.0 end
@@ -129,6 +129,13 @@ function AddTargModel(model, data, num)
 	elseif Config.Target == 'ox' then
 		exports.ox_target:addLocalEntity(model, options)
 	end
+end
+
+function propsSpawn(entity, heading, ops)
+	SetEntityHeading(entity, heading)
+    FreezeEntityPosition(entity, true)
+    SetEntityInvincible(entity, true)
+	AddTargModel(entity, ops)
 end
 
 function GetImage(img)
@@ -375,13 +382,13 @@ lib.callback.register('md-jobs:client:chargePerson', function(peeps)
 end)
 
 lib.callback.register('md-jobs:client:acceptCharge', function(amount)
-		local accept = lib.inputDialog(L.Menus.acceptBill.title, {
-			{type = 'select', description = L.Menus.acceptBill.cashor ,options = {{label = L.Menus.acceptBill.card, value = 'bank'},{label = L.Menus.acceptBill.cash, value = 'cash'}}},
-			{type = 'select', description = s(L.Menus.acceptBill.description, amount),options = {{label = L.Menus.acceptBill.accept, value = true},{label = L.Menus.acceptBill.decline, value = false}}}
-		})
-		if not accept then return false end
-		if not accept[2] then return false end
-		return {accept = accept[2], type = accept[1]}
+	local accept = lib.inputDialog(L.Menus.acceptBill.title, {
+		{type = 'select', description = L.Menus.acceptBill.cashor ,options = {{label = L.Menus.acceptBill.card, value = 'bank'},{label = L.Menus.acceptBill.cash, value = 'cash'}}},
+		{type = 'select', description = s(L.Menus.acceptBill.description, amount),options = {{label = L.Menus.acceptBill.accept, value = true},{label = L.Menus.acceptBill.decline, value = false}}}
+	})
+	if not accept then return false end
+	if not accept[2] then return false end
+	return {accept = accept[2], type = accept[1]}
 end)
 
 function openTray(name, weight, slot, num, job)
@@ -422,8 +429,6 @@ function openStash(name, weight, slot, num, job)
 		TriggerServerEvent('md-jobs:server:openStash', name, weight, slot, num, job)
 	end
 end
-
-
 
 local function calculateRemainingTime(due, time)
     local diff = due - time
@@ -477,16 +482,12 @@ end)
 function manageClosed(job,num)
 	lib.registerContext({id = 'closedShops', title = job .. ' Shop', 
 	options = {
-		{
-			title = L.Menus.addItem,
-			description = L.Menus.aIdes,
+		{title = L.Menus.addItem,description = L.Menus.aIdes,
 			onSelect = function()
 				lib.callback.await('md-jobs:server:addItemsToClosed', false, job, num)
 			end
 		},
-		{
-			title = L.Menus.removeItems,
-			description = L.Menus.rIdes,
+		{title = L.Menus.removeItems,description = L.Menus.rIdes,
 			onSelect = function()
 				lib.callback.await('md-jobs:server:removeItemsFromClosed', false, job, num)
 			end,
@@ -500,10 +501,11 @@ lib.callback.register('md-jobs:client:adjustPrices', function(data)
 	local adjust = lib.inputDialog(L.Menus.adjustPrices, data)
 	return adjust
 end)
+
 function adjustPrices(job, num)
-	local data = lib.callback.await('md-jobs:server:adjustPrices', false, job, num)
-	
+	lib.callback.await('md-jobs:server:adjustPrices', false, job, num)
 end
+
 function openClosedShop(job, num)
 	local data = lib.callback.await('md-jobs:server:getClosedShops', false, job, num)
 	local options = {}
@@ -527,125 +529,99 @@ function openClosedShop(job, num)
 	lib.showContext('closedShops')
 end
 
+local function startCatering(job)
+	local start = lib.callback.await('md-jobs:server:startCatering', false, job)
+	if start then 
+		Notify(L.cater.manage.started, 'success')
+	end
+end
+
+local function deliverCatering(job)
+	local info, time = lib.callback.await('md-jobs:server:getCateringInfo', false, job)
+	local details = json.decode(info.details)
+	if details.dueby - time < 0 then
+		Notify(L.cater.manage.too_late, 'error')
+		local stop = lib.callback.await('md-jobs:server:stopCatering', false, job)
+		return
+	end
+	lib.requestModel(details.location.model, 30000)
+	local ped = CreatePed(4, details.location.model, details.location.loc.x, details.location.loc.y, details.location.loc.z-1, details.location.loc.w, false, false)
+	Freeze(ped, details.location.loc.w)
+	local blip = AddBlipForEntity(ped)
+	SetBlipSprite(blip, 326)
+	SetBlipDisplay(blip, 2)
+	SetBlipScale(blip, 0.9)
+	SetBlipColour(blip, 8)
+	BeginTextCommandSetBlipName("STRING")
+	AddTextComponentString('Catering')
+	EndTextCommandSetBlipName(blip)
+	AddTargModel(ped, {
+		{icon = 'fas fa-utensils', label = L.cater.manage.deliver, action = function()
+			local deliver = lib.callback.await('md-jobs:server:deliverCatering', false, job)
+			if deliver then 
+				Notify(L.cater.manage.complete, 'success')
+				DeleteEntity(ped)
+				RemoveBlip(blip)
+			end
+		end
+	}})
+	local plate = lib.callback.await('md-jobs:server:cateringVan', false, job)
+	SetVehicleFuelLevel(plate, 100.0)
+	Notify(L.cater.manage.van, 'success')
+end
+
+local function cancelCatering(job)
+	local stop = lib.callback.await('md-jobs:server:stopCatering', false, job)
+	if stop then Notify(L.cater.manage.cancelled, 'error') return end
+end
+
+local function addToCatering(job)
+	local add = lib.callback.await('md-jobs:server:addtoCatering', false, job)
+	if not add then return end
+	Notify(L.cater.manage.added 'success')
+end
+
+local function checkHistory(job)
+	local history = lib.callback.await('md-jobs:server:getCateringHistory', false, job)
+	local options = {}
+	for k, v in pairs (history) do
+		local c, t, r, e  = json.decode(v.customer), json.decode(v.totals), json.decode(v.receipt), json.decode(v.employees)
+		options[#options + 1] = {
+			title = c.label,
+			description = s(L.cater.manage.hd,c.name,t.price),
+			onSelect = function()
+				local d = '  \n  '
+				local itemList = {}
+				for _, d in pairs (r) do table.insert(itemList, GetLabel(d.item) .. ": Amount: " .. d.amount) end
+				table.sort(itemList)
+				local empList = {}
+				if #e == 0 then 
+					data = data .. e.name
+				else
+					for _, d in pairs (e) do table.insert(empList, d.name) end
+				end
+				table.sort(empList)
+				local des = s(L.cater.manage.hd_desc,d, d, c.name, d, c.label, d, t.amount, d, t.price, d, d, table.concat(itemList, "  \n  "), d, d, table.concat(empList, "  \n  "))
+				lib.alertDialog({header = c.label,content = des,centered = true,cancel = true})
+			end
+		}
+	end
+	lib.registerContext({id = 'cateringHistory', title = 'Catering History', options = options})
+	lib.showContext('cateringHistory')
+end
+
 function manageCatering(job)
 	if getJobName() ~= job then Notify(s(L.Error.no_job, job), 'error') return end
 	lib.registerContext({
 		id = 'catering',
 		title = s(L.cater.manage.title, job),
 		options = {
-		  {
-			title = L.cater.manage.start,
-			description = L.cater.manage.start_desc,
-			onSelect = function()
-				local start = lib.callback.await('md-jobs:server:startCatering', false, job)
-				if start then 
-					Notify(L.cater.manage.started, 'success')
-				end
-			end
-		  },
-		  {
-			title = L.cater.manage.check,
-			description = L.cater.manage.check_desc,
-			onSelect = function()
-				checkCatering(job)
-			end
-		  },
-		  {
-			title = L.cater.manage.deliver,
-			description = L.cater.manage.deliver_desc,
-			onSelect = function()
-				local info, time = lib.callback.await('md-jobs:server:getCateringInfo', false, job)
-				local data, details, employees = json.decode(info.data), json.decode(info.details), json.decode(info.employees)
-				if details.dueby - time < 0 then
-					Notify(L.cater.manage.too_late, 'error')
-					local stop = lib.callback.await('md-jobs:server:stopCatering', false, job)
-					return
-				end
-				lib.requestModel(details.location.model, 30000)
-				local ped = CreatePed(4, details.location.model, details.location.loc.x, details.location.loc.y, details.location.loc.z-1, details.location.loc.w, false, false)
-				Freeze(ped, details.location.loc.w)
-				local blip = AddBlipForEntity(ped)
-				SetBlipSprite(blip, 326)
-				SetBlipDisplay(blip, 2)
-				SetBlipScale(blip, 0.9)
-				SetBlipColour(blip, 8)
-				BeginTextCommandSetBlipName("STRING")
-				AddTextComponentString('Catering')
-				EndTextCommandSetBlipName(blip)
-				AddTargModel(ped, {
-					{icon = 'fas fa-utensils', label = L.cater.manage.deliver, action = function()
-						local deliver = lib.callback.await('md-jobs:server:deliverCatering', false, job)
-						if deliver then 
-							Notify(L.cater.manage.complete, 'success')
-							DeleteEntity(ped)
-							RemoveBlip(blip)
-						end
-					end
-				}})
-				local plate = lib.callback.await('md-jobs:server:cateringVan', false, job)
-				SetVehicleFuelLevel(plate, 100.0)
-				Notify(L.cater.manage.van, 'success')
-			end
-		  },
-		  {
-			title = L.cater.manage.cancel,
-			description = L.cater.manage.cancel_desc,
-			onSelect = function()
-				local stop = lib.callback.await('md-jobs:server:stopCatering', false, job)
-				if stop then Notify(L.cater.manage.cancelled, 'error') return end
-			end
-		  },
-		  {
-			title = L.cater.manage.add,
-			description = L.cater.manage.add_desc,
-			onSelect = function()
-				local add = lib.callback.await('md-jobs:server:addtoCatering', false, job)
-				if not add then return end
-				Notify(L.cater.manage.added 'success')
-			end
-		  },
-		  {
-			title = L.cater.manage.history,
-			description = L.cater.manage.history_desc,
-			disabled = not isBoss(),
-			onSelect = function()
-				local history = lib.callback.await('md-jobs:server:getCateringHistory', false, job)
-				local options = {}
-				for k, v in pairs (history) do
-					local c, t, r, e  = json.decode(v.customer), json.decode(v.totals), json.decode(v.receipt), json.decode(v.employees)
-					options[#options + 1] = {
-						title = c.label,
-						description = s(L.cater.manage.hd,c.name,t.price),
-						onSelect = function()
-							local d = '  \n  '
-							local itemList = {}
-							for _, d in pairs (r) do
-								table.insert(itemList, GetLabel(d.item) .. ": Amount: " .. d.amount)
-							end
-							table.sort(itemList)
-							local empList = {}
-							if #e == 0 then 
-								data = data .. e.name
-							else
-								for _, d in pairs (e) do
-									table.insert(empList, d.name)
-								end
-							end
-							table.sort(empList)
-							local des = s(L.cater.manage.hd_desc,d, d, c.name, d, c.label, d, t.amount, d, t.price, d, d, table.concat(itemList, "  \n  "), d, d, table.concat(empList, "  \n  "))
-							lib.alertDialog({
-								header = c.label,
-								content = des,
-								centered = true,
-								cancel = true
-							})
-						end
-					}
-				end
-				lib.registerContext({id = 'cateringHistory', title = 'Catering History', options = options})
-				lib.showContext('cateringHistory')
-			end
-		  }
+		  { title = L.cater.manage.start, description = L.cater.manage.start_desc,  onSelect = function() startCatering(job) end },
+		  { title = L.cater.manage.check, description = L.cater.manage.check_desc,  onSelect = function() checkCatering(job) end},
+		  {title = L.cater.manage.deliver,description = L.cater.manage.deliver_desc,onSelect = function() deliverCatering(job) end  },
+		  {title = L.cater.manage.cancel, description = L.cater.manage.cancel_desc,	onSelect = function() cancelCatering(job) end	},
+		  {title = L.cater.manage.add,    description = L.cater.manage.add_desc,	onSelect = function() addToCatering(job) end},
+		  {title = L.cater.manage.history,description = L.cater.manage.history_desc,disabled = not isBoss(), onSelect = function() checkHistory(job) end}
 		}
 	  })
 	  lib.showContext('catering')

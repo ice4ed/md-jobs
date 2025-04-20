@@ -13,10 +13,7 @@ CreateThread(function()
                     local number = #props + 1
                     lib.requestModel(d.CraftData.prop)
                     props[#props + 1] = CreateObject(d.CraftData.prop, d.loc.x,d.loc.y,d.loc.z, false, false, false)
-                    SetEntityHeading(props[number], d.r + 0.0 or 180.0)
-                    FreezeEntityPosition(props[number], true)
-                    SetEntityInvincible(props[number], true)
-                    AddTargModel(props[number], ops)
+                    propsSpawn(props[number], d.r + 0.0 or 180.0, ops)
                 else
                     AddBoxZone('craft' .. k .. m, d, ops)
                 end
@@ -33,10 +30,7 @@ CreateThread(function()
                     local number = #props + 1
                     lib.requestModel(d.StoreData.prop)
                     props[number] = CreateObject(d.StoreData.prop, d.loc.x,d.loc.y,d.loc.z, false, false, false)
-                    SetEntityHeading(props[number], d.r + 0.0 or 180.0)
-                    FreezeEntityPosition(props[number], true)
-                    SetEntityInvincible(props[number], true)
-                    AddTargModel(props[number], ops)
+                    propsSpawn(props[number], d.r + 0.0 or 180.0, ops)
                 else
                     AddBoxZone('store' .. k .. m, d, ops)
                 end
@@ -44,7 +38,6 @@ CreateThread(function()
         end
         if v.Tills then
             for m, d in pairs(v.Tills) do
-
                 local ops = {
                     {icon = Icons.till, label = L.T.till, action = function() TriggerServerEvent('md-jobs:server:billPlayer', k, m) end, canInteract = function() return hasJob(k) end},
                     {icon = Icons.till, label = L.T.managecat, action = function() manageCatering(k) end, canInteract = function() return hasJob(k) and GlobalState.Cater[k] end},
@@ -54,10 +47,7 @@ CreateThread(function()
                     lib.requestModel(d.prop)
                     local number = #props + 1
                     props[number] = CreateObject(d.prop, d.loc.x,d.loc.y,d.loc.z, false, false, false)
-                    SetEntityHeading(props[number], d.r + 0.0 or 180.0)
-                    FreezeEntityPosition(props[number], true)
-                    SetEntityInvincible(props[number], true)
-                    AddTargModel(props[number], ops)
+                    propsSpawn(props[number], d.r + 0.0 or 180.0, ops)
                 else
                     AddBoxZone('till' .. k .. m, d, ops)
                 end
@@ -73,10 +63,7 @@ CreateThread(function()
                     local number = #props + 1
                     lib.requestModel(d.prop)
                     props[number] = CreateObject(d.prop, d.loc.x,d.loc.y,d.loc.z, false, false, false)
-                    SetEntityHeading(props[number], d.r + 0.0 or 180.0)
-                    FreezeEntityPosition(props[number], true)
-                    SetEntityInvincible(props[number], true)
-                    AddTargModel(props[number], ops)
+                    propsSpawn(props[number], d.r + 0.0 or 180.0, ops)
                 else
                     AddBoxZone('stash' .. k .. m, d, ops)
                 end
@@ -92,10 +79,7 @@ CreateThread(function()
                     lib.requestModel(d.prop)
                     local number = #props + 1
                     props[number] = CreateObject(d.prop, d.loc.x,d.loc.y,d.loc.z, false, false, false)
-                    SetEntityHeading(props[number], d.r + 0.0 or 180.0)
-                    FreezeEntityPosition(props[number], true)
-                    SetEntityInvincible(props[number], true)
-                    AddTargModel(props[number], ops)
+                    propsSpawn(props[number], d.r + 0.0 or 180.0, ops)
                 else
                     AddBoxZone('trays' .. k .. m, d, ops)
                 end
@@ -108,15 +92,9 @@ local blips = {}
 local peds = {}
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() then return end
-    for k, v in pairs(props) do
-        DeleteEntity(v)
-    end
-    for k, v in pairs (blips) do
-        RemoveBlip(v)
-    end
-    for k, v in pairs (peds) do
-        DeleteEntity(v)
-    end
+    for k, v in pairs(props) do DeleteEntity(v) end
+    for k, v in pairs (blips) do RemoveBlip(v) end
+    for k, v in pairs (peds) do DeleteEntity(v) end
     blips = {}
     peds = {}
 end)
