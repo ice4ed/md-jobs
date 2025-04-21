@@ -8,6 +8,28 @@
   <a href="https://discord.gg/sAMzrB4DDx"><strong>Join the Mustache Scripts Discord</strong></a>
 </div>
 
+
+## Acknowledgements
+### big shoutout to [Mcklean](https://mckleans-scripts.tebex.io/) for MK-Items
+### big shoutout to [bitc0de](https://github.com/bitc0de/fivem-items-gallery) for the items as well
+### Thanks to the beta testers as they have helped a lot :) 
+
+## Contributions
+### as time moves on, I would love for this script to make more and more jobs accessible, free, and open source. If you make items and locations and want to contribute to the resource to help others get more jobs made for their server you must do the following
+### make sure items and images are TOS friendly (we dont need coca-cola, ecola is fine.)
+### fork/clone the current repository
+### upload the folder in this format below
+  - name of job
+    - image folder with images
+    - qb.md -- qb items format
+    - ox.md -- ox items format
+    - jobData.md -- job code snippet for qb, qbx, esx
+    - jobname.lua -- please rename the lua file to be name of the job and which mlo
+      - uwu_gabz or deerdiner_dippzy
+### if that format is hard you can use the site linked below and upload the images and input the data for jobs on the site and hit export at the bottom
+### then add in the jobname.lua to it
+### Send A PR and As long as its TOS safe and the coords work, ill accept and merge it in.
+
 ## Features
 - **Unlimited Crafting Jobs**: Create as many jobs as you want with fully customizable crafting stations, shops, and catering options.
 - **Customizable Recipes**: Define ingredients, crafting animations, and results for each job.
@@ -58,6 +80,11 @@
         }
     },
 ```
+### Step 5 ( ONLY FOR QBX )
+- head to the fxmanifest.lua
+   - uncomment out the line in client_scripts { } for player data
+
+   
 # How to edit things around
 ## Now There is an easy way and a harder way
 
