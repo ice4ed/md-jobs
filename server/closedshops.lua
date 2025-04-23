@@ -116,7 +116,7 @@ lib.callback.register('md-jobs:server:addItemsToClosed', function(source, job, n
         for k , v in pairs (data) do
             if items[k] >= 1 then
                 if RemoveItem(src, v.item, items[k]) then
-                    if alreadyin[v.item] ~= nil then 
+                    if alreadyin[v.item] ~= nil then
                         alreadyin[v.item] = alreadyin[v.item] + items[k]
                     else
                         alreadyin[v.item] = items[k]
@@ -150,7 +150,7 @@ lib.callback.register('md-jobs:server:removeItemsFromClosed', function(source, j
            else
                 if has[v.item] ~= nil then
                     has[v.item] = has[v.item] - items[k]
-                    if has[v.item] <= 0 then 
+                    if has[v.item] <= 0 then
                         has[v.item] = nil
                     end
                     AddItem(src, v.item, items[k])

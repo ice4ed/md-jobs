@@ -38,7 +38,7 @@ function getlocData(job, event,num)
     return Jobs[job]['locations'][event][num]
 end
 
-local function oxPrep() -- initializing trays and stashes for ox
+local function oxPrep()
     if GetResourceState('ox_inventory') == 'started' then
         for m, d in pairs (Jobs) do 
             if Jobs[m].locations.trays then 
@@ -56,7 +56,7 @@ local function oxPrep() -- initializing trays and stashes for ox
 end
 oxPrep()
 
-function getLocsOx(job, shop) -- only used if Config.UseShops is true
+function getLocsOx(job, shop)
     local loc = {}
     for k, v in pairs (Jobs[job]['locations']['Stores']) do
         if v.job == job then
@@ -66,15 +66,11 @@ function getLocsOx(job, shop) -- only used if Config.UseShops is true
     return loc
 end
 
--- end location stuff
-
-
 --- start crafting stuff
 lib.callback.register('md-jobs:server:getRecipes', function(source, job, loc)
     local Player = getPlayer(source)
     local Job = getJobName(source)
     if job ~= Job then return false end
-
     if Jobs[job]['craftingStations'][loc] then
         return Jobs[job]['craftingStations'][loc]
     end
@@ -181,7 +177,6 @@ local function checkDistShops(source,job, loc)
 end
 
 lib.callback.register('md-jobs:server:getShops', function(source, job, loc)
-    local Player = getPlayer(source)
     local Job = getJobName(source)
     if not checkDistShops(source, job, loc) then return false end 
     if job ~= Job then return false end
@@ -203,7 +198,6 @@ lib.callback.register('md-jobs:server:getShops', function(source, job, loc)
 end)
 
 lib.callback.register('md-jobs:server:purchaseShops', function(source, job, loc, item, amount, location)
-    local Player = getPlayer(source)
     if not checkDistShops(source,job, loc) then return end
     local price = nil
     if not getJobName(source) == job then return end

@@ -61,7 +61,6 @@ function generateCatering(src, job)
     repeat
         Wait(100)
         local git = Jobs[job].catering.items[math.random(1, #Jobs[job].catering.items)]
-
         local amount = math.random(1, git.maxAmount)
         weight = weight + (getWeight(git.name) * amount)
         if weight > Config.MaxCateringWeight then items = 0 end
@@ -84,8 +83,8 @@ function generateCatering(src, job)
         Wait(100)
         items = items - 1
     until items == 0
-    MySQL.query.await('INSERT INTO mdjobs_catering (data, job, time,totals, details, employees) VALUES (?, ?, ?, ?, ?, ?)', 
-    {json.encode(data), job, os.time(), json.encode(totals), json.encode(detail), json.encode(employees)})
+    MySQL.query.await('INSERT INTO mdjobs_catering (data, job, time,totals, details, employees) VALUES (?, ?, ?, ?, ?, ?)',
+        {json.encode(data), job, os.time(), json.encode(totals), json.encode(detail), json.encode(employees)})
     Log('Catering Order Created: ' .. job .. ' Name:' .. getName(src), 'catering')
     return true
 end

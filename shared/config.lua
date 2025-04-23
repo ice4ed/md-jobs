@@ -1,7 +1,7 @@
 Config = {}
 Jobs = {} -- no touch if you do I will need therapy even more.
 Config.Target = 'ox' -- qb or ox
-Config.Inv = 'ox' -- qb or ox 
+Config.Inv = 'ox' -- qb or ox || you really should only be using ox in 2025
 Config.Framework = 'qbx' -- qb or esx or qbx
 Config.Banking = 'renewed' -- qb, qb-management, renewed, fd, tgg, okok
 Config.ClosedShopFee = 0.2 -- 20% of the total price

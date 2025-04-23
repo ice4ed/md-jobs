@@ -1,6 +1,6 @@
 
 local notify = Config.Notify -- qb or ox
-local logs = false 
+local logs = false
 local logapi = GetConvar("fivemerrLogs", "")
 local endpoint = 'https://api.fivemerr.com/v1/logs'
 local headers = {
@@ -9,7 +9,7 @@ local headers = {
 }
 
 CreateThread(function()
-if logs then 
+if logs then
     print'^2 Logs Enabled for md-jobs'
     if logapi == 'insert string here' then 
         print'^1 homie you gotta set your api on line 4'
@@ -22,7 +22,7 @@ end
 end)
 
 function Log(message, type)
-if logs == false then return end	
+if logs == false then return end
     local buffer = {
         level = "info",
         message = message,
@@ -62,7 +62,7 @@ function Notifys(source, text, type)
     elseif notify == 'okok' then
         TriggerClientEvent('okokNotify:Alert', source, '', text, 4000, type, false)
     else
-        print"dude, it literally tells you what to put in the config"    
+        print"dude, it literally tells you what to put in the config"
     end
 end
 
@@ -124,7 +124,7 @@ function getSRC(player)
 end
 
 function getPlayerByCid(cid)
-    if Config.Framework == 'qb' then 
+    if Config.Framework == 'qb' then
         return QBCore.Functions.GetPlayerByCitizenId(cid)
     elseif Config.Framework == 'qbx' then
         return QBOX:GetPlayerByCitizenId(cid)
@@ -147,7 +147,7 @@ function getJobName(source)
 end
 
 function getCid(source)
-    if Config.Framework == 'qb' then 
+    if Config.Framework == 'qb' then
         local Player = getPlayer(source)
         return Player.PlayerData.citizenid
     elseif Config.Framework == 'qbx' then
@@ -171,8 +171,6 @@ function isBoss(source)
         return Player.getJob().isboss
     end
 end
-
-
 
 function Itemcheck(source, item, amount, notify)
     if type(item) == 'table' then 
@@ -227,7 +225,6 @@ function getItemCount(src, item)
             return 0
         end
     end
-    return 0
 end
 
 function GetLabels(item)
@@ -241,7 +238,7 @@ function GetLabels(item)
     end
 end
 
-function RemoveItem(source, item, amount) 
+function RemoveItem(source, item, amount)
     if Config.Inv == 'ox' then
         if exports.ox_inventory:RemoveItem(source, item, amount) then
             return true
@@ -307,7 +304,6 @@ function sorter(tbl, key)
     end)
 end
 
-
 function billPlayer(src, type, amount)
     if Config.Framework == 'qb' then 
         local Player = getPlayer(src)
@@ -348,7 +344,7 @@ end
 
 function removeMoney(source, amount, type) 
     local Player = getPlayer(source)
-    if Config.Framework == 'qb' then 
+    if Config.Framework == 'qb' then
         if Player.Functions.RemoveMoney(type, amount) then
             return true
         else
@@ -415,7 +411,6 @@ function getNear(source)
     end
     return peeps
 end
-
 
 function addMoney(source, amount)
     if Config.Framework == 'qb' then 
@@ -501,7 +496,7 @@ RegisterNetEvent('md-jobs:server:openStash', function(name, weight, slot, num, j
    end
 end)
 
-function CUI(item, fun) 
+function CUI(item, fun)
     if Config.Framework == 'qb' then 
         QBCore.Functions.CreateUseableItem(item, fun)
     elseif Config.Framework == 'qbx' then

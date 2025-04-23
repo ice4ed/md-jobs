@@ -118,7 +118,7 @@ end
 
 function AddTargModel(model, data, num)
 	local options = {}
-	for k, v in pairs (data) do 
+	for k, v in pairs (data) do
 		table.insert(options, {
 			icon = v.icon or "fa-solid fa-eye",  label = v.label, event = v.event or nil, action = v.action or nil,
 			onSelect = v.action,data = v.data,canInteract = v.canInteract or nil, distance = 2.0,
@@ -201,7 +201,6 @@ function isBoss()
 	end
 end
 
-
 function hasJob(job)
 	if getJobName() == job then return true else return false end
 end
@@ -244,7 +243,7 @@ function hasEnough(table)
 		end
 		return true
 	elseif Config.Inv == 'ox' then
-		local need, have = 0, 0 
+		local need, have = 0, 0
 		for k, v in pairs(table) do
 			need = need + 1
 			local item = exports.ox_inventory:Search('slots', k)
@@ -397,10 +396,7 @@ function openTray(name, weight, slot, num, job)
 	elseif Config.Inv == 'oldqb' then 
 		Wait(100)
 		TriggerEvent(invcall..":client:SetCurrentStash", name)
-		TriggerServerEvent(invcall..":server:OpenInventory", "stash", name, {
-			maxweight = weight,
-			slots = slot,
-		})
+		TriggerServerEvent(invcall..":server:OpenInventory", "stash", name, {maxweight = weight,slots = slot,})
 	elseif Config.Inv == 'outdated' then
 		local other = {maxweight = weight, slots = slot}
 		TriggerServerEvent("inventory:server:OpenInventory", "stash", "Stash_"..name, other)
@@ -417,10 +413,7 @@ function openStash(name, weight, slot, num, job)
 	elseif Config.Inv == 'oldqb' then 
 		Wait(100)
 		TriggerEvent(invcall..":client:SetCurrentStash", name)
-		TriggerServerEvent(invcall..":server:OpenInventory", "stash", name, {
-			maxweight = weight,
-			slots = slot,
-		})
+		TriggerServerEvent(invcall..":server:OpenInventory", "stash", name, {maxweight = weight,slots = slot,})
 	elseif Config.Inv == 'outdated' then
 		local other = {maxweight = weight, slots = slot}
 		TriggerServerEvent("inventory:server:OpenInventory", "stash", "Stash_"..name, other)
@@ -439,7 +432,7 @@ local function calculateRemainingTime(due, time)
     return s(L.cater.time, hour, minute, secs)
 end
 
-local function stopCatering(job) 
+local function stopCatering(job)
 	local stop = lib.callback.await('md-jobs:server:stopCatering', false, job)
 	if stop then Notify(L.cater.timeout, 'error') return end
 end
@@ -459,12 +452,7 @@ local function checkCatering(job)
 	table.sort(itemList)
 	local ord = s(L.cater.check, drop, drop, dt.firstname, dt.lastname, drop, dt.location.label, drop, -- no touch plz
 	calculateRemainingTime(dt.dueby, time), drop, totals.amount, drop, totals.price, drop, drop, table.concat(itemList, "  \n  ")) 
-	local alert = lib.alertDialog({
-		header = s(L.cater.cater_header, job),
-		content = ord,
-		centered = true,
-		cancel = true
-	})
+	local alert = lib.alertDialog({ header = s(L.cater.cater_header, job), content = ord, centered = true, cancel = true})
 	return true
 end
 
@@ -566,6 +554,7 @@ local function deliverCatering(job)
 		end
 	}})
 	local plate = lib.callback.await('md-jobs:server:cateringVan', false, job)
+	giveKeys(plate)
 	SetVehicleFuelLevel(plate, 100.0)
 	Notify(L.cater.manage.van, 'success')
 end
@@ -642,10 +631,18 @@ end
 
 lib.callback.register('md-jobs:client:consume', function(item, data)
    if not data.label then data.label = 'Consuming ' end
-   if not data.time then data.time = 5000 end -- Default consume time if not provided
-   if not data.anim then data.anim = 'uncuff' end -- Default animation if not provided
-   if not progressbar(data.label .. ' ' .. GetLabel(item), data.time, data.anim) then
-	  return false -- If the progress bar is cancelled, stop consuming
-   end
+   if not data.time then data.time = 5000 end
+   if not data.anim then data.anim = 'uncuff' end 
+   if not progressbar(data.label .. ' ' .. GetLabel(item), data.time, data.anim) then return false end
    return true
 end)
+
+function giveKeys(veh)
+	if Config.Framework == 'qb' then 
+		TriggerEvent("vehiclekeys:client:SetOwner",veh)
+	elseif Config.Framework == 'qbx' then
+		TriggerEvent("vehiclekeys:client:SetOwner", veh)
+	elseif Config.Framework == 'esx' then
+		print('someone PR This for esx vehicle keys idk esx much and im lazy')
+	end
+end
