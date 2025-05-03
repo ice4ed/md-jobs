@@ -80,6 +80,49 @@
         }
     },
 ```
+If using scully:
+
+```lua
+
+{
+    Label = 'Uncuff',
+    Command = 'uncuff',
+    Animation = 'a_uncuff',
+    Dictionary = 'mp_arresting',
+    Options = {
+        Flags = {
+            Loop = true,
+            Move = true,
+        },
+    },
+},
+
+{
+    Label = 'Shake Cocktail',
+    Command = 'cocktail',
+    Animation = 'shake_can_male',
+    Dictionary = 'anim@scripted@freemode@postertag@graffiti_spray@male@',
+    Options = {
+        Flags = {
+            Loop = true,
+            Move = false,
+        },
+        Props = {
+            {
+                Bone = 28422,
+                Name = 'prop_bar_cockshaker',
+                Placement = {
+                    vector3(0.0, 0.0, -0.20),
+                    vector3(0.0017365, 0.0, 0.0),
+                },
+            },
+        },
+    },
+},
+
+```
+
+
 ### Step 5 ( ONLY FOR QBX )
 - head to the fxmanifest.lua
    - uncomment out the line in client_scripts { } for player data
