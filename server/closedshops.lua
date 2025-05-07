@@ -182,11 +182,11 @@ lib.callback.register('md-jobs:server:purchaseClosedShops', function(source, job
                 Notifys(src, s(L.closed.bought, amount, GetLabels(item), totalPrice), 'success')
                 Log('Purchased from Closed Shop: ' .. job .. ' Name:' .. getName(src), 'closedshop')
                 return true
-            else
-                Notifys(src, L.Error.too_poor, 'error')
             end
+            return false
         else
             Notifys(src, L.closed.not_enough_stock 'error')
+            return false
         end
     end
     return true
