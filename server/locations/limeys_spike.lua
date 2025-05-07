@@ -78,7 +78,7 @@ Jobs['limeys'] = {
             {loc = vector3(253.38, -1022.38, 29.65), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 160,  commission = 0.2, job = 'limeys'},
         },
         stash = {
-            {loc = vec3(253.99, -1017.3, 29.54), l = 0.75, w = 0.5, lwr = 0.50, upr = 0.50, r = 160, slots = 20, weight = 100000, job = 'limeys'},
+            {loc = vec3(253.8, -1016.9, 29.54), l = 0.75, w = 0.5, lwr = 0.50, upr = 0.50, r = 160, slots = 20, weight = 100000, job = 'limeys'},
         },
         trays = {
             {prop = 'prop_food_tray_01', label = 'Grab Drinks!', loc = vector3(253.71, -1021.59, 29.5),  l = 0.5, w = 0.5, lwr = 0.25, upr = 0.25, r = 160, slots = 20, weight = 100000, job = 'tequilala'},

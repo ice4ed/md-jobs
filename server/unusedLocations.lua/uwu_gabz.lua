@@ -116,8 +116,6 @@ Jobs['uwu'] = {
             {CraftData = {type = 'chop', targetLabel = 'Chop Food', menuLabel = 'Chop Food!'},
                 loc = vector3(-591.06, -1063.04, 22.32), l = 0.5, w = 0.6, lwr = 0.25, upr = 0.25, r = 180, job = 'uwu'},
 
-            {CraftData = {type = 'cocktail', targetLabel = 'Make Cocktail', menuLabel = 'Make Cocktail!'},
-                loc = vector3(-561.36, 286.65, 82.24), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 180, job = 'uwu'},
 
             {CraftData = {type = 'sautee', targetLabel = 'Sautee Food!', menuLabel = 'Sautee Food!'},
                 loc = vector3(-590.89, -1056.5, 22.38), l = 0.5, w = 0.75, lwr = 0.5, upr = 0.5, r = 180, job = 'uwu'},

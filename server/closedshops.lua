@@ -145,7 +145,7 @@ lib.callback.register('md-jobs:server:removeItemsFromClosed', function(source, j
         local items = lib.callback.await('md-jobs:client:removeItemsFromClosed', src, data)
         if items == nil then return end
         for k, v in pairs (data) do
-           if items[k] <= 0 then
+           if items[k] < 0 then
                 has[v.item] = nil
            else
                 if has[v.item] ~= nil then
