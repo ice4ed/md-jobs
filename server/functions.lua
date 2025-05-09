@@ -505,3 +505,13 @@ function CUI(item, fun)
         ESX.RegisterUsableItem(item, fun)
     end
 end
+
+CreateThread(function()
+    local url = "https://raw.githubusercontent.com/Mustachedom/md-jobs/main/version.txt"
+    local version = GetResourceMetadata('md-jobs', "version" )
+     PerformHttpRequest(url, function(err, text, headers)
+         if (text ~= nil) then
+                print('^2 Your Version:' .. version .. ' | Current Version:' .. text .. '' )  
+         end
+     end, "GET", "", "")
+end)
