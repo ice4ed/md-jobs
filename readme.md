@@ -1,5 +1,5 @@
 # MD-Jobs
-
+    
 <div align="center">
   <a href="https://discord.gg/sAMzrB4DDx">
     <img src="https://i.imgur.com/t65G9Z0.png" width="200" alt="Mustache Scripts Discord">
