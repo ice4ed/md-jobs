@@ -646,3 +646,13 @@ function giveKeys(veh)
 		print('someone PR This for esx vehicle keys idk esx much and im lazy')
 	end
 end
+
+function toggleDuty()
+	if Config.Framework == 'qb' then
+		TriggerServerEvent('QBCore:ToggleDuty')
+	elseif Config.Framework == 'qbx' then
+		TriggerServerEvent("QBCore:ToggleDuty")
+	elseif Config.Framework == 'esx' then
+		print('someone PR This for esx duty idk esx much and im lazy')
+	end
+end

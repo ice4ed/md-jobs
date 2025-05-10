@@ -41,7 +41,8 @@ CreateThread(function()
                 local ops = {
                     {icon = Icons.till, label = L.T.till, action = function() TriggerServerEvent('md-jobs:server:billPlayer', k, m) end, canInteract = function() return hasJob(k) end},
                     {icon = Icons.till, label = L.T.managecat, action = function() manageCatering(k) end, canInteract = function() return hasJob(k) and GlobalState.Cater[k] end},
-                    {icon = Icons.till, label = L.T.boss, action = function() openBossMenu(k) end, canInteract = function() return isBoss() and hasJob(k) end}
+                    {icon = Icons.till, label = L.T.boss, action = function() openBossMenu(k) end, canInteract = function() return isBoss() and hasJob(k) end},
+                    {icon = Icons.till, label = 'Toggle Duty', action = function() toggleDuty() end, canInteract = function() return hasJob(k) end},
                 }
                 if d.prop ~= nil then
                     lib.requestModel(d.prop)
