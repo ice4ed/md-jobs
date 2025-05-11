@@ -68,7 +68,7 @@ Jobs['uwu'] = {
 
             },
             Van = {
-                vu = {model = 'burrito', label = 'Burrito', plate = 'uwucat', loc = vector4(-609.21, -1034.1, 21.79, 78.33), heading = 28.78},
+                uwu = {model = 'burrito', label = 'Burrito', plate = 'uwucat', loc = vector4(-609.21, -1034.1, 21.79, 78.33), heading = 28.78},
             }
 
     },
