@@ -207,7 +207,7 @@ end
 
 function openBossMenu(job)
 	if Config.Framework == 'qb' then 
-		TriggerEvent('qb-bossmenu:client:openMenu', job)
+		TriggerEvent('qb-bossmenu:client:OpenMenu')
 	elseif Config.Framework == 'qbx' then
 		exports.qbx_management:OpenBossMenu('job')
 	elseif Config.Framework == 'esx' then
