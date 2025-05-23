@@ -1,5 +1,5 @@
 local invcall
-local progressbartype = Config.progressbartype
+local progressbartype = Config.ProgressBarType
 local notifytype = Config.Notify
 
 -- Initialize inventory
@@ -134,11 +134,11 @@ end
 --- @return nil
 local function deliverCatering(job)
 	local info, currentTime = lib.callback.await('md-jobs:server:getCateringInfo', false, job)
-	info.employees = json.decode(info.employees)
-	info.totals    = json.decode(info.totals)
-	info.details   = json.decode(info.details)
-	info.data      = json.decode(info.data)
-	local details = info.details
+	info.employees          = json.decode(info.employees)
+	info.totals             = json.decode(info.totals)
+	info.details            = json.decode(info.details)
+	info.data               = json.decode(info.data)
+	local details           = info.details
 	if details.dueby - currentTime < 0 then
 		Notify(L.cater.manage.too_late, 'error')
 		lib.callback.await('md-jobs:server:stopCatering', false, job)
@@ -171,7 +171,7 @@ local function deliverCatering(job)
 			action = function()
 				local delivered = lib.callback.await('md-jobs:server:deliverCatering', false, job)
 				if delivered then
-					Notify(L.cater.manage.complete, 'success')
+					Notify(L.cater.manage.delivered, 'success')
 					DeleteEntity(npcPed)
 					RemoveBlip(blip)
 				end
@@ -182,6 +182,7 @@ local function deliverCatering(job)
 	giveKeys(vanPlate)
 	SetVehicleFuelLevel(vanPlate, 100.0)
 	Notify(L.cater.manage.van, 'success')
+	SetModelAsNoLongerNeeded(details.location.model)
 end
 
 --- Cancel catering for a job
@@ -566,9 +567,37 @@ end
 
 --- Add a target model to the map
 --- @param model number the model to add
---- @param data table the data for the model
---- @return nil
+--- @param data table the data for the target
+--- @return false | number - false if the target was not added, or the target id
 function AddTargModel(model, data)
+	local options = {}
+	for _, modelOption in pairs(data) do
+		table.insert(options, {
+			icon        = modelOption.icon or "fa-solid fa-eye",
+			name        = modelOption.label,
+			label       = modelOption.label,
+			event       = modelOption.event,
+			action      = modelOption.action,
+			onSelect    = modelOption.action,
+			data        = modelOption.data,
+			canInteract = modelOption.canInteract,
+			distance    = 2.0,
+		})
+	end
+	if Config.Target == 'qb' then
+		return exports['qb-target']:AddTargetEntity(model, { options = options, distance = 3.5 })
+	elseif Config.Target == 'ox' then
+		return exports.ox_target:addLocalEntity(model, options)
+	end
+	return false
+end
+
+--- Add a target model to the map
+--- @param name string the name of the target
+--- @param coords vector3 the coordinates of the sphere
+--- @param data table the data for the target
+--- @return false | number - false if the target was not added, or the target id
+function AddTargSphere(name, coords, data)
 	local options = {}
 	for _, modelOption in pairs(data) do
 		table.insert(options, {
@@ -583,10 +612,42 @@ function AddTargModel(model, data)
 		})
 	end
 	if Config.Target == 'qb' then
-		exports['qb-target']:AddTargetEntity(model, { options = options, distance = 3.5 })
+		return exports['qb-target']:AddCircleZone(name, coords, 2.0, { options = options, distance = 3.5 })
 	elseif Config.Target == 'ox' then
-		exports.ox_target:addLocalEntity(model, options)
+		return exports.ox_target:addSphereZone({
+			name = name,
+			coords = coords,
+			options = options
+		})
 	end
+	return false
+end
+
+--- Remove a target sphere from the map
+--- @param entity number the entity to remove
+--- @param data table the data for the target
+function RemoveTargModel(entity, data)
+	local options = {}
+	for _, modelOption in pairs(data) do
+		table.insert(options, modelOption.label)
+	end
+	if Config.Target == 'qb' then
+		return exports['qb-target']:RemoveTargetEntity(entity, options)
+	elseif Config.Target == 'ox' then
+		return exports.ox_target:removeLocalEntity(entity, options)
+	end
+	return false
+end
+
+--- Remove a target sphere from the map
+--- @param name string the name of the target
+function RemoveTargSphere(name)
+	if Config.Target == 'qb' then
+		return exports['qb-target']:RemoveZone(name)
+	elseif Config.Target == 'ox' then
+		return exports.ox_target:removeZone(name)
+	end
+	return false
 end
 
 --- Spawn a prop in the world
@@ -976,9 +1037,13 @@ function OpenClosedShop(job, num)
 			end
 		})
 	end
+	local jobLabel = job
+	if Config.Framework == 'qbx' then
+		jobLabel = QBOX:GetJob(job).label
+	end
 	lib.registerContext({
 		id      = 'closedShops',
-		title   = Format(L.Menus.closed.shop, job),
+		title   = Format(L.Menus.closed.shop, jobLabel),
 		options = menuOptions
 	})
 	lib.showContext('closedShops')
@@ -1175,4 +1240,15 @@ lib.callback.register('md-jobs:client:consume', function(item, data)
 	if not data.anim then data.anim = 'uncuff' end
 	if not progressbar(data.label .. ' ' .. GetLabel(item), data.time, data.anim) then return false end
 	return true
+end)
+
+lib.callback.register('md-jobs:client:setVehicleLivery', function(netId, livery)
+	if netId and livery and NetworkDoesEntityExistWithNetworkId(netId) then
+		local vehicle = NetToVeh(netId)
+		if DoesEntityExist(vehicle) and IsEntityAVehicle(vehicle) then
+			SetVehicleLivery(vehicle, livery)
+			return true
+		end
+	end
+	return false
 end)

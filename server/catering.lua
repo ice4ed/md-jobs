@@ -256,6 +256,13 @@ lib.callback.register('md-jobs:server:cateringVan', function(source, job)
     )
     SetVehicleNumberPlateText(vanEntity, vanConfig.plate)
     SetEntityHeading(vanEntity, vanConfig.loc.w)
+    if vanConfig.livery and type(vanConfig.livery) == "number" then
+        local netId = NetworkGetNetworkIdFromEntity(vanEntity)
+        local success = lib.callback.await('md-jobs:client:setVehicleLivery', -1, netId, vanConfig.livery)
+        if not success then
+            print('[ERR] Failed to set livery for catering van')
+        end
+    end
     Log('Catering Order Van Made: ' .. job .. ' Name:' .. GetName(source), 'catering')
     return Jobs[job].catering.Van
 end)

@@ -57,9 +57,13 @@ local function oxPrep()
         return
     end
     for jobName, jobConfig in pairs(Jobs) do
+        local jobLabel = jobName
+        if Config.Framework == 'qbx' then
+            jobLabel = QBOX:GetJob(jobName).label
+        end
         local trayLocations = jobConfig.locations.trays or {}
         for trayIndex, trayConfig in pairs(trayLocations) do
-            local stashName = jobName .. ' Tray ' .. trayIndex
+            local stashName = jobLabel .. ' Tray ' .. trayIndex
             exports.ox_inventory:RegisterStash(
                 stashName,
                 stashName,
@@ -69,7 +73,7 @@ local function oxPrep()
         end
         local stashLocations = jobConfig.locations.stash or {}
         for stashIndex, stashConfig in pairs(stashLocations) do
-            local stashName = jobName .. ' stash ' .. stashIndex
+            local stashName = jobLabel .. ' stash ' .. stashIndex
             exports.ox_inventory:RegisterStash(
                 stashName,
                 stashName,
@@ -231,19 +235,20 @@ end
 ------------------------
 
 RegisterNetEvent('md-jobs:server:billPlayer', function(job, tillIndex)
-    local playerSrc = source
+    local src = source
+    if not src then return end
     local tillData  = getLocData(job, 'Tills', tillIndex)
     if job ~= tillData.job then
         return
     end
-    if not CheckLoc(playerSrc, job, 'Tills', tillIndex) then
+    if not CheckLoc(src, job, 'Tills', tillIndex) then
         return
     end
-    if GetJobName(playerSrc) ~= tillData.job then
+    if GetJobName(src) ~= tillData.job then
         return
     end
-    local nearbyPlayers = GetNear(playerSrc)
-    local chargeInfo    = lib.callback.await('md-jobs:client:chargePerson', playerSrc, nearbyPlayers)
+    local nearbyPlayers = GetNear(src)
+    local chargeInfo    = lib.callback.await('md-jobs:client:chargePerson', src, nearbyPlayers)
     if not chargeInfo then
         return
     end
@@ -251,30 +256,30 @@ RegisterNetEvent('md-jobs:server:billPlayer', function(job, tillIndex)
     local billedSrc       = getSRC(billedPlayerObj)
     local acceptedCharge  = lib.callback.await('md-jobs:client:acceptCharge', billedSrc, chargeInfo.amount)
     if not acceptedCharge then
-        Notifys(playerSrc, GetName(playerSrc) .. ' Refused To Pay', 'error')
+        Notifys(src, GetName(src) .. ' Refused To Pay', 'error')
         return
     end
     if BillPlayer(billedSrc, acceptedCharge.type, chargeInfo.amount) then
         Notifys(
-            playerSrc,
+            src,
             Format(L.billing.billed, chargeInfo.amount, GetName(billedSrc)),
             'success'
         )
         Notifys(
             billedSrc,
-            Format(L.billing.paid, chargeInfo.amount, GetName(playerSrc)),
+            Format(L.billing.paid, chargeInfo.amount, GetName(src)),
             'success'
         )
-        dispenseCommission(playerSrc, chargeInfo.amount, tillData.commission)
+        dispenseCommission(src, chargeInfo.amount, tillData.commission)
         Log(
             'Charged: ' .. job ..
-            ' Name:' .. GetName(playerSrc) ..
+            ' Name:' .. GetName(src) ..
             ' Billed: ' .. GetName(billedSrc) ..
             '$' .. chargeInfo.amount,
             'billing'
         )
     else
-        Notifys(playerSrc, Format(L.billing.too_poor, GetName(billedSrc)), 'error')
+        Notifys(src, Format(L.billing.too_poor, GetName(billedSrc)), 'error')
     end
 end)
 

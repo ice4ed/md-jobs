@@ -7,13 +7,13 @@ local headers  = {
     ['Content-Type']  = 'application/json',
 }
 
--------------------------
----- Local Functions ----
--------------------------
+--------------------------
+---- Global Functions ----
+--------------------------
 
 --- Get all players
 --- @return table - the players
-local function getPlayers()
+function GetPlayers()
     if Config.Framework == 'qb' then
         return QBCore.Functions.GetQBPlayers()
     elseif Config.Framework == 'qbx' then
@@ -23,10 +23,6 @@ local function getPlayers()
     end
     return {}
 end
-
---------------------------
----- Global Functions ----
---------------------------
 
 --- Log a message
 --- @param message string the message to log
@@ -281,7 +277,7 @@ end
 --- @return table - a list of nearby players
 function GetNear(source)
     local nearbyPlayers = {}
-    local allPlayers    = getPlayers()
+    local allPlayers    = GetPlayers()
     if Config.Framework == 'qb' or Config.Framework == 'qbx' then
         for _, entry in pairs(allPlayers) do
             local srcPed   = GetPlayerPed(source)
@@ -369,27 +365,28 @@ end
 ------------------------
 
 RegisterNetEvent('md-jobs:server:openTray', function(name, weight, slot, num, job)
-    local playerSrc = source
-    local data      = { label = name, maxweight = weight, slots = slot }
+    local src  = source
+    local data = { label = name, maxweight = weight, slots = slot }
     if GetResourceState('qb-inventory') == 'started' then
-        exports['qb-inventory']:OpenInventory(playerSrc, name, data)
+        exports['qb-inventory']:OpenInventory(src, name, data)
     elseif GetResourceState('ps-inventory') == 'started' then
-        exports['ps-inventory']:OpenInventory(playerSrc, name, data)
+        exports['ps-inventory']:OpenInventory(src, name, data)
     else
         print('^1 You Wouldnt See This If You Had Read The ReadMe.md')
     end
 end)
 
 RegisterNetEvent('md-jobs:server:openStash', function(name, weight, slot, num, job)
-    local playerSrc = source
-    local player    = GetPlayer(playerSrc)
-    if not CheckLoc(playerSrc, job, 'stash', num) then return end
+    local src = source
+    if not src then return end
+    local player = GetPlayer(src)
+    if not CheckLoc(src, job, 'stash', num) then return end
     if job ~= player.PlayerData.job.name then return end
     local data = { label = name, maxweight = weight, slots = slot }
     if GetResourceState('qb-inventory') == 'started' then
-        exports['qb-inventory']:OpenInventory(playerSrc, name, data)
+        exports['qb-inventory']:OpenInventory(src, name, data)
     elseif GetResourceState('ps-inventory') == 'started' then
-        exports['ps-inventory']:OpenInventory(playerSrc, name, data)
+        exports['ps-inventory']:OpenInventory(src, name, data)
     else
         print('^1 You Wouldnt See This If You Had Read The ReadMe.md')
     end

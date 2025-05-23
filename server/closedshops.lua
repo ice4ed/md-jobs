@@ -50,24 +50,80 @@ local function getAllJobs()
     return {}
 end
 
-----------------------------
----- Callback Functions ----
-----------------------------
+--- Spawn server-sided closed shop ped
+--- @param shop table - the shop data
+--- @return number | nil - the network ID of the spawned ped or nil if it fails
+local function spawnPed(shop)
+    if Config.UseClientPeds and shop.ped then
+        local timeout = 5000
+        local startTime = GetGameTimer()
+        local ped = CreatePed(0, shop.ped, shop.loc.x, shop.loc.y, shop.loc.z, shop.loc.w, true, true)
+        while not DoesEntityExist(ped) do
+            Wait(100)
+            if GetGameTimer() - startTime > timeout then
+                if Config.Debug then print("Timeout: Ped creation failed.") end
+                return
+            end
+        end
+        FreezeEntityPosition(ped, true)
+        local netId = NetworkGetNetworkIdFromEntity(ped)
+        shop.netId = netId
+    end
+end
 
-lib.callback.register('md-jobs:server:getPeds', function()
-    local peds = {}
-    for jobName, jobData in pairs(Jobs) do
-        if jobData.closedShopsEnabled then
-            if jobData.closedShops then
-                for index, shop in pairs(Jobs[jobName].closedShops) do
-                    if shop.ped then
-                        table.insert(peds, { model = shop.ped, loc = shop.loc, job = jobName, num = index })
+------------------------
+---- Event Handlers ----
+------------------------
+
+AddEventHandler('onResourceStop', function(resource)
+    if resource ~= GetCurrentResourceName() or Config.UseClientPeds then return end
+    for _, job in pairs(Jobs) do
+        local closedShop = job.closedShops
+        if closedShop ~= nil then
+            for _, shop in pairs(closedShop) do
+                local netId = shop.ped and shop.ped.netId or nil -- Fall back if ped is nil
+                if netId and NetworkDoesEntityExistWithNetworkId(netId) then
+                    local ped = NetworkGetEntityFromNetworkId(netId)
+                    if DoesEntityExist(ped) then
+                        DeleteEntity(ped)
                     end
                 end
             end
         end
     end
-    return peds
+end)
+
+----------------------------
+---- Callback Functions ----
+----------------------------
+
+lib.callback.register('md-jobs:server:getClosedShops', function()
+    local shops = {}
+    for jobName, jobData in pairs(Jobs) do
+        if jobData.closedShopsEnabled then
+            if jobData.closedShops then
+                for index, shop in pairs(Jobs[jobName].closedShops) do
+                    if shop.ped then
+                        local modelValue = nil -- Ped model if client spawned else netId
+                        if Config.UseClientPeds then
+                            modelValue = shop.ped
+                        else
+                            local netId = shop.netId
+                            if not netId or not NetworkDoesEntityExistWithNetworkId(netId) then
+                                netId = spawnPed(shop)
+                                shop.netId = netId
+                            end
+                            modelValue = netId
+                        end
+                        table.insert(shops, { type = "ped", config = { model = modelValue, loc = shop.loc, job = jobName, num = index }})
+                    else
+                        table.insert(shops, { type = "target", config = { loc = shop.loc, job = jobName, num = index }})
+                    end
+                end
+            end
+        end
+    end
+    return shops
 end)
 
 
@@ -227,10 +283,10 @@ lib.callback.register('md-jobs:server:purchaseClosedShops', function(source, job
 end)
 
 lib.callback.register('md-jobs:server:adjustPrices', function(source, job, shopIndex)
-    local playerSrc = source
-    if not isBoss(playerSrc) then return end
-    if GetJobName(playerSrc) ~= job then return end
-    local playerCoords = GetEntityCoords(GetPlayerPed(playerSrc))
+    local src = source
+    if not isBoss(src) then return end
+    if GetJobName(src) ~= job then return end
+    local playerCoords = GetEntityCoords(GetPlayerPed(src))
     local shopConfig   = Jobs[job]['closedShops'][shopIndex]
     if #(playerCoords - vector3(shopConfig.loc.x, shopConfig.loc.y, shopConfig.loc.z)) >= 5.0 then
         return
@@ -257,7 +313,7 @@ lib.callback.register('md-jobs:server:adjustPrices', function(source, job, shopI
     Sort(priceOptions, 'name')
     local updatedPrices = lib.callback.await(
         'md-jobs:client:adjustPrices',
-        playerSrc,
+        src,
         priceOptions
     )
     if not updatedPrices then return end
