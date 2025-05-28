@@ -4,9 +4,14 @@
         "progressbar",
         "MySQL",
         "getPlayer",
-        "QBX"
+        "QBX",
+        "TriggerServerEvent",
+        "TriggerEvent",
+        "Wait",
+        "exports"
     ],
     "Lua.diagnostics.disable": [
         "lowercase-global"
-    ]
+    ],
+    "lua.targetVersion": "5.3"
 }

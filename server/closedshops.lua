@@ -51,13 +51,14 @@ local function getAllJobs()
 end
 
 --- Spawn server-sided closed shop ped
---- @param shop table - the shop data
+--- @param model string - the ped model to spawn
+--- @param loc vector4 - the location to spawn at
 --- @return number | nil - the network ID of the spawned ped or nil if it fails
-local function spawnPed(shop)
-    if Config.UseClientPeds and shop.ped then
+local function spawnPed(model, loc)
+    if not Config.UseClientPeds and model and loc then
         local timeout = 5000
         local startTime = GetGameTimer()
-        local ped = CreatePed(0, shop.ped, shop.loc.x, shop.loc.y, shop.loc.z, shop.loc.w, true, true)
+        local ped = CreatePed(4, model, loc.x, loc.y, loc.z, loc.w, true, true)
         while not DoesEntityExist(ped) do
             Wait(100)
             if GetGameTimer() - startTime > timeout then
@@ -66,8 +67,7 @@ local function spawnPed(shop)
             end
         end
         FreezeEntityPosition(ped, true)
-        local netId = NetworkGetNetworkIdFromEntity(ped)
-        shop.netId = netId
+        return NetworkGetNetworkIdFromEntity(ped)
     end
 end
 
@@ -110,14 +110,15 @@ lib.callback.register('md-jobs:server:getClosedShops', function()
                         else
                             local netId = shop.netId
                             if not netId or not NetworkDoesEntityExistWithNetworkId(netId) then
-                                netId = spawnPed(shop)
+                                netId = spawnPed(shop.ped, shop.loc)
                                 shop.netId = netId
                             end
                             modelValue = netId
                         end
-                        table.insert(shops, { type = "ped", config = { model = modelValue, loc = shop.loc, job = jobName, num = index }})
+                        table.insert(shops,
+                            { type = "ped", config = { model = modelValue, loc = shop.loc, job = jobName, num = index } })
                     else
-                        table.insert(shops, { type = "target", config = { loc = shop.loc, job = jobName, num = index }})
+                        table.insert(shops, { type = "target", config = { loc = shop.loc, job = jobName, num = index } })
                     end
                 end
             end

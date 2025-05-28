@@ -461,6 +461,24 @@ local function checkCatering(job)
 	return true
 end
 
+--- Create a zone
+--- @param coords vector3 the coords of the zone
+--- @param size vector3 the size of the box zone
+--- @param rotation number the rotation of the zone
+--- @param onEnter function triggers on zone enter
+--- @param onExit function triggers on zone exit
+--- @return string the name of the zone
+local function createZone(coords, size, rotation, onEnter, onExit)
+	return lib.zones.box({
+		coords = coords,
+		size = size,
+		rotation = rotation,
+		debug = Config.Debug,
+		onEnter = onEnter,
+		onExit = onExit
+	})
+end
+
 --------------------------
 ---- Global Functions ----
 --------------------------
@@ -974,6 +992,32 @@ function ManageClosed(job, num)
 	lib.showContext('closedShops')
 end
 
+--- Spawn a ped on the client
+--- @param model string - the model of the ped to spawn
+--- @param location vector4 - the location & heading of the ped
+--- @return number - the local entity id of the ped
+function SpawnLocalPed(model, location)
+	if Config.UseClientPeds then
+		lib.requestModel(model, 30000)
+		local timeout = 5000
+		local startTime = GetGameTimer()
+		ped = CreatePed(4, model, location.x, location.y, location.z, location.w,
+			false,
+			true)
+		while not DoesEntityExist(ped) do
+			Wait(100)
+			if GetGameTimer() - startTime > timeout then
+				if Config.Debug then print("[ERROR] - Timeout: Ped creation failed.") end
+				return
+			end
+		end
+		SetEntityHeading(ped, location.w)
+		FreezeEntityPosition(ped, true)
+		SetModelAsNoLongerNeeded(model)
+		return ped
+	end
+end
+
 --- Adjust prices for a job
 --- @param job string the job to adjust prices for
 --- @param num number the new price to adjust to
@@ -1251,4 +1295,9 @@ lib.callback.register('md-jobs:client:setVehicleLivery', function(netId, livery)
 		end
 	end
 	return false
+end)
+
+lib.callback.register('md-jobs:client:createZone', function(coords, size, rotation, onEnter, onExit)
+	if not coords or not size or not rotation or not onEnter or not onExit then return end
+	return createZone(coords, size, rotation, onEnter, onExit)
 end)

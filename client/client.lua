@@ -2,103 +2,88 @@ local props = {}
 local blips = {}
 local peds = {}
 
---- Spawn peds
+--- Create closed shop zones
 --- @return nil
 local function createZones()
     local closedShops = lib.callback.await('md-jobs:server:getClosedShops', false)
-    for _, shopObj in pairs(closedShops) do
-        local shopConfig = shopObj.config
-        local shopOptions = {
-            {
-                icon = Icons.shop,
-                label = L.T.shop,
-                action = function() OpenClosedShop(shopConfig.job, shopConfig.num) end,
-                canInteract = function()
-                    return CanOpenClosed(shopConfig.job)
-                end
-            },
-            {
-                icon = Icons.shop,
-                label = L.T.manage,
-                action = function() ManageClosed(shopConfig.job, shopConfig.num) end,
-                canInteract = function()
-                    return HasJob(shopConfig.job)
-                end
-            },
-            {
-                icon = Icons.shop,
-                label = "Adjust Prices",
-                action = function() AdjustPrices(shopConfig.job, shopConfig.num) end,
-                canInteract = function()
-                    return IsBoss() and HasJob(shopConfig.job)
-                end
+    CreateThread(function()
+        for _, shopObj in pairs(closedShops) do
+            local shopConfig = shopObj.config
+            local shopOptions = {
+                {
+                    icon = Icons.shop,
+                    label = L.T.shop,
+                    action = function() OpenClosedShop(shopConfig.job, shopConfig.num) end,
+                    canInteract = function()
+                        return CanOpenClosed(shopConfig.job)
+                    end
+                },
+                {
+                    icon = Icons.shop,
+                    label = L.T.manage,
+                    action = function() ManageClosed(shopConfig.job, shopConfig.num) end,
+                    canInteract = function()
+                        return HasJob(shopConfig.job)
+                    end
+                },
+                {
+                    icon = Icons.shop,
+                    label = "Adjust Prices",
+                    action = function() AdjustPrices(shopConfig.job, shopConfig.num) end,
+                    canInteract = function()
+                        return IsBoss() and HasJob(shopConfig.job)
+                    end
+                }
             }
-        }
-        lib.zones.box({
-            coords = vector3(shopConfig.loc.x, shopConfig.loc.y, shopConfig.loc.z),
-            size = vector3(30, 30, 3),
-            rotation = shopConfig.loc.w or 0,
-            debug = Config.Debug,
-            onEnter = function()
-                if shopObj.type == "ped" then
-                    local ped = nil
-                    if Config.UseClientPeds then
-                        local model = shopConfig.model
-                        lib.requestModel(model, 30000)
-                        local timeout = 5000
-                        local startTime = GetGameTimer()
-                        ped = CreatePed(4, model, shopConfig.loc.x, shopConfig.loc.y, shopConfig.loc.z, shopConfig.loc.w,
-                            false,
-                            true)
-                        while not DoesEntityExist(ped) do
-                            Wait(100)
-                            if GetGameTimer() - startTime > timeout then
-                                if Config.Debug then print("[ERROR] - Timeout: Ped creation failed.") end
-                                return
-                            end
+            lib.zones.box({
+                coords = vector3(shopConfig.loc.x, shopConfig.loc.y, shopConfig.loc.z),
+                size = vector3(30, 30, 3),
+                rotation = shopConfig.loc.w or 0,
+                debug = Config.Debug,
+                onEnter = function()
+                    if shopObj.type == "ped" then
+                        local ped = nil
+                        if Config.UseClientPeds then
+                            peds[shopConfig.num] = SpawnLocalPed(shopConfig.model, shopConfig.loc)
+                        else
+                            local netId = shopConfig.model -- If server spawned shopConfig.model is netId
+                            ped = NetToPed(netId)
                         end
-                        SetEntityHeading(ped, shopConfig.loc.w)
-                        FreezeEntityPosition(ped, true)
-                        SetModelAsNoLongerNeeded(model)
-                        peds[shopConfig.num] = ped
-                    else
-                        local netId = shopConfig.model -- If server spawned shopConfig.model is netId
-                        ped = NetToPed(netId)
-                    end
-                    if not ped or not DoesEntityExist(ped) then
-                        print("[ERROR] - Failed to get ped for interaction")
-                        return
-                    end
-                    SetEntityInvincible(ped, true)
-                    SetBlockingOfNonTemporaryEvents(ped, true)
-
-                    AddTargModel(ped, shopOptions)
-                elseif shopObj.type == "target" then
-                    AddTargSphere(shopConfig.job .. ' ' .. shopConfig.num,
-                        vector3(shopConfig.loc.x, shopConfig.loc.y, shopConfig.loc.z), shopOptions)
-                end
-            end,
-            onExit = function()
-                if shopObj.type == "ped" then
-                    if Config.UseClientPeds then
-                        if DoesEntityExist(peds[shopConfig.num]) then
-                            DeleteEntity(peds[shopConfig.num])
-                            peds[shopConfig.num] = nil
-                        end
-                    else
-                        local netId = shopConfig.model -- If server spawned shopConfig.model is netId
-                        local ped = NetToPed(netId)
                         if not ped or not DoesEntityExist(ped) then
-                            print("[ERROR] - Failed to get ped for removal")
+                            print("[ERROR] - Failed to get ped for interaction")
                             return
                         end
-                        RemoveTargModel(ped, shopOptions)
+                        SetEntityInvincible(ped, true)
+                        SetBlockingOfNonTemporaryEvents(ped, true)
+
+                        AddTargModel(ped, shopOptions)
+                    elseif shopObj.type == "target" then
+                        AddTargSphere(shopConfig.job .. ' ' .. shopConfig.num,
+                            vector3(shopConfig.loc.x, shopConfig.loc.y, shopConfig.loc.z), shopOptions)
                     end
-                elseif shopObj.type == "target" then
-                    RemoveTargSphere(shopConfig.job .. ' ' .. shopConfig.num)
-                end
-            end,
-        })
+                end,
+                onExit = function()
+                    if shopObj.type == "ped" then
+                        if Config.UseClientPeds then
+                            if DoesEntityExist(peds[shopConfig.num]) then
+                                DeleteEntity(peds[shopConfig.num])
+                                peds[shopConfig.num] = nil
+                            end
+                        else
+                            local netId = shopConfig.model -- If server spawned shopConfig.model is netId
+                            local ped = NetToPed(netId)
+                            if not ped or not DoesEntityExist(ped) then
+                                print("[ERROR] - Failed to get ped for removal")
+                                return
+                            end
+                            RemoveTargModel(ped, shopOptions)
+                        end
+                    elseif shopObj.type == "target" then
+                        RemoveTargSphere(shopConfig.job .. ' ' .. shopConfig.num)
+                    end
+                end,
+            })
+        end
     end
 end
 
