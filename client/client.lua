@@ -113,7 +113,7 @@ local function spawnBlips()
         SetBlipColour(blips[blipIndex], blipInfo.color or 2)
         SetBlipAsShortRange(blips[blipIndex], true)
         BeginTextCommandSetBlipName("STRING")
-        AddTextComponentString(blipInfo.label or 'Lazy Ass')
+        -- AddTextComponentString(blipInfo.label or 'Lazy Ass')
         EndTextCommandSetBlipName(blips[blipIndex])
     end
 end

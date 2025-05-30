@@ -151,7 +151,7 @@ local function deliverCatering(job)
 	SetBlipScale(blip, 0.9)
 	SetBlipColour(blip, 8)
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString('Catering')
+	-- AddTextComponentString('Catering')
 	EndTextCommandSetBlipName(blip)
 
 	local options = {

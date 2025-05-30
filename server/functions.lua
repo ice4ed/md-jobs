@@ -113,24 +113,6 @@ function CreateZones()
     end)
 end
 
---- Create constant blips (shortcut)
---- @return nil
-function SpawnBlips()
-    local blipConfigs = lib.callback.await('md-jobs:server:getBlips', false)
-    for blipIndex, blipInfo in pairs(blipConfigs) do
-        blips[blipIndex] = AddBlipForCoord(blipInfo.loc.x, blipInfo.loc.y, blipInfo.loc.z)
-        local temp = blips[blipIndex]
-        SetBlipSprite(blips[blipIndex], blipInfo.sprite or 52)
-        SetBlipDisplay(blips[blipIndex], 4)
-        SetBlipScale(blips[blipIndex], blipInfo.scale or 0.8)
-        SetBlipColour(blips[blipIndex], blipInfo.color or 2)
-        SetBlipAsShortRange(blips[blipIndex], true)
-        BeginTextCommandSetBlipName("STRING")
-        AddTextComponentString(blipInfo.label or 'Lazy Ass')
-        EndTextCommandSetBlipName(blips[blipIndex])
-    end
-end
-
 --- Spawn server-sided closed shop ped
 --- @param model string - the ped model to spawn
 --- @param loc vector4 - the location to spawn at
