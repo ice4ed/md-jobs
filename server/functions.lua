@@ -6,10 +6,155 @@ local headers  = {
     ['Authorization'] = logapi,
     ['Content-Type']  = 'application/json',
 }
+local props    = {}
+local blips    = {}
+local peds     = {}
 
 --------------------------
 ---- Global Functions ----
 --------------------------
+
+--- Create closed shop zones
+--- @return nil
+function CreateZones()
+    CreateThread(function()
+        local closedShops = lib.callback.await('md-jobs:server:getClosedShops', false)
+        if not closedShops then
+            print("[ERR] - No closed shops found")
+            return
+        end
+        for _, shopObj in pairs(closedShops) do
+            local shopConfig = shopObj.config
+            local shopOptions = {
+                {
+                    icon = Icons.shop,
+                    label = L.T.shop,
+                    action = function() OpenClosedShop(shopConfig.job, shopConfig.num) end,
+                    canInteract = function()
+                        return CanOpenClosed(shopConfig.job)
+                    end
+                },
+                {
+                    icon = Icons.shop,
+                    label = L.T.manage,
+                    action = function() ManageClosed(shopConfig.job, shopConfig.num) end,
+                    canInteract = function()
+                        return HasJob(shopConfig.job)
+                    end
+                },
+                {
+                    icon = Icons.shop,
+                    label = "Adjust Prices",
+                    action = function() AdjustPrices(shopConfig.job, shopConfig.num) end,
+                    canInteract = function()
+                        return IsBoss() and HasJob(shopConfig.job)
+                    end
+                }
+            }
+            lib.zones.box({
+                coords = vector3(shopConfig.loc.x, shopConfig.loc.y, shopConfig.loc.z),
+                size = vector3(30, 30, 3),
+                rotation = shopConfig.loc.w or 0,
+                debug = Config.Debug,
+                onEnter = function()
+                    print("Entering closed shop zone: " .. shopConfig.job .. ' ' .. shopConfig.num)
+                    if shopObj.type == "ped" then
+                        local ped
+                        if Config.UseClientPeds then
+                            peds[shopConfig.num] = SpawnLocalPed(shopConfig.model, shopConfig.loc)
+                        else
+                            local netId = shopConfig.model -- If server spawned shopConfig.model is netId
+                            if NetworkDoesEntityExistWithNetworkId(netId) then
+                                ped = NetToPed(netId)
+                            else
+                                print("[ERROR] - No entity found for netId: " .. netId)
+                            end
+                        end
+                        if not ped or not DoesEntityExist(ped) then
+                            print("[ERROR] - Failed to get ped for interaction")
+                            return
+                        else
+                            print("Ped found for interaction: " .. ped)
+                        end
+                        SetEntityInvincible(ped, true)
+                        SetBlockingOfNonTemporaryEvents(ped, true)
+
+                        AddTargModel(ped, shopOptions)
+                    elseif shopObj.type == "target" then
+                        AddTargSphere(shopConfig.job .. ' ' .. shopConfig.num,
+                            vector3(shopConfig.loc.x, shopConfig.loc.y, shopConfig.loc.z), shopOptions)
+                    end
+                end,
+                onExit = function()
+                    if shopObj.type == "ped" then
+                        if Config.UseClientPeds then
+                            if DoesEntityExist(peds[shopConfig.num]) then
+                                DeleteEntity(peds[shopConfig.num])
+                                peds[shopConfig.num] = nil
+                            end
+                        else
+                            local ped
+                            local netId = shopConfig.model -- If server spawned shopConfig.model is netId
+                            if NetworkDoesEntityExistWithNetworkId(netId) then
+                                ped = NetToPed(netId)
+                            end
+                            if not ped or not DoesEntityExist(ped) then
+                                print("[ERROR] - Failed to get ped for removal")
+                                return
+                            end
+                            RemoveTargModel(ped, shopOptions)
+                        end
+                    elseif shopObj.type == "target" then
+                        RemoveTargSphere(shopConfig.job .. ' ' .. shopConfig.num)
+                    end
+                end,
+            })
+        end
+    end)
+end
+
+--- Create constant blips (shortcut)
+--- @return nil
+function SpawnBlips()
+    local blipConfigs = lib.callback.await('md-jobs:server:getBlips', false)
+    for blipIndex, blipInfo in pairs(blipConfigs) do
+        blips[blipIndex] = AddBlipForCoord(blipInfo.loc.x, blipInfo.loc.y, blipInfo.loc.z)
+        local temp = blips[blipIndex]
+        SetBlipSprite(blips[blipIndex], blipInfo.sprite or 52)
+        SetBlipDisplay(blips[blipIndex], 4)
+        SetBlipScale(blips[blipIndex], blipInfo.scale or 0.8)
+        SetBlipColour(blips[blipIndex], blipInfo.color or 2)
+        SetBlipAsShortRange(blips[blipIndex], true)
+        BeginTextCommandSetBlipName("STRING")
+        AddTextComponentString(blipInfo.label or 'Lazy Ass')
+        EndTextCommandSetBlipName(blips[blipIndex])
+    end
+end
+
+--- Spawn server-sided closed shop ped
+--- @param model string - the ped model to spawn
+--- @param loc vector4 - the location to spawn at
+--- @return number | nil - the network ID of the spawned ped or nil if it fails
+function SpawnPed(model, loc)
+    if not Config.UseClientPeds and model and loc then
+        local timeout = 5000
+        local startTime = GetGameTimer()
+        local ped = CreatePed(4, model, loc.x, loc.y, loc.z, loc.w, true, true)
+        while not DoesEntityExist(ped) do
+            Wait(100)
+            if GetGameTimer() - startTime > timeout then
+                if Config.Debug then print("Timeout: Ped creation failed.") end
+                return
+            end
+        end
+        FreezeEntityPosition(ped, true)
+        print("Created ped " ..
+            ped ..
+            " with model " ..
+            model .. " and netId " .. NetworkGetNetworkIdFromEntity(ped) .. " at location " .. json.encode(loc))
+        return NetworkGetNetworkIdFromEntity(ped)
+    end
+end
 
 --- Get all players
 --- @return table - the players
@@ -390,6 +535,29 @@ RegisterNetEvent('md-jobs:server:openStash', function(name, weight, slot, num, j
     else
         print('^1 You Wouldnt See This If You Had Read The ReadMe.md')
     end
+end)
+
+AddEventHandler('onClientResourceStop', function(resource)
+    if resource ~= GetCurrentResourceName() then return end
+
+    for _, prop in pairs(props) do
+        if DoesEntityExist(prop) then
+            DeleteEntity(prop)
+        end
+    end
+
+    if Config.UseClientPeds then
+        for _, ped in pairs(peds) do
+            if DoesEntityExist(ped) then
+                DeleteEntity(ped)
+            end
+        end
+    end
+
+    for _, blip in pairs(blips) do RemoveBlip(blip) end
+    props = {}
+    blips = {}
+    peds = {}
 end)
 
 -----------------

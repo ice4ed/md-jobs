@@ -1,6 +1,6 @@
 Config = {}
 Jobs = {} -- no touch if you do I will need therapy even more.
-Config.Debug = false -- Enables zone debug **do not use in production**
+Config.Debug = true -- Enables zone debug **do not use in production**
 Config.Target = 'ox' -- qb or ox
 Config.Inv = 'ox' -- qb or ox || you really should only be using ox in 2025
 Config.Framework = 'qbx' -- qb or esx or qbx

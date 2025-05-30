@@ -1,28 +1,8 @@
+local closedShops = {}
+
 -------------------------
 ---- Local Functions ----
 -------------------------
-
---- Initialize closed shop peds
---- @return nil
-local function initializePeds()
-    for jobName, jobData in pairs(Jobs) do
-        if jobData.closedShopsEnabled then
-            for _, shopData in pairs(Jobs[jobName].closedShops) do
-                local items = MySQL.query.await('SELECT * FROM mdjobs_closedshop WHERE label = ?', { shopData.label })
-                if #items == 0 then
-                    local itemPrices = {}
-                    for index, item in pairs(Jobs[jobName].closedShopItems) do
-                        if item.price == nil then item.price = 5 end
-                        itemPrices[index] = item.price
-                    end
-                    MySQL.insert('INSERT INTO mdjobs_closedshop (job, label, items, prices) VALUES (?, ?, ?,?)',
-                        { jobName, shopData.label, json.encode({}), json.encode(itemPrices) })
-                end
-            end
-        end
-    end
-end
-initializePeds()
 
 --- Check if the player is a boss
 --- @param source number the player ID
@@ -50,26 +30,69 @@ local function getAllJobs()
     return {}
 end
 
---- Spawn server-sided closed shop ped
---- @param model string - the ped model to spawn
---- @param loc vector4 - the location to spawn at
---- @return number | nil - the network ID of the spawned ped or nil if it fails
-local function spawnPed(model, loc)
-    if not Config.UseClientPeds and model and loc then
-        local timeout = 5000
-        local startTime = GetGameTimer()
-        local ped = CreatePed(4, model, loc.x, loc.y, loc.z, loc.w, true, true)
-        while not DoesEntityExist(ped) do
-            Wait(100)
-            if GetGameTimer() - startTime > timeout then
-                if Config.Debug then print("Timeout: Ped creation failed.") end
-                return
+--- Initialize closed shop peds
+--- @return nil
+local function initialize()
+    closedShops = {}
+    for jobName, jobData in pairs(Jobs) do
+        if jobData.closedShopsEnabled and jobData.closedShops then
+            for index, shopData in ipairs(jobData.closedShops) do
+                local rows = MySQL.query.await(
+                    'SELECT * FROM mdjobs_closedshop WHERE job = ? AND label = ?',
+                    { jobName, shopData.label }
+                )
+                if #rows == 0 then
+                    local defaultPrices = {}
+                    for key, item in pairs(jobData.closedShopItems or {}) do
+                        defaultPrices[key] = item.price or 5
+                    end
+                    MySQL.insert(
+                        'INSERT INTO mdjobs_closedshop (job, label, items, prices) VALUES (?, ?, ?, ?)',
+                        { jobName, shopData.label, json.encode({}), json.encode(defaultPrices) }
+                    )
+                    rows = { {
+                        job    = jobName,
+                        label  = shopData.label,
+                        items  = json.encode({}),
+                        prices = json.encode(defaultPrices),
+                    } }
+                end
+                if shopData.ped then
+                    local modelValue
+                    if Config.UseClientPeds then
+                        modelValue = shopData.ped
+                    else
+                        local netId = shopData.netId
+                        if not netId then
+                            shopData.netId = SpawnPed(shopData.ped, shopData.loc)
+                        end
+                        modelValue = netId
+                    end
+
+                    table.insert(closedShops, {
+                        type   = "ped",
+                        config = {
+                            model = modelValue,
+                            loc   = shopData.loc,
+                            job   = jobName,
+                            num   = index
+                        }
+                    })
+                else
+                    table.insert(closedShops, {
+                        type   = "target",
+                        config = {
+                            loc = shopData.loc,
+                            job = jobName,
+                            num = index
+                        }
+                    })
+                end
             end
         end
-        FreezeEntityPosition(ped, true)
-        return NetworkGetNetworkIdFromEntity(ped)
     end
 end
+initialize()
 
 ------------------------
 ---- Event Handlers ----
@@ -77,13 +100,19 @@ end
 
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() or Config.UseClientPeds then return end
+    print("Cleaning up closed shop peds...")
     for _, job in pairs(Jobs) do
         local closedShop = job.closedShops
         if closedShop ~= nil then
             for _, shop in pairs(closedShop) do
-                local netId = shop.ped and shop.ped.netId or nil -- Fall back if ped is nil
-                if netId and NetworkDoesEntityExistWithNetworkId(netId) then
+                print("Deleting closed shop peds for: " .. shop.label)
+                print(json.encode(shop))
+                local netId = shop.ped and shop.netId or nil -- Fall back if ped is nil
+                print("NetId: " .. tostring(netId) .. " (" .. shop.ped .. shop.netId .. ")")
+                if netId then
                     local ped = NetworkGetEntityFromNetworkId(netId)
+                    print("Deleting ped with netId/entityId: " ..
+                        netId .. " / " .. ped .. " (" .. DoesEntityExist(ped) .. ")")
                     if DoesEntityExist(ped) then
                         DeleteEntity(ped)
                     end
@@ -109,8 +138,8 @@ lib.callback.register('md-jobs:server:getClosedShops', function()
                             modelValue = shop.ped
                         else
                             local netId = shop.netId
-                            if not netId or not NetworkDoesEntityExistWithNetworkId(netId) then
-                                netId = spawnPed(shop.ped, shop.loc)
+                            if not netId or not DoesEntityExist(NetworkGetEntityFromNetworkId(netId)) then
+                                netId = SpawnPed(shop.ped, shop.loc)
                                 shop.netId = netId
                             end
                             modelValue = netId
@@ -128,7 +157,7 @@ lib.callback.register('md-jobs:server:getClosedShops', function()
 end)
 
 
-lib.callback.register('md-jobs:server:getClosedShops', function(source, job, loc)
+lib.callback.register('md-jobs:server:getClosedShop', function(source, job, loc)
     local src = source
     local location = GetEntityCoords(GetPlayerPed(src))
     local coords = Jobs[job]['closedShops'][loc].loc

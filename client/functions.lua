@@ -107,7 +107,7 @@ local function progressbar(text, time, anim)
 end
 
 --- Give keys to a vehicle
---- @param veh string the vehicle to give keys to
+--- @param veh number the vehicle to give keys to
 --- @return nil
 local function giveKeys(veh)
 	if Config.Framework == 'qb' then
@@ -133,30 +133,19 @@ end
 --- @param job string the job to deliver catering for
 --- @return nil
 local function deliverCatering(job)
-	local info, currentTime = lib.callback.await('md-jobs:server:getCateringInfo', false, job)
-	info.employees          = json.decode(info.employees)
-	info.totals             = json.decode(info.totals)
-	info.details            = json.decode(info.details)
-	info.data               = json.decode(info.data)
-	local details           = info.details
+	local info, currentTime, npcPedId = lib.callback.await('md-jobs:server:getCateringInfo', false, job)
+	info.employees                    = json.decode(info.employees)
+	info.totals                       = json.decode(info.totals)
+	info.details                      = json.decode(info.details)
+	info.data                         = json.decode(info.data)
+	local details                     = info.details
 	if details.dueby - currentTime < 0 then
 		Notify(L.cater.manage.too_late, 'error')
 		lib.callback.await('md-jobs:server:stopCatering', false, job)
 		return
 	end
-	lib.requestModel(details.location.model, 30000)
-	local npcPed = CreatePed(
-		4,
-		details.location.model,
-		details.location.loc.x,
-		details.location.loc.y,
-		details.location.loc.z - 1,
-		details.location.loc.w,
-		false,
-		false
-	)
-	Freeze(npcPed, details.location.loc.w)
-	local blip = AddBlipForEntity(npcPed)
+
+	local blip = AddBlipForCoord(details.location.loc.x, details.location.loc.y, details.location.loc.z)
 	SetBlipSprite(blip, 326)
 	SetBlipDisplay(blip, 2)
 	SetBlipScale(blip, 0.9)
@@ -164,7 +153,8 @@ local function deliverCatering(job)
 	BeginTextCommandSetBlipName("STRING")
 	AddTextComponentString('Catering')
 	EndTextCommandSetBlipName(blip)
-	AddTargModel(npcPed, {
+
+	local options = {
 		{
 			icon   = 'fas fa-utensils',
 			label  = L.cater.manage.deliver,
@@ -172,17 +162,71 @@ local function deliverCatering(job)
 				local delivered = lib.callback.await('md-jobs:server:deliverCatering', false, job)
 				if delivered then
 					Notify(L.cater.manage.delivered, 'success')
-					DeleteEntity(npcPed)
 					RemoveBlip(blip)
+					if Config.UseClientPeds then
+						DeleteEntity(details.npcPed)
+					end
 				end
 			end,
 		}
+	}
+
+	lib.zones.sphere({
+		coords = vector3(details.location.loc.x, details.location.loc.y, details.location.loc.z),
+		radius = 50,
+		debug = Config.Debug,
+		onEnter = function()
+			print("Entering catering delivery zone: " .. info.job)
+			if Config.UseClientPeds then
+				details.npcPed = SpawnLocalPed(details.location.model, details.location.loc)
+			elseif npcPedId and NetworkDoesEntityExistWithNetworkId(npcPedId) then
+				details.npcPed = NetworkGetEntityFromNetworkId(npcPedId)
+			end
+			if not details.npcPed or not DoesEntityExist(details.npcPed) then
+				print("[ERR] - Failed to spawn catering delivery ped")
+				return
+			end
+		end,
+		onExit = function()
+			if shopObj.type == "ped" then
+				if Config.UseClientPeds then
+					if DoesEntityExist(peds[shopConfig.num]) then
+						DeleteEntity(peds[shopConfig.num])
+						peds[shopConfig.num] = nil
+					end
+				else
+					local ped
+					local netId = shopConfig.model -- If server spawned shopConfig.model is netId
+					if NetworkDoesEntityExistWithNetworkId(netId) then
+						ped = NetToPed(netId)
+					end
+					if not ped or not DoesEntityExist(ped) then
+						print("[ERROR] - Failed to get ped for removal")
+						return
+					end
+					RemoveTargModel(ped, shopOptions)
+				end
+			elseif shopObj.type == "target" then
+				RemoveTargSphere(shopConfig.job .. ' ' .. shopConfig.num)
+			end
+		end,
 	})
-	local vanPlate = lib.callback.await('md-jobs:server:cateringVan', false, job)
-	giveKeys(vanPlate)
-	SetVehicleFuelLevel(vanPlate, 100.0)
-	Notify(L.cater.manage.van, 'success')
-	SetModelAsNoLongerNeeded(details.location.model)
+	AddTargModel(npcPed, options)
+
+	local vehicleNetId = lib.callback.await('md-jobs:server:cateringVan', false, job)
+	if vehicleNetId == -100 then
+		Notify(L.cater.manage.van_dup, 'error')
+		return
+	elseif vehicleNetId and NetworkDoesEntityExistWithNetworkId(vehicleNetId) then
+		local vehicle = NetworkGetEntityFromNetworkId(vehicleNetId)
+		if DoesEntityExist(vehicle) and IsEntityAVehicle(vehicle) then
+			giveKeys(vehicle)
+			SetVehicleFuelLevel(vehicle, 100.0)
+			Notify(L.cater.manage.van, 'success')
+			return
+		end
+	end
+	print("[ERR] - Failed to get catering van for job: " .. job)
 end
 
 --- Cancel catering for a job
@@ -467,7 +511,6 @@ end
 --- @param rotation number the rotation of the zone
 --- @param onEnter function triggers on zone enter
 --- @param onExit function triggers on zone exit
---- @return string the name of the zone
 local function createZone(coords, size, rotation, onEnter, onExit)
 	return lib.zones.box({
 		coords = coords,
@@ -522,16 +565,6 @@ function ItemCheck(item)
 			return false
 		end
 	end
-end
-
---- Freeze an entity in place
---- @param ent number the entity to freeze
---- @param head number the heading to set the entity to
---- @return nil
-function Freeze(ent, head)
-	SetEntityHeading(ent, head)
-	FreezeEntityPosition(ent, true)
-	PlaceObjectOnGroundProperly(ent)
 end
 
 --- Add a box zone to the map
@@ -995,13 +1028,13 @@ end
 --- Spawn a ped on the client
 --- @param model string - the model of the ped to spawn
 --- @param location vector4 - the location & heading of the ped
---- @return number - the local entity id of the ped
+--- @return number | nil - the local entity id of the ped
 function SpawnLocalPed(model, location)
 	if Config.UseClientPeds then
 		lib.requestModel(model, 30000)
 		local timeout = 5000
 		local startTime = GetGameTimer()
-		ped = CreatePed(4, model, location.x, location.y, location.z, location.w,
+		local ped = CreatePed(4, model, location.x, location.y, location.z, location.w,
 			false,
 			true)
 		while not DoesEntityExist(ped) do
@@ -1013,6 +1046,7 @@ function SpawnLocalPed(model, location)
 		end
 		SetEntityHeading(ped, location.w)
 		FreezeEntityPosition(ped, true)
+		PlaceObjectOnGroundProperly(ped)
 		SetModelAsNoLongerNeeded(model)
 		return ped
 	end
@@ -1031,9 +1065,9 @@ end
 --- @param num number the number of items
 --- @return nil
 function OpenClosedShop(job, num)
-	local closedList = lib.callback.await('md-jobs:server:getClosedShops', false, job, num)
+	local closedList = lib.callback.await('md-jobs:server:getClosedShop', false, job, num)
 	local menuOptions = {}
-	if #closedList == 0 then
+	if not closedList or #closedList == 0 then
 		Notify(L.closed.no_item, 'error')
 		return
 	end
@@ -1284,17 +1318,6 @@ lib.callback.register('md-jobs:client:consume', function(item, data)
 	if not data.anim then data.anim = 'uncuff' end
 	if not progressbar(data.label .. ' ' .. GetLabel(item), data.time, data.anim) then return false end
 	return true
-end)
-
-lib.callback.register('md-jobs:client:setVehicleLivery', function(netId, livery)
-	if netId and livery and NetworkDoesEntityExistWithNetworkId(netId) then
-		local vehicle = NetToVeh(netId)
-		if DoesEntityExist(vehicle) and IsEntityAVehicle(vehicle) then
-			SetVehicleLivery(vehicle, livery)
-			return true
-		end
-	end
-	return false
 end)
 
 lib.callback.register('md-jobs:client:createZone', function(coords, size, rotation, onEnter, onExit)

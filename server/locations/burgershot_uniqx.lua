@@ -73,7 +73,7 @@ Jobs['burgershot'] = {
         },
 
         Van = {
-            burgershot = { model = 'burrito', label = 'Burrito', plate = 'BSCater', livery = false, loc = vec4(-1171.46, -880.38, 14.1, 302.39) },
+            burgershot = { model = 'burrito', label = 'Burrito', plate = 'BSCater', livery = 3, loc = vec4(-1171.46, -880.38, 14.1, 302.39) },
         }
 
     },

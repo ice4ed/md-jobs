@@ -13,5 +13,4 @@
     "Lua.diagnostics.disable": [
         "lowercase-global"
     ],
-    "lua.targetVersion": "5.3"
 }

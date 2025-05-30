@@ -1,7 +1,7 @@
 local cateringHours = 1 -- how long the catering order is valid for in hours
 local cateringDetails = {
-    firstname = { 'john', 'jane', 'jim', 'jill', 'jack', 'jessie', 'jacob', 'jennifer', 'jason', 'julie', 'mike', 'michelle', 'matt', 'mary', 'mark', 'maria', 'megan', 'mason', 'melissa', 'max', 'molly', 'miles', 'mitch' },
-    lastname  = { 'smith', 'johnson', 'williams', 'jones', 'brown', 'davis', 'miller', 'wilson', 'moore', 'taylor', 'anderson', 'thomas', 'jackson', 'white', 'harris', 'martin', 'thompson', 'garcia', 'martinez', 'robinson', 'clark', 'rodriguez', 'lewis', 'lee', 'walker', 'hall', 'allen', 'young', 'hernandez', 'king', 'wright', 'lopez', 'hill', 'scott', 'green', 'adams', 'baker', 'gonzalez', 'nelson', 'carter', 'mitchell', 'perez', 'roberts', 'turner', 'phillips', 'campbell', 'parker', 'evans', 'edwards', 'collins', 'stewart', 'sanchez', 'morris', 'rogers', 'reed' },
+    firstname = { 'John', 'Jane', 'Jim', 'Jill', 'Jack', 'Jessie', 'Jacob', 'Jennifer', 'Jason', 'Julie', 'Mike', 'Michelle', 'Matt', 'Mary', 'Mark', 'Maria', 'Megan', 'Mason', 'Melissa', 'Max', 'Molly', 'Miles', 'Mitch' },
+    lastname  = { 'Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Garcia', 'Martinez', 'Robinson', 'Clark', 'Rodriguez', 'Lewis', 'Lee', 'Walker', 'Hall', 'Allen', 'Young', 'Hernandez', 'King', 'Wright', 'Lopez', 'Hill', 'Scott', 'Green', 'Adams', 'Baker', 'Gonzalez', 'Nelson', 'Carter', 'Mitchell', 'Perez', 'Roberts', 'Turner', 'Phillips', 'Campbell', 'Parker', 'Evans', 'Edwards', 'Collins', 'Stewart', 'Sanchez', 'Morris', 'Rogers', 'Reed' },
     locations = {
         { loc = vector4(321.72, -559.07, 28.74, 28.78),    label = 'Pillbox Hospital',            model = 's_m_m_doctor_01' },
         { loc = vector4(-4.93, -1107.83, 29.0, 161.55),    label = 'Ammunation',                  model = 's_m_y_ammucity_01' },
@@ -244,6 +244,16 @@ lib.callback.register('md-jobs:server:cateringVan', function(source, job)
     if GetJobName(source) ~= job then
         return
     end
+
+    if Jobs[job].catering.Van.netId then
+        local van = NetworkGetEntityFromNetworkId(Jobs[job].catering.Van.netId)
+        if DoesEntityExist(van) then
+            return -100 -- Prevent duplicate spawn
+        end
+    end
+
+    local timeout = 5000
+    local startTime = GetGameTimer()
     local vanConfig = Jobs[job].catering.Van[job]
     local vanEntity = CreateVehicle(
         vanConfig.model,
@@ -254,17 +264,28 @@ lib.callback.register('md-jobs:server:cateringVan', function(source, job)
         true,
         true
     )
+    while not DoesEntityExist(vanEntity) do
+        Wait(100)
+        if GetGameTimer() - startTime > timeout then
+            if Config.Debug then print("Timeout: Van Entity creation failed.") end
+            return
+        end
+    end
+    local netId = NetworkGetNetworkIdFromEntity(vanEntity)
+    Jobs[job].catering.Van.netId = netId
+    print("Created vehicle " ..
+        vanEntity ..
+        " with model " ..
+        vanConfig.model ..
+        " and netId " .. netId .. " at location " .. json.encode(vanConfig.loc))
+
     SetVehicleNumberPlateText(vanEntity, vanConfig.plate)
     SetEntityHeading(vanEntity, vanConfig.loc.w)
     if vanConfig.livery and type(vanConfig.livery) == "number" then
-        local netId = NetworkGetNetworkIdFromEntity(vanEntity)
-        local success = lib.callback.await('md-jobs:client:setVehicleLivery', -1, netId, vanConfig.livery)
-        if not success then
-            print('[ERR] Failed to set livery for catering van')
-        end
+        TriggerClientEvent('md-jobs:client:setVehicleLivery', -1, netId, vanConfig.livery)
     end
     Log('Catering Order Van Made: ' .. job .. ' Name:' .. GetName(source), 'catering')
-    return Jobs[job].catering.Van
+    return netId
 end)
 
 lib.callback.register('md-jobs:server:stopCatering', function(source, job)

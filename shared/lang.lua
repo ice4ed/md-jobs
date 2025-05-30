@@ -74,6 +74,7 @@ L.cater = {
         delivered = 'You Delivered The Order, Return The Company Vehicle',
         complete = 'You Have Completed The Catering Order',
         van = 'The Company Vehicle Is Outside! Go To The Marked Location',
+        van_dup = 'The Company Vehicle is Already Waiting Outside!',
         cancel = 'Cancel Catering Order',
         cancel_desc = 'Cancel The Catering Order',
         cancelled = 'You Have Cancelled The Catering Order',

@@ -5,8 +5,12 @@ local peds = {}
 --- Create closed shop zones
 --- @return nil
 local function createZones()
-    local closedShops = lib.callback.await('md-jobs:server:getClosedShops', false)
     CreateThread(function()
+        local closedShops = lib.callback.await('md-jobs:server:getClosedShops', false)
+        if not closedShops then
+            print("[ERR] - No closed shops found")
+            return
+        end
         for _, shopObj in pairs(closedShops) do
             local shopConfig = shopObj.config
             local shopOptions = {
@@ -41,17 +45,24 @@ local function createZones()
                 rotation = shopConfig.loc.w or 0,
                 debug = Config.Debug,
                 onEnter = function()
+                    print("Entering closed shop zone: " .. shopConfig.job .. ' ' .. shopConfig.num)
                     if shopObj.type == "ped" then
-                        local ped = nil
+                        local ped
                         if Config.UseClientPeds then
                             peds[shopConfig.num] = SpawnLocalPed(shopConfig.model, shopConfig.loc)
                         else
                             local netId = shopConfig.model -- If server spawned shopConfig.model is netId
-                            ped = NetToPed(netId)
+                            if NetworkDoesEntityExistWithNetworkId(netId) then
+                                ped = NetToPed(netId)
+                            else
+                                print("[ERROR] - No entity found for netId: " .. netId)
+                            end
                         end
                         if not ped or not DoesEntityExist(ped) then
                             print("[ERROR] - Failed to get ped for interaction")
                             return
+                        else
+                            print("Ped found for interaction: " .. ped)
                         end
                         SetEntityInvincible(ped, true)
                         SetBlockingOfNonTemporaryEvents(ped, true)
@@ -70,8 +81,11 @@ local function createZones()
                                 peds[shopConfig.num] = nil
                             end
                         else
+                            local ped
                             local netId = shopConfig.model -- If server spawned shopConfig.model is netId
-                            local ped = NetToPed(netId)
+                            if NetworkDoesEntityExistWithNetworkId(netId) then
+                                ped = NetToPed(netId)
+                            end
                             if not ped or not DoesEntityExist(ped) then
                                 print("[ERROR] - Failed to get ped for removal")
                                 return
@@ -84,7 +98,7 @@ local function createZones()
                 end,
             })
         end
-    end
+    end)
 end
 
 --- Create blips
@@ -119,27 +133,13 @@ AddEventHandler('onClientResourceStart', function(resourceName)
     createZones()
 end)
 
-AddEventHandler('onClientResourceStop', function(resource)
-    if resource ~= GetCurrentResourceName() then return end
-
-    for _, prop in pairs(props) do
-        if DoesEntityExist(prop) then
-            DeleteEntity(prop)
+RegisterNetEvent('md-jobs:client:setVehicleLivery', function(netId, livery)
+    if netId and livery and NetworkDoesEntityExistWithNetworkId(netId) then
+        local vehicle = NetToVeh(netId)
+        if DoesEntityExist(vehicle) and IsEntityAVehicle(vehicle) then
+            SetVehicleLivery(vehicle, livery)
         end
     end
-
-    if Config.UseClientPeds then
-        for _, ped in pairs(peds) do
-            if DoesEntityExist(ped) then
-                DeleteEntity(ped)
-            end
-        end
-    end
-
-    for _, blip in pairs(blips) do RemoveBlip(blip) end
-    props = {}
-    blips = {}
-    peds = {}
 end)
 
 -----------------
