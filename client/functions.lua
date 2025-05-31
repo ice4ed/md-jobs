@@ -133,7 +133,7 @@ end
 --- @param job string the job to deliver catering for
 --- @return nil
 local function deliverCatering(job)
-	local info, currentTime, npcPedId = lib.callback.await('md-jobs:server:getCateringInfo', false, job)
+	local info, currentTime, npcNetId = lib.callback.await('md-jobs:server:getCateringInfo', false, job)
 	info.employees                    = json.decode(info.employees)
 	info.totals                       = json.decode(info.totals)
 	info.details                      = json.decode(info.details)
@@ -162,16 +162,24 @@ local function deliverCatering(job)
 				local delivered = lib.callback.await('md-jobs:server:deliverCatering', false, job)
 				if delivered then
 					Notify(L.cater.manage.delivered, 'success')
+					PlayPedAmbientSpeechNative(details.npcPed, 'GENERIC_THANKS', 'SPEECH_PARAMS_FORCE_NORMAL_CLEAR')
 					RemoveBlip(blip)
-					if Config.UseClientPeds then
-						DeleteEntity(details.npcPed)
-					end
+					FreezeEntityPosition(details.npcPed, false)
+					SetBlockingOfNonTemporaryEvents(details.npcPed, false)
+					SetPedFleeAttributes(details.npcPed, 0, true)
+					SetPedCanRagdoll(details.npcPed, true)
+					SetEntityCanBeDamaged(details.npcPed, true)
+					SetEntityInvincible(details.npcPed, false)
+					TaskWanderStandard(details.npcPed, 10.0, 10)
+					SetEntityAsMissionEntity(details.npcPed, false, false)
+					SetEntityAsNoLongerNeeded(details.npcPed)
+					details.zone:remove()
 				end
 			end,
 		}
 	}
 
-	lib.zones.sphere({
+	details.zone = lib.zones.sphere({
 		coords = vector3(details.location.loc.x, details.location.loc.y, details.location.loc.z),
 		radius = 50,
 		debug = Config.Debug,
@@ -179,39 +187,34 @@ local function deliverCatering(job)
 			print("Entering catering delivery zone: " .. info.job)
 			if Config.UseClientPeds then
 				details.npcPed = SpawnLocalPed(details.location.model, details.location.loc)
-			elseif npcPedId and NetworkDoesEntityExistWithNetworkId(npcPedId) then
-				details.npcPed = NetworkGetEntityFromNetworkId(npcPedId)
+			elseif npcNetId and NetworkDoesEntityExistWithNetworkId(npcNetId) then
+				details.npcPed = NetworkGetEntityFromNetworkId(npcNetId)
 			end
 			if not details.npcPed or not DoesEntityExist(details.npcPed) then
 				print("[ERR] - Failed to spawn catering delivery ped")
 				return
 			end
+
+			SetBlockingOfNonTemporaryEvents(details.npcPed, true)
+			SetPedFleeAttributes(details.npcPed, 0, false)
+			SetPedCanRagdoll(details.npcPed, false)
+			SetEntityCanBeDamaged(details.npcPed, false)
+			SetEntityInvincible(details.npcPed, true)
+			PlayPedAmbientSpeechNative(details.npcPed, 'GENERIC_HI', 'SPEECH_PARAMS_FORCE_NORMAL_CLEAR')
+
+			AddTargModel(details.npcPed, options)
 		end,
 		onExit = function()
-			if shopObj.type == "ped" then
-				if Config.UseClientPeds then
-					if DoesEntityExist(peds[shopConfig.num]) then
-						DeleteEntity(peds[shopConfig.num])
-						peds[shopConfig.num] = nil
-					end
-				else
-					local ped
-					local netId = shopConfig.model -- If server spawned shopConfig.model is netId
-					if NetworkDoesEntityExistWithNetworkId(netId) then
-						ped = NetToPed(netId)
-					end
-					if not ped or not DoesEntityExist(ped) then
-						print("[ERROR] - Failed to get ped for removal")
-						return
-					end
-					RemoveTargModel(ped, shopOptions)
+			if Config.UseClientPeds then
+				if DoesEntityExist(details.npcPed) then
+					DeleteEntity(details.npcPed)
 				end
-			elseif shopObj.type == "target" then
-				RemoveTargSphere(shopConfig.job .. ' ' .. shopConfig.num)
+			else
+				RemoveTargModel(details.npcPed, options)
 			end
 		end,
 	})
-	AddTargModel(npcPed, options)
+	AddTargModel(details.npcPed, options)
 
 	local vehicleNetId = lib.callback.await('md-jobs:server:cateringVan', false, job)
 	if vehicleNetId == -100 then

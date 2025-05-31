@@ -183,11 +183,27 @@ lib.callback.register('md-jobs:server:getCateringInfo', function(source, job)
     local result = MySQL.query.await(
         'SELECT * FROM mdjobs_catering WHERE job = ?', { job }
     )
-    if not result[1] then
+    local info = result[1]
+    if not info then
         return
     end
+
+    local npcNetId -- Populates if using server sided peds, else nil
+    if not Config.UseClientPeds then
+        npcNetId = Jobs[job].catering.npcNetId
+        if not npcNetId or not DoesEntityExist(NetworkGetEntityFromNetworkId(npcNetId)) then
+            local details = json.decode(info.details)
+            local ped = SpawnPed(details.location.model, details.location.loc)
+            if ped then
+                Jobs[job].catering.npcNetId = NetworkGetNetworkIdFromEntity(ped)
+            else
+                print("[ERR] - Failed to create catering delivery ped")
+            end
+        end
+    end
+
     Log('Catering Order Checked: ' .. job .. ' Name:' .. GetName(source), 'catering')
-    return result[1], os.time()
+    return info, os.time(), npcNetId
 end)
 
 lib.callback.register('md-jobs:server:addtoCatering', function(source, job)
@@ -324,6 +340,18 @@ lib.callback.register('md-jobs:server:deliverCatering', function(source, job)
         RemoveItem(source, itemEntry.item, itemEntry.amount)
     end
     handleMoney(source, totalsData.price, employeeList)
+
+    if not Config.UseClientPeds then
+        local npcNetId = Jobs[job].catering.npcNetId
+        if npcNetId then
+            local npcPed = NetworkGetEntityFromNetworkId(npcNetId)
+            if DoesEntityExist(npcPed) then
+                FreezeEntityPosition(npcPed, false)
+            end
+            Jobs[job].catering.npcNetId = nil
+        end
+    end
+
     MySQL.query('DELETE FROM mdjobs_catering WHERE job = ?', { job })
     local customerRecord = {
         name  = details.firstname .. ' ' .. details.lastname,

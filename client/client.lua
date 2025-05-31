@@ -64,8 +64,17 @@ local function createZones()
                         else
                             print("Ped found for interaction: " .. ped)
                         end
-                        SetEntityInvincible(ped, true)
+
                         SetBlockingOfNonTemporaryEvents(ped, true)
+                        SetPedFleeAttributes(ped, 0, false)
+                        SetPedCanRagdoll(ped, false)
+                        SetEntityCanBeDamaged(ped, false)
+                        SetEntityInvincible(ped, true)
+
+                        local hiChance = math.random(1, 4)
+                        if hiChance > 1 then
+                            PlayPedAmbientSpeechNative(ped, 'GENERIC_HI', 'SPEECH_PARAMS_FORCE_NORMAL_CLEAR')
+                        end
 
                         AddTargModel(ped, shopOptions)
                     elseif shopObj.type == "target" then
@@ -76,6 +85,12 @@ local function createZones()
                 onExit = function()
                     if shopObj.type == "ped" then
                         if Config.UseClientPeds then
+                            local byeChance = math.random(1, 4)
+                            if byeChance > 1 then
+                                PlayPedAmbientSpeechNative(peds[shopConfig.num], 'GENERIC_BYE',
+                                    'SPEECH_PARAMS_FORCE_NORMAL_CLEAR')
+                            end
+
                             if DoesEntityExist(peds[shopConfig.num]) then
                                 DeleteEntity(peds[shopConfig.num])
                                 peds[shopConfig.num] = nil
@@ -90,6 +105,13 @@ local function createZones()
                                 print("[ERROR] - Failed to get ped for removal")
                                 return
                             end
+
+                            local byeChance = math.random(1, 4)
+                            if byeChance > 1 then
+                                PlayPedAmbientSpeechNative(ped, 'GENERIC_BYE',
+                                    'SPEECH_PARAMS_FORCE_NORMAL_CLEAR')
+                            end
+
                             RemoveTargModel(ped, shopOptions)
                         end
                     elseif shopObj.type == "target" then
