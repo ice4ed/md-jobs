@@ -407,10 +407,10 @@ end)
 
 lib.callback.register('md-jobs:server:getBlips', function()
     local blipList = {}
-    for _, jobConfig in pairs(Jobs) do
+    for jobName, jobConfig in pairs(Jobs) do
         local blips = jobConfig.Blip or {}
         for _, blipData in pairs(blips) do
-            table.insert(blipList, blipData)
+            table.insert(blipList, { job = jobName, info = blipData})
         end
     end
     return blipList

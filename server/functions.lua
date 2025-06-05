@@ -28,10 +28,6 @@ function SpawnPed(model, loc)
             end
         end
         FreezeEntityPosition(ped, true)
-        print("Created ped " ..
-            ped ..
-            " with model " ..
-            model .. " and netId " .. NetworkGetNetworkIdFromEntity(ped) .. " at location " .. json.encode(loc))
         return NetworkGetNetworkIdFromEntity(ped)
     end
 end
@@ -104,18 +100,27 @@ function GetPlayer(source)
     end
 end
 
---- Get player source by citizen id
+--- Attempt to get player source by citizen id
 --- @param cid string the citizen id
---- @return number - the player source
+--- @return number  the player source, or -1 if not found/offline
 function GetSource(cid)
     if Config.Framework == 'qb' then
-        return QBCore.Functions.GetPlayerByCitizenId(cid).PlayerData.source
+        local ply = QBCore.Functions.GetPlayerByCitizenId(cid)
+        if ply and ply.PlayerData then
+            return ply.PlayerData.source
+        end
     elseif Config.Framework == 'qbx' then
-        return QBOX:GetPlayerByCitizenId(cid).PlayerData.source
+        local ply = QBOX:GetPlayerByCitizenId(cid)
+        if ply and ply.PlayerData then
+            return ply.PlayerData.source
+        end
     elseif Config.Framework == 'esx' then
-        return ESX.GetPlayerFromIdentifier(cid).source
+        local xPlayer = ESX.GetPlayerFromIdentifier(cid)
+        if xPlayer then
+            return xPlayer.source
+        end
     end
-    return 65535 -- server source
+    return -1
 end
 
 --- Get player name by source
@@ -402,12 +407,44 @@ function SpawnPed(model, loc)
             end
         end
         FreezeEntityPosition(ped, true)
-        print("Created ped " ..
-        ped ..
-        " with model " ..
-        model .. " and netId " .. NetworkGetNetworkIdFromEntity(ped) .. " at location " .. json.encode(loc))
+        SetEntityOrphanMode(ped, 2)
         return NetworkGetNetworkIdFromEntity(ped)
     end
+end
+
+--- Spawn server-sided vehicle
+--- @param model string the vehicle model to spawn
+--- @param coords vector4 the location to spawn at
+--- @param plate string the plate to apply to the vehicle
+--- @param livery number the livery to apply to the vehicle
+--- @return number | nil - the network ID of the spawned vehicle or nil if it fails
+function SpawnVehicle(model, coords, plate, livery)
+    local timeout = 5000
+    local startTime = GetGameTimer()
+    local vanEntity = CreateVehicle(
+        model,
+        coords.x,
+        coords.y,
+        coords.z,
+        coords.w,
+        true,
+        true
+    )
+    while not DoesEntityExist(vanEntity) do
+        Wait(100)
+        if GetGameTimer() - startTime > timeout then
+            if Config.Debug then print("Timeout: Van Entity creation failed.") end
+            return
+        end
+    end
+    local netId = NetworkGetNetworkIdFromEntity(vanEntity)
+    SetVehicleNumberPlateText(vanEntity, plate)
+    SetEntityHeading(vanEntity, coords.w)
+    SetEntityOrphanMode(vanEntity, 2)
+    if livery then
+        TriggerClientEvent('md-jobs:client:setVehicleLivery', -1, netId, livery)
+    end
+    return netId
 end
 
 ------------------------
@@ -422,7 +459,7 @@ RegisterNetEvent('md-jobs:server:openTray', function(name, weight, slot, num, jo
     elseif GetResourceState('ps-inventory') == 'started' then
         exports['ps-inventory']:OpenInventory(src, name, data)
     else
-        print('^1 You Wouldnt See This If You Had Read The ReadMe.md')
+        print('^1You Wouldnt See This If You Had Read The ReadMe.md^0')
     end
 end)
 
@@ -438,7 +475,7 @@ RegisterNetEvent('md-jobs:server:openStash', function(name, weight, slot, num, j
     elseif GetResourceState('ps-inventory') == 'started' then
         exports['ps-inventory']:OpenInventory(src, name, data)
     else
-        print('^1 You Wouldnt See This If You Had Read The ReadMe.md')
+        print('^1You Wouldnt See This If You Had Read The ReadMe.md^0')
     end
 end)
 
@@ -448,14 +485,14 @@ end)
 
 CreateThread(function()
     if logs then
-        print '^2 Logs Enabled for md-jobs'
+        print('^2Logs Enabled for md-jobs^0')
         if logapi == 'insert string here' then
-            print '^1 homie you gotta set your api on line 4'
+            print('^1Homie you gotta set your api on line 4^0')
         else
-            print '^2 API Key Looks Good, Dont Trust Me Though, Im Not Smart'
+            print('^2API Key Looks Good, Dont Trust Me Though, Im Not Smart^0')
         end
     else
-        print '^1 logs disabled for md-jobs'
+        print('^1Logs disabled for md-jobs^0')
     end
 end)
 
@@ -464,7 +501,7 @@ CreateThread(function()
     local version = GetResourceMetadata('md-jobs', "version", 0)
     PerformHttpRequest(url, function(_, text, _)
         if text then
-            print('^2 Your Version:' .. version .. ' | Current Version:' .. text .. '^0')
+            print('^2Your Version: ' .. version .. ' | Current Version: ' .. text .. '^0')
         end
     end, "GET", "", {})
 end)

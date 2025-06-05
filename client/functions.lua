@@ -1,6 +1,7 @@
 local invcall
 local progressbartype = Config.ProgressBarType
 local notifytype = Config.Notify
+local indent = '  \n  '
 
 -- Initialize inventory
 if Config.Framework == 'qb' then
@@ -106,139 +107,36 @@ local function progressbar(text, time, anim)
 	return false
 end
 
---- Give keys to a vehicle
---- @param veh number the vehicle to give keys to
---- @return nil
-local function giveKeys(veh)
-	if Config.Framework == 'qb' then
-		TriggerEvent("vehiclekeys:client:SetOwner", veh)
-	elseif Config.Framework == 'qbx' then
-		TriggerEvent("vehiclekeys:client:SetOwner", veh)
-	elseif Config.Framework == 'esx' then
-		print('someone PR This for esx vehicle keys idk esx much and im lazy')
-	end
-end
-
---- Start a catering job
---- @param job string the job to start catering for
---- @return nil
-local function startCatering(job)
-	local started = lib.callback.await('md-jobs:server:startCatering', false, job)
-	if started then
-		Notify(L.cater.manage.started, 'success')
-	end
-end
-
---- Deliver catering to a location
---- @param job string the job to deliver catering for
---- @return nil
-local function deliverCatering(job)
-	local info, currentTime, npcNetId = lib.callback.await('md-jobs:server:getCateringInfo', false, job)
-	info.employees                    = json.decode(info.employees)
-	info.totals                       = json.decode(info.totals)
-	info.details                      = json.decode(info.details)
-	info.data                         = json.decode(info.data)
-	local details                     = info.details
-	if details.dueby - currentTime < 0 then
-		Notify(L.cater.manage.too_late, 'error')
-		lib.callback.await('md-jobs:server:stopCatering', false, job)
-		return
-	end
-
-	local blip = AddBlipForCoord(details.location.loc.x, details.location.loc.y, details.location.loc.z)
-	SetBlipSprite(blip, 326)
-	SetBlipDisplay(blip, 2)
-	SetBlipScale(blip, 0.9)
-	SetBlipColour(blip, 8)
-	BeginTextCommandSetBlipName("STRING")
-	-- AddTextComponentString('Catering')
-	EndTextCommandSetBlipName(blip)
-
-	local options = {
-		{
-			icon   = 'fas fa-utensils',
-			label  = L.cater.manage.deliver,
-			action = function()
-				local delivered = lib.callback.await('md-jobs:server:deliverCatering', false, job)
-				if delivered then
-					Notify(L.cater.manage.delivered, 'success')
-					PlayPedAmbientSpeechNative(details.npcPed, 'GENERIC_THANKS', 'SPEECH_PARAMS_FORCE_NORMAL_CLEAR')
-					RemoveBlip(blip)
-					FreezeEntityPosition(details.npcPed, false)
-					SetBlockingOfNonTemporaryEvents(details.npcPed, false)
-					SetPedFleeAttributes(details.npcPed, 0, true)
-					SetPedCanRagdoll(details.npcPed, true)
-					SetEntityCanBeDamaged(details.npcPed, true)
-					SetEntityInvincible(details.npcPed, false)
-					TaskWanderStandard(details.npcPed, 10.0, 10)
-					SetEntityAsMissionEntity(details.npcPed, false, false)
-					SetEntityAsNoLongerNeeded(details.npcPed)
-					details.zone:remove()
-				end
-			end,
-		}
-	}
-
-	details.zone = lib.zones.sphere({
-		coords = vector3(details.location.loc.x, details.location.loc.y, details.location.loc.z),
-		radius = 50,
-		debug = Config.Debug,
-		onEnter = function()
-			print("Entering catering delivery zone: " .. info.job)
-			if Config.UseClientPeds then
-				details.npcPed = SpawnLocalPed(details.location.model, details.location.loc)
-			elseif npcNetId and NetworkDoesEntityExistWithNetworkId(npcNetId) then
-				details.npcPed = NetworkGetEntityFromNetworkId(npcNetId)
-			end
-			if not details.npcPed or not DoesEntityExist(details.npcPed) then
-				print("[ERR] - Failed to spawn catering delivery ped")
-				return
-			end
-
-			SetBlockingOfNonTemporaryEvents(details.npcPed, true)
-			SetPedFleeAttributes(details.npcPed, 0, false)
-			SetPedCanRagdoll(details.npcPed, false)
-			SetEntityCanBeDamaged(details.npcPed, false)
-			SetEntityInvincible(details.npcPed, true)
-			PlayPedAmbientSpeechNative(details.npcPed, 'GENERIC_HI', 'SPEECH_PARAMS_FORCE_NORMAL_CLEAR')
-
-			AddTargModel(details.npcPed, options)
-		end,
-		onExit = function()
-			if Config.UseClientPeds then
-				if DoesEntityExist(details.npcPed) then
-					DeleteEntity(details.npcPed)
-				end
-			else
-				RemoveTargModel(details.npcPed, options)
-			end
-		end,
-	})
-	AddTargModel(details.npcPed, options)
-
-	local vehicleNetId = lib.callback.await('md-jobs:server:cateringVan', false, job)
-	if vehicleNetId == -100 then
-		Notify(L.cater.manage.van_dup, 'error')
-		return
-	elseif vehicleNetId and NetworkDoesEntityExistWithNetworkId(vehicleNetId) then
-		local vehicle = NetworkGetEntityFromNetworkId(vehicleNetId)
-		if DoesEntityExist(vehicle) and IsEntityAVehicle(vehicle) then
-			giveKeys(vehicle)
-			SetVehicleFuelLevel(vehicle, 100.0)
-			Notify(L.cater.manage.van, 'success')
-			return
-		end
-	end
-	print("[ERR] - Failed to get catering van for job: " .. job)
-end
-
 --- Cancel catering for a job
 --- @param job string the job to cancel catering for
 --- @return nil
 local function cancelCatering(job)
-	local stopped = lib.callback.await('md-jobs:server:stopCatering', false, job)
-	if stopped then
-		Notify(L.cater.manage.cancelled, 'error')
+	if not job or GetJobName() ~= job then
+		Notify(Format(L.Error.no_job, job), 'error')
+		return false
+	end
+	local cateringInfo = lib.callback.await('md-jobs:server:checkCatering', false, job)
+	if cateringInfo == nil then
+		Notify(L.cater.no_cater, 'error')
+		return false
+	end
+	local delivered = cateringInfo.delivered
+	local content = L.cater.manage.cancel_confirm
+	if not delivered then
+		content = indent .. L.cater.manage.cancel_incomplete
+	else
+		content = indent .. L.cater.manage.cancel_return ..
+			indent .. Format(L.cater.manage.cancel_fee, tostring(Config.VehicleReturnFee * 100) .. '%')
+	end
+	local cancelConfirmed = lib.alertDialog({
+		header = L.cater.manage.cancel,
+		content = content,
+		centered = true,
+		cancel = true,
+		size = 'md',
+	}) == 'confirm' and true or false
+	if cancelConfirmed then
+		local stopped = lib.callback.await('md-jobs:server:endCatering', false, job)
 	end
 end
 
@@ -265,15 +163,26 @@ local function checkHistory(job)
 		}
 	else
 		for _, entry in pairs(historyEntries) do
-			local customerData    = json.decode(entry.customer)
-			local totalsData      = json.decode(entry.totals)
-			local receiptData     = json.decode(entry.receipt)
-			local employeesData   = json.decode(entry.employees)
+			local customerData  = json.decode(entry.customer)
+			local totalsData    = json.decode(entry.totals)
+			local receiptData   = json.decode(entry.receipt)
+			local employeesData = json.decode(entry.employees)
+			local delivered     = entry.delivered
+			local returned      = entry.vehicle_returned
+			local symbol
+			if delivered then
+				if returned then
+					symbol = '✔️'
+				else
+					symbol = '➖'
+				end
+			else
+				symbol = '❌'
+			end
 			options[#options + 1] = {
-				title       = customerData.label,
+				title       = (symbol .. ' ' .. customerData.label),
 				description = Format(L.cater.manage.hd, customerData.name, totalsData.price),
 				onSelect    = function()
-					local indent = '  \n  '
 					local itemList = {}
 					for _, receiptItem in pairs(receiptData) do
 						table.insert(
@@ -293,17 +202,13 @@ local function checkHistory(job)
 					table.sort(employeeList)
 					local descriptionText = Format(
 						L.cater.manage.hd_desc,
-						indent, indent,
 						customerData.name,
-						indent,
 						customerData.label,
-						indent,
+						delivered,
+						returned,
 						totalsData.amount,
-						indent,
 						totalsData.price,
-						indent, indent,
 						table.concat(itemList, indent),
-						indent, indent,
 						table.concat(employeeList, indent)
 					)
 					lib.alertDialog({
@@ -323,19 +228,6 @@ local function checkHistory(job)
 		options = options,
 	})
 	lib.showContext('cateringHistory')
-end
-
---- Get the player's job name
---- @return string - the player's job name
-local function getJobName()
-	if Config.Framework == 'qb' then
-		return QBCore.Functions.GetPlayerData().job.name
-	elseif Config.Framework == 'qbx' then
-		return QBX.PlayerData.job.name
-	elseif Config.Framework == 'esx' then
-		return ESX.PlayerData.job.name
-	end
-	return 'Config.Framework not set'
 end
 
 --- Get the player's inventory items
@@ -449,7 +341,7 @@ end
 --- @param job string the job to stop catering for
 --- @return nil
 local function stopCatering(job)
-	local isStopped = lib.callback.await('md-jobs:server:stopCatering', false, job)
+	local isStopped = lib.callback.await('md-jobs:server:endCatering', false, job)
 	if isStopped then
 		Notify(L.cater.timeout, 'error')
 		return
@@ -460,7 +352,7 @@ end
 --- @param job string the job to check catering for
 --- @return boolean - true if catering is available, false otherwise
 local function checkCatering(job)
-	if getJobName() ~= job then
+	if not job or GetJobName() ~= job then
 		Notify(Format(L.Error.no_job, job), 'error')
 		return false
 	end
@@ -472,12 +364,12 @@ local function checkCatering(job)
 	local totalsTable   = json.decode(cateringInfo.totals)
 	local rawItemList   = json.decode(cateringInfo.data)
 	local jobDetails    = json.decode(cateringInfo.details)
+	local delivered     = cateringInfo.delivered
 	local timeRemaining = calculateRemainingTime(jobDetails.dueby, currentTime)
 	if timeRemaining == 'finished' then
 		stopCatering(cateringInfo.job)
 		return false
 	end
-	local indent    = '  \n  '
 	local itemLines = {}
 	for _, itemData in ipairs(rawItemList) do
 		table.insert(
@@ -490,22 +382,36 @@ local function checkCatering(job)
 	table.sort(itemLines)
 	local dialogContent = Format(
 		L.cater.check,
-		indent, indent,
 		jobDetails.firstname, jobDetails.lastname,
-		indent, jobDetails.location.label,
-		indent, timeRemaining,
-		indent, totalsTable.amount,
-		indent, totalsTable.price,
-		indent, indent,
+		jobDetails.location.label,
+		tostring(delivered),
+		timeRemaining,
+		totalsTable.amount,
+		totalsTable.price,
 		table.concat(itemLines, indent)
 	)
+	local jobLabel = job
+	if Config.Framework == 'qbx' then
+		jobLabel = QBOX:GetJob(job).label
+	end
 	lib.alertDialog({
-		header   = Format(L.cater.cater_header, job),
+		header   = Format(L.cater.cater_header, jobLabel),
 		content  = dialogContent,
 		centered = true,
 		cancel   = true,
 	})
 	return true
+end
+
+--- Start a catering job
+--- @param job string the job to start catering for
+--- @return nil
+local function createCatering(job)
+	local started = lib.callback.await('md-jobs:server:createCatering', false, job)
+	if started then
+		Notify(L.cater.manage.started, 'success')
+		checkCatering(job)
+	end
 end
 
 --- Create a zone
@@ -773,11 +679,24 @@ function GetLabel(label)
 	end
 end
 
+--- Get the player's job name
+--- @return string - the player's job name
+function GetJobName()
+	if Config.Framework == 'qb' then
+		return QBCore.Functions.GetPlayerData().job.name
+	elseif Config.Framework == 'qbx' then
+		return QBX.PlayerData.job.name
+	elseif Config.Framework == 'esx' then
+		return ESX.PlayerData.job.name
+	end
+	return 'Config.Framework not set'
+end
+
 --- Check if the player has a specific job
 --- @param job string the job to check for
 --- @return boolean - true if the player has the job, false otherwise
 function HasJob(job)
-	return getJobName() == job
+	return job and GetJobName() == job or false
 end
 
 --- Open the boss menu for a job
@@ -800,7 +719,7 @@ end
 --- @param num number the number of the crafter
 --- @return nil
 function MakeCrafter(items, text, job, num)
-	if getJobName() ~= job then
+	if not job or GetJobName() ~= job then
 		Notify(Format(L.Error.no_job, job), 'error')
 		return
 	end
@@ -902,7 +821,7 @@ function MakeStore(store, job, text, num)
 		exports.ox_inventory:openInventory('shop', { type = shopItems, id = num })
 		return
 	end
-	if getJobName() ~= job then
+	if not job or GetJobName() ~= job then
 		Notify(Format(L.Error.no_job, job), 'error')
 		return
 	end
@@ -980,7 +899,7 @@ end
 --- @param job string the job to open the stash for
 --- @return nil
 function OpenStash(name, weight, slot, num, job)
-	if getJobName() ~= job then
+	if not job or GetJobName() ~= job then
 		Notify(Format(L.Error.no_job, job), 'error')
 		return
 	end
@@ -1134,7 +1053,7 @@ end
 --- @param job string the job to manage catering for
 --- @return nil
 function ManageCatering(job)
-	if getJobName() ~= job then
+	if not job or GetJobName() ~= job then
 		Notify(Format(L.Error.no_job, job), 'error')
 		return
 	end
@@ -1150,7 +1069,7 @@ function ManageCatering(job)
 				title = L.cater.manage.start,
 				description = L.cater.manage.start_desc,
 				onSelect = function()
-					startCatering(job)
+					createCatering(job)
 				end
 			},
 			{
@@ -1164,7 +1083,7 @@ function ManageCatering(job)
 				title = L.cater.manage.deliver,
 				description = L.cater.manage.deliver_desc,
 				onSelect = function()
-					deliverCatering(job)
+					TriggerServerEvent('md-jobs:server:startCatering', job)
 				end
 			},
 			{
@@ -1228,6 +1147,40 @@ function IsBoss()
 		return ESX.PlayerData.job.grade_name == 'boss'
 	end
 	return false
+end
+
+--- Creates a blip
+--- @param coords vector3 the location of the blip
+--- @param details BlipData the required information for the blip
+--- @param gps boolean if the player's gps should be set to the blip coords
+--- @return integer -- the generated blip id+++++++
+function CreateBlip(coords, details, gps)
+	local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
+	SetBlipSprite(blip, details.sprite)
+	SetBlipDisplay(blip, details.display)
+	SetBlipScale(blip, details.scale)
+	SetBlipColour(blip, details.color)
+	BeginTextCommandSetBlipName("STRING")
+    AddTextComponentSubstringPlayerName(details.label)
+    EndTextCommandSetBlipName(blip)
+	if gps then
+		SetBlipRoute(blip, true)
+		SetBlipRouteColour(blip, details.color)
+	end
+	return blip
+end
+
+--- Give keys to a vehicle
+--- @param veh number the vehicle to give keys to
+--- @return nil
+function GiveKeys(veh)
+	if Config.Framework == 'qb' then
+		TriggerEvent("vehiclekeys:client:SetOwner", veh)
+	elseif Config.Framework == 'qbx' then
+		TriggerEvent("vehiclekeys:client:SetOwner", veh)
+	elseif Config.Framework == 'esx' then
+		print('someone PR This for esx vehicle keys idk esx much and im lazy')
+	end
 end
 
 ----------------------------

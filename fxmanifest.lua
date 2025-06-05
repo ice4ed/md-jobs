@@ -11,7 +11,7 @@ shared_scripts {
 
 client_script {
     'client/**.lua',
-    '@qbx_core/modules/playerdata.lua', -- uncomment out if you're using qbx
+    -- '@qbx_core/modules/playerdata.lua', -- uncomment out if you're using qbx
 }
 server_script{
     '@oxmysql/lib/MySQL.lua',
@@ -21,6 +21,13 @@ server_script{
     'server/catering.lua',
     'server/closedshops.lua',
     'server/consumables.lua',
+    'server/server.lua',
+    'server/sql.lua'
+}
+
+dependencies {
+    'oxmysql',
+    'ox_lib'
 }
 
 lua54 'yes'

@@ -42,6 +42,7 @@
 ## Dependencies
 - **qb-core**, **qbx_core**, or **esx** (ESX support is experimental)
   - For ESX: `ox_inventory` and `ox_target` are required.
+- **oxmysql**
 - **ox_lib**
 - **rpemotes** or **scully_emotemenu**
 
@@ -55,7 +56,8 @@
 ### Step 2: Upload Images to Inventory
 - Copy and paste the images into your inventory resource.
 
-### Step 3: Run the SQL File
+### Step 3: Run the SQL File (ONLY IF Config.AutorunSQL = false)
+- **ONLY DO THIS IF: Config.AutorunSQL = false**
 - Execute the provided SQL file to set up the necessary database tables.
   - If you're unsure how to run SQL files, there are many helpful tutorials on YouTube.
 
@@ -219,7 +221,7 @@ Jobs['bestbudz'] = {
             {name = 'weed_oil',     minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
         Van = {
-            taxi = {model = 'burrito', label = 'Burrito', plate = 'WeedMan', loc = vector4(364.85, -829.15, 29.29, 192.0), heading = 192.00},
+            taxi = {model = 'burrito', label = 'Burrito', plate = 'WeedMan', livery = false, loc = vector4(364.85, -829.15, 29.29, 192.0), heading = 192.00},
         }
     },
     shops = {
@@ -465,7 +467,7 @@ or
             {name = 'vodka',        minPrice = 10, maxPrice = 20, maxAmount = 30},
             {name = 'tequila',      minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
-        Van = {model = 'burrito', label = 'Burrito', plate = 'policeCATER', loc = vector4(144.72, -1300.25, 28.89, 121.44)},
+        Van = {model = 'burrito', label = 'Burrito', plate = 'policeCATER', livery = false, loc = vector4(144.72, -1300.25, 28.89, 121.44)},
     },
 }
 ```
@@ -488,6 +490,7 @@ or
 | `model` | Vehicle model name | Yes | - |
 | `label` | Display name for the vehicle | Yes | - |
 | `plate` | License plate text | Yes | - |
+| `livery` | Vehicle livery index | No | - |
 | `loc` | Vector4 spawn location (x, y, z, heading) | Yes | - |
 
 ## Setting up Shops!

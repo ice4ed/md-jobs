@@ -94,34 +94,6 @@ local function initialize()
 end
 initialize()
 
-------------------------
----- Event Handlers ----
-------------------------
-
-AddEventHandler('onResourceStop', function(resource)
-    if resource ~= GetCurrentResourceName() or Config.UseClientPeds then return end
-    print("Cleaning up closed shop peds...")
-    for _, job in pairs(Jobs) do
-        local closedShop = job.closedShops
-        if closedShop ~= nil then
-            for _, shop in pairs(closedShop) do
-                print("Deleting closed shop peds for: " .. shop.label)
-                print(json.encode(shop))
-                local netId = shop.ped and shop.netId or nil -- Fall back if ped is nil
-                print("NetId: " .. tostring(netId) .. " (" .. shop.ped .. shop.netId .. ")")
-                if netId then
-                    local ped = NetworkGetEntityFromNetworkId(netId)
-                    print("Deleting ped with netId/entityId: " ..
-                        netId .. " / " .. ped .. " (" .. DoesEntityExist(ped) .. ")")
-                    if DoesEntityExist(ped) then
-                        DeleteEntity(ped)
-                    end
-                end
-            end
-        end
-    end
-end)
-
 ----------------------------
 ---- Callback Functions ----
 ----------------------------

@@ -67,21 +67,29 @@ local function getWeight(item)
 end
 
 --- Handle money distribution for catering
---- @param src number the player source
+--- @param job string the player source
 --- @param price number the total price
 --- @param employeeList table list of employees (cid/name)
-local function handleMoney(src, price, employeeList)
-    local commissionRate  = Jobs[GetJobName(src)].catering.commission or 0
+local function handleMoney(job, price, employeeList)
+    local onlineEmployees = {}
+    for _, emp in pairs(employeeList) do
+        local empSrc = GetSource(emp.cid)
+        if empSrc ~= -1 and DoesPlayerExist(tostring(empSrc)) then
+            table.insert(onlineEmployees, empSrc)
+        end
+    end
+
+    local commissionRate  = Jobs[job].catering.commission or 0
     local commissionTotal = math.floor(price * commissionRate)
-    local commissionPer   = math.floor(commissionTotal / #employeeList)
+    local commissionPer   = math.floor(commissionTotal / #onlineEmployees)
     local netRevenue      = math.floor(price - commissionTotal)
 
-    for _, employee in pairs(employeeList) do
-        local empSrc = GetSource(employee.cid)
+    for _, empSrc in pairs(onlineEmployees) do
         AddMoney(empSrc, commissionPer)
     end
-    Log('Catering Order Commission paid: ' .. GetJobName(src) .. ' Name:' .. GetName(src), 'catering')
-    AddJobMoney(GetJobName(src), netRevenue)
+
+    Log('Catering Order Commission paid: ' .. job, 'catering')
+    AddJobMoney(job, netRevenue)
 end
 
 --- Generate a new catering order
@@ -148,21 +156,361 @@ local function generateCatering(src, job)
     return true
 end
 
+--- Get the distance between two vec3 points
+---@param a vector3 the first point
+---@param b vector3 the second point
+---@return number - the distance between points
+local function getDistance(a, b)
+    if not a or not b then
+        return -1
+    end
+    local dx = (a.x or 0) - (b.x or 0)
+    local dy = (a.y or 0) - (b.y or 0)
+    local dz = (a.z or 0) - (b.z or 0)
+    return math.sqrt(dx * dx + dy * dy + dz * dz)
+end
+
+--- Check if a player is on the catering employee list
+--- @param src number the player id of the player
+--- @param job string the job to check
+--- @param employeeList? table (optional) list of employees
+--- @return boolean - true if on the list, else false
+local function isEmployee(src, job, employeeList)
+    if not src or not job or GetJobName(src) ~= job then
+        return false
+    end
+    if not employeeList then
+        local result = MySQL.query.await(
+            'SELECT * FROM mdjobs_catering WHERE job = ?', { job }
+        )
+        local info = result[1]
+        if not info then
+            return false
+        end
+        employeeList = json.decode(info.employees)
+    end
+    local isOnJob = false
+    local srcCid = GetCid(src)
+    for _, emp in ipairs(employeeList) do
+        if emp.cid == srcCid then isOnJob = true end
+    end
+    return isOnJob
+end
+
+--- Check if the catering van can be returned (and optionally delete it)
+--- @param job string the name of the job
+--- @param delete? boolean (optional) delete the entity if it can be returned
+local function canReturnVan(job, delete)
+    local vanId = Jobs[job].catering.Van.netId
+    local van = NetworkGetEntityFromNetworkId(vanId)
+    local vanConfig = Jobs[job].catering.Van[job]
+    if DoesEntityExist(van) and getDistance(GetEntityCoords(van), vanConfig.loc) < 10.0 then
+        if delete then
+            DeleteEntity(van)
+            Jobs[job].catering.Van.netId = nil
+        end
+        return true
+    end
+    return false
+end
+
+--- Stop/Cancel a catering order
+--- @param src number the originator's player id
+--- @param job string the job to cancel catering for
+--- @return boolean - if the cancellation was successful
+local function stopCatering(src, job)
+    local currentOrder = MySQL.query.await('SELECT * FROM mdjobs_catering WHERE job = ?', { job })
+    if not currentOrder[1] then return false end
+
+    local totalsData     = json.decode(currentOrder[1].totals)
+    local orderItems     = json.decode(currentOrder[1].data)
+    local details        = json.decode(currentOrder[1].details)
+    local employeeList   = json.decode(currentOrder[1].employees)
+    local delivered      = currentOrder[1].delivered
+    local customerRecord = {
+        name  = details.firstname .. ' ' .. details.lastname,
+        label = details.location.label
+    }
+    local vanReturned    = canReturnVan(job, true)
+
+    if delivered then
+        local price = totalsData.price
+        if not vanReturned then
+            local fee = math.floor(price * Config.VehicleReturnFee)
+            price = math.floor(price - fee)
+        end
+        handleMoney(job, price, employeeList)
+    end
+
+    MySQL.query.await('DELETE FROM mdjobs_catering WHERE job = ?', { job })
+    MySQL.query.await(
+        'INSERT INTO mdjobs_completed_catering (job, receipt, employees, totals, customer, delivered, vehicle_returned) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        {
+            job,
+            json.encode(orderItems),
+            currentOrder[1].employees,
+            json.encode(totalsData),
+            json.encode(customerRecord),
+            delivered,
+            vanReturned
+        }
+    )
+
+    local npcNetId
+    if not Config.UseClientPeds then
+        npcNetId = Jobs[job].catering.npcNetId
+        if npcNetId then
+            local npcPed = NetworkGetEntityFromNetworkId(npcNetId)
+            if DoesEntityExist(npcPed) then
+                FreezeEntityPosition(npcPed, false)
+                SetEntityOrphanMode(npcPed, 0) -- Allow ped to be cleaned up
+            end
+            Jobs[job].catering.npcNetId = nil
+        end
+    end
+
+    local vanId = Jobs[job].catering.Van.netId
+    if vanId then
+        local van = NetworkGetEntityFromNetworkId(vanId)
+        if DoesEntityExist(van) then
+            DeleteEntity(van)
+        end
+        Jobs[job].catering.Van.netId = nil
+    end
+
+    local canceled = not delivered or not vanReturned
+    for _, emp in pairs(employeeList) do
+        local empSrc = GetSource(emp.cid)
+        if empSrc ~= -1 and DoesPlayerExist(tostring(empSrc)) then
+            TriggerClientEvent('md-jobs:client:endCatering', empSrc, job, npcNetId)
+            if canceled then
+                Notifys(empSrc, L.cater.manage.canceled, 'error')
+            else
+                Notifys(empSrc, L.cater.manage.complete, 'success')
+            end
+        end
+    end
+
+    Log(Format('[%s] Catering Order %s By %s (%s)', job, canceled and "Canceled" or "Ended", GetName(src), src),
+        'catering')
+    return true
+end
+
+--- Spawn and track a catering van
+--- @param job string the job to spawn for
+--- @return number | nil - the netId of the van (or nil if spawning fails)
+local function spawnVan(job)
+    local vanConfig = Jobs[job].catering.Van[job]
+    local vehicleNetId = SpawnVehicle(vanConfig.model, vanConfig.loc, vanConfig.plate, vanConfig.livery)
+    Jobs[job].catering.Van.netId = vehicleNetId
+
+    CreateThread(function()
+        if not vehicleNetId then return end
+
+        --- Updates the stored player list
+        --- @return table - an array of playerIds to update
+        local function getEmployeesList()
+            local currentOrder = MySQL.query.await('SELECT * FROM mdjobs_catering WHERE job = ?', { job })
+            if not currentOrder[1] then return {} end
+            local employeeList = json.decode(currentOrder[1].employees)
+            local playerIds = {}
+            for _, emp in pairs(employeeList) do
+                local empSrc = GetSource(emp.cid)
+                if empSrc ~= -1 and DoesPlayerExist(tostring(empSrc)) then
+                    table.insert(playerIds, empSrc)
+                end
+            end
+            return playerIds
+        end
+
+        local counter = 0
+        local playerList = getEmployeesList()
+        local van = NetworkGetEntityFromNetworkId(vehicleNetId)
+        local blipColor = Jobs[job].Blip[1].color
+        local blipLabel = (Jobs[job].Blip[1].label or '') .. ' Company Vehicle'
+        while DoesEntityExist(van) do
+            counter += 1
+            if counter >= 60 then -- Every 2 minutes
+                playerList = getEmployeesList()
+                counter = 0
+            end
+            local coords = GetEntityCoords(van)
+            for _, player in pairs(playerList) do
+                if DoesPlayerExist(player) then
+                    TriggerClientEvent('md-jobs:client:trackVan', player, job, coords, {
+                        sprite = 67,
+                        display = 4,
+                        scale = 0.8,
+                        color = blipColor,
+                        label = blipLabel
+                    })
+                end
+            end
+            Wait(5000)
+        end
+
+        playerList = getEmployeesList()
+        for _, player in pairs(playerList) do
+            TriggerClientEvent('md-jobs:client:untrackVan', player, job)
+        end
+    end)
+
+    return vehicleNetId
+end
+
+------------------------
+---- Event Handlers ----
+------------------------
+
+RegisterNetEvent('md-jobs:server:startCatering', function(job)
+    local src = source
+    if not src or not job or GetJobName(src) ~= job then return end
+    local result = MySQL.query.await(
+        'SELECT * FROM mdjobs_catering WHERE job = ?', { job }
+    )
+    local info = result[1]
+    if not info then
+        Notifys(src, L.cater.no_cater, 'error')
+        return
+    end
+
+    local employees = json.decode(info.employees)
+    if not isEmployee(src, job, employees) then
+        Notifys(src, L.cater.manage.not_on_order, 'error')
+        return
+    end
+
+    if info.delivered then
+        Notifys(src, L.cater.manage.cancel_return, 'error')
+        return
+    end
+
+    info.details  = json.decode(info.details)
+    local details = info.details
+    if details.dueby - os.time() < 0 then
+        Notifys(src, L.cater.manage.too_late, 'error')
+        stopCatering(src, job)
+        return
+    end
+
+    local npcNetId -- Populates if using server sided peds, else nil
+    if not Config.UseClientPeds then
+        npcNetId = Jobs[job].catering.npcNetId
+        if not npcNetId or not DoesEntityExist(NetworkGetEntityFromNetworkId(npcNetId)) then
+            npcNetId = SpawnPed(details.location.model, details.location.loc)
+            if npcNetId then
+                Jobs[job].catering.npcNetId = npcNetId
+            else
+                print("[ERR] - Failed to create catering delivery ped")
+            end
+        end
+    end
+
+    local vehicleNetId
+    if Jobs[job].catering.Van.netId then
+        local van = NetworkGetEntityFromNetworkId(Jobs[job].catering.Van.netId)
+        if DoesEntityExist(van) then
+            vehicleNetId = -1 -- Prevent duplicate spawn
+        else
+            vehicleNetId = spawnVan(job)
+        end
+    else
+        vehicleNetId = spawnVan(job)
+    end
+
+    local blipColor = Jobs[job].Blip[1].color
+    local blipLabel = Jobs[job].Blip[1].label .. 'Catering Order'
+    local blipConfig = {
+        sprite = 280,
+        display = 2,
+        scale = 0.8,
+        color = blipColor,
+        label = blipLabel
+    }
+
+    for _, emp in ipairs(employees) do
+        local empSrc = GetSource(emp.cid)
+        if empSrc ~= -1 and DoesPlayerExist(tostring(empSrc)) then
+            TriggerClientEvent('md-jobs:client:cateringStarted', empSrc, job, info, npcNetId, vehicleNetId, blipConfig)
+        end
+    end
+
+    Log('Catering Order Delivery Started for job ' .. job .. ' by ' .. GetName(src), 'catering')
+end)
+
+RegisterNetEvent('md-jobs:server:deliverCatering', function(job)
+    local src = source
+    if not src or not job or GetJobName(src) ~= job then return end
+    local currentOrder = MySQL.query.await('SELECT * FROM mdjobs_catering WHERE job = ?', { job })
+    if not currentOrder[1] then return end
+    local employeeList = json.decode(currentOrder[1].employees)
+    local orderItems   = json.decode(currentOrder[1].data)
+    if not isEmployee(src, job, employeeList) then return end
+    local neededCount, haveCount = 0, 0
+    for _, itemEntry in pairs(orderItems) do
+        if HasItem(src, itemEntry.item, itemEntry.amount) then
+            haveCount = haveCount + 1
+        end
+        neededCount = neededCount + 1
+    end
+    if neededCount ~= haveCount then
+        Notifys(src, L.cater.dontHave, 'error')
+        return
+    end
+    for _, itemEntry in pairs(orderItems) do
+        RemoveItem(src, itemEntry.item, itemEntry.amount)
+    end
+
+    MySQL.query('UPDATE mdjobs_catering SET delivered = ? WHERE job = ?', { 1, job })
+
+    local npcNetId
+    if not Config.UseClientPeds then
+        npcNetId = Jobs[job].catering.npcNetId
+        if npcNetId then
+            local npcPed = NetworkGetEntityFromNetworkId(npcNetId)
+            if DoesEntityExist(npcPed) then
+                FreezeEntityPosition(npcPed, false)
+                SetEntityOrphanMode(npcPed, 0) -- Allow ped to be cleaned up
+            end
+            Jobs[job].catering.npcNetId = nil
+        end
+    end
+
+    local blipColor = Jobs[job].Blip[1].color
+    local blipLabel = Jobs[job].Blip[1].label .. 'Company Vehicle Parking'
+    local returnCoords = Jobs[job].catering.Van[job].loc
+    local model = GetEntityModel(NetworkGetEntityFromNetworkId(Jobs[job].catering.Van.netId))
+    local blipConfig = {
+        sprite = 357,
+        display = 4,
+        scale = 0.8,
+        color = blipColor,
+        label = blipLabel
+    }
+    for _, emp in pairs(employeeList) do
+        local empSrc = GetSource(emp.cid)
+        if empSrc ~= -1 and DoesPlayerExist(tostring(empSrc)) then
+            TriggerClientEvent('md-jobs:client:endDelivery', empSrc, job, npcNetId, model, returnCoords, blipConfig)
+            Notifys(empSrc, L.cater.manage.delivered, 'success')
+        end
+    end
+
+    Log(Format('[%s] Catering Order Delivered By %s (%s)', job, GetName(src), src), 'catering')
+end)
+
 ----------------------------
 ---- Callback Functions ----
 ----------------------------
 
-lib.callback.register('md-jobs:server:startCatering', function(source, job)
-    local currentJob = GetJobName(source)
-    if currentJob ~= job then
+lib.callback.register('md-jobs:server:createCatering', function(source, job)
+    if not source or not job or GetJobName(source) ~= job then
         return false
     end
     return generateCatering(source, job)
 end)
 
 lib.callback.register('md-jobs:server:checkCatering', function(source, job)
-    local currentJob = GetJobName(source)
-    if currentJob ~= job then
+    if not source or not job or GetJobName(source) ~= job then
         return false
     end
 
@@ -176,38 +524,8 @@ lib.callback.register('md-jobs:server:checkCatering', function(source, job)
     return result[1], os.time()
 end)
 
-lib.callback.register('md-jobs:server:getCateringInfo', function(source, job)
-    if GetJobName(source) ~= job then
-        return
-    end
-    local result = MySQL.query.await(
-        'SELECT * FROM mdjobs_catering WHERE job = ?', { job }
-    )
-    local info = result[1]
-    if not info then
-        return
-    end
-
-    local npcNetId -- Populates if using server sided peds, else nil
-    if not Config.UseClientPeds then
-        npcNetId = Jobs[job].catering.npcNetId
-        if not npcNetId or not DoesEntityExist(NetworkGetEntityFromNetworkId(npcNetId)) then
-            local details = json.decode(info.details)
-            local ped = SpawnPed(details.location.model, details.location.loc)
-            if ped then
-                Jobs[job].catering.npcNetId = NetworkGetNetworkIdFromEntity(ped)
-            else
-                print("[ERR] - Failed to create catering delivery ped")
-            end
-        end
-    end
-
-    Log('Catering Order Checked: ' .. job .. ' Name:' .. GetName(source), 'catering')
-    return info, os.time(), npcNetId
-end)
-
 lib.callback.register('md-jobs:server:addtoCatering', function(source, job)
-    if GetJobName(source) ~= job then
+    if not source or not job or GetJobName(source) ~= job then
         return
     end
     local dbResult = MySQL.query.await(
@@ -243,11 +561,11 @@ lib.callback.register('md-jobs:server:addtoCatering', function(source, job)
 end)
 
 lib.callback.register('md-jobs:server:getCateringHistory', function(source, job)
-    if GetJobName(source) ~= job then
+    if not source or not job or GetJobName(source) ~= job then
         return
     end
     local history = MySQL.query.await(
-        'SELECT * FROM mdjobs_completed_catering WHERE job = ?', { job }
+        'SELECT * FROM mdjobs_completed_catering WHERE job = ? ORDER BY id DESC', { job }
     )
     if not history[1] then
         return
@@ -256,118 +574,12 @@ lib.callback.register('md-jobs:server:getCateringHistory', function(source, job)
     return history
 end)
 
-lib.callback.register('md-jobs:server:cateringVan', function(source, job)
-    if GetJobName(source) ~= job then
+lib.callback.register('md-jobs:server:endCatering', function(source)
+    if not source then return false end
+    local job = GetJobName(source)
+    if not isEmployee(source, job) then
+        Notifys(source, L.cater.manage.not_on_order, 'error')
         return
     end
-
-    if Jobs[job].catering.Van.netId then
-        local van = NetworkGetEntityFromNetworkId(Jobs[job].catering.Van.netId)
-        if DoesEntityExist(van) then
-            return -100 -- Prevent duplicate spawn
-        end
-    end
-
-    local timeout = 5000
-    local startTime = GetGameTimer()
-    local vanConfig = Jobs[job].catering.Van[job]
-    local vanEntity = CreateVehicle(
-        vanConfig.model,
-        vanConfig.loc.x,
-        vanConfig.loc.y,
-        vanConfig.loc.z,
-        vanConfig.loc.w,
-        true,
-        true
-    )
-    while not DoesEntityExist(vanEntity) do
-        Wait(100)
-        if GetGameTimer() - startTime > timeout then
-            if Config.Debug then print("Timeout: Van Entity creation failed.") end
-            return
-        end
-    end
-    local netId = NetworkGetNetworkIdFromEntity(vanEntity)
-    Jobs[job].catering.Van.netId = netId
-    print("Created vehicle " ..
-        vanEntity ..
-        " with model " ..
-        vanConfig.model ..
-        " and netId " .. netId .. " at location " .. json.encode(vanConfig.loc))
-
-    SetVehicleNumberPlateText(vanEntity, vanConfig.plate)
-    SetEntityHeading(vanEntity, vanConfig.loc.w)
-    if vanConfig.livery and type(vanConfig.livery) == "number" then
-        TriggerClientEvent('md-jobs:client:setVehicleLivery', -1, netId, vanConfig.livery)
-    end
-    Log('Catering Order Van Made: ' .. job .. ' Name:' .. GetName(source), 'catering')
-    return netId
-end)
-
-lib.callback.register('md-jobs:server:stopCatering', function(source, job)
-    if GetJobName(source) ~= job then
-        return
-    end
-    MySQL.query('DELETE FROM mdjobs_catering WHERE job = ?', { job })
-    Log('Catering Order Deleted: ' .. job .. ' Name:' .. GetName(source), 'catering')
-    return true
-end)
-
-lib.callback.register('md-jobs:server:deliverCatering', function(source, job)
-    if GetJobName(source) ~= job then
-        return
-    end
-    local currentOrder = MySQL.query.await('SELECT * FROM mdjobs_catering WHERE job = ?', { job })
-    if not currentOrder[1] then
-        return
-    end
-    local totalsData             = json.decode(currentOrder[1].totals)
-    local employeeList           = json.decode(currentOrder[1].employees)
-    local orderItems             = json.decode(currentOrder[1].data)
-    local details                = json.decode(currentOrder[1].details)
-    local neededCount, haveCount = 0, 0
-    for _, itemEntry in pairs(orderItems) do
-        if HasItem(source, itemEntry.item, itemEntry.amount) then
-            haveCount = haveCount + 1
-        end
-        neededCount = neededCount + 1
-    end
-    if neededCount ~= haveCount then
-        Notifys(source, L.cater.dontHave, 'error')
-        return false
-    end
-    for _, itemEntry in pairs(orderItems) do
-        RemoveItem(source, itemEntry.item, itemEntry.amount)
-    end
-    handleMoney(source, totalsData.price, employeeList)
-
-    if not Config.UseClientPeds then
-        local npcNetId = Jobs[job].catering.npcNetId
-        if npcNetId then
-            local npcPed = NetworkGetEntityFromNetworkId(npcNetId)
-            if DoesEntityExist(npcPed) then
-                FreezeEntityPosition(npcPed, false)
-            end
-            Jobs[job].catering.npcNetId = nil
-        end
-    end
-
-    MySQL.query('DELETE FROM mdjobs_catering WHERE job = ?', { job })
-    local customerRecord = {
-        name  = details.firstname .. ' ' .. details.lastname,
-        label = details.location.label
-    }
-    MySQL.query.await(
-        'INSERT INTO mdjobs_completed_catering (job, receipt, employees, totals, customer) VALUES (?, ?, ?, ?, ?)',
-        {
-            job,
-            json.encode(orderItems),
-            currentOrder[1].employees,
-            json.encode(totalsData),
-            json.encode(customerRecord)
-        }
-    )
-    Notifys(source, 'You Have Delivered The Catering Order!', 'success')
-    Log('Catering Order Delivered: ' .. job .. ' Name:' .. GetName(source), 'catering')
-    return true
+    return stopCatering(source, job)
 end)
