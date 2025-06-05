@@ -187,7 +187,7 @@ local function checkHistory(job)
 					for _, receiptItem in pairs(receiptData) do
 						table.insert(
 							itemList,
-							GetLabel(receiptItem.item) .. ": Amount: " .. receiptItem.amount
+							GetLabel(receiptItem.item) .. ": " .. receiptItem.amount
 						)
 					end
 					table.sort(itemList)
@@ -208,8 +208,8 @@ local function checkHistory(job)
 						returned,
 						totalsData.amount,
 						totalsData.price,
-						table.concat(itemList, indent),
-						table.concat(employeeList, indent)
+						indent .. '- ' .. table.concat(itemList, indent .. indent .. '- '),
+						indent .. '- ' .. table.concat(employeeList, indent .. indent .. '- ')
 					)
 					lib.alertDialog({
 						header   = customerData.label,
@@ -388,7 +388,7 @@ local function checkCatering(job)
 		timeRemaining,
 		totalsTable.amount,
 		totalsTable.price,
-		table.concat(itemLines, indent)
+		indent .. '- ' .. table.concat(itemLines, indent .. indent .. '- ')
 	)
 	local jobLabel = job
 	if Config.Framework == 'qbx' then
@@ -1151,18 +1151,20 @@ end
 
 --- Creates a blip
 --- @param coords vector3 the location of the blip
---- @param details BlipData the required information for the blip
+--- @param details MDBlipData the required information for the blip
 --- @param gps boolean if the player's gps should be set to the blip coords
+--- @param short boolean if the blip should be short range or long
 --- @return integer -- the generated blip id+++++++
-function CreateBlip(coords, details, gps)
+function CreateBlip(coords, details, short, gps)
 	local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
 	SetBlipSprite(blip, details.sprite)
 	SetBlipDisplay(blip, details.display)
 	SetBlipScale(blip, details.scale)
 	SetBlipColour(blip, details.color)
 	BeginTextCommandSetBlipName("STRING")
-    AddTextComponentSubstringPlayerName(details.label)
-    EndTextCommandSetBlipName(blip)
+	AddTextComponentSubstringPlayerName(details.label)
+	EndTextCommandSetBlipName(blip)
+	SetBlipAsShortRange(blip, short)
 	if gps then
 		SetBlipRoute(blip, true)
 		SetBlipRouteColour(blip, details.color)

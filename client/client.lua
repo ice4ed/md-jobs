@@ -131,13 +131,19 @@ local function spawnBlips()
     local blipConfigs = lib.callback.await('md-jobs:server:getBlips', false)
     for jobName, blipConfig in pairs(blipConfigs) do
         local blipInfo = blipConfig.info
+        if blips[job] ~= nil then
+            if DoesBlipExist(blips[job]) then
+                RemoveBlip(blips[job])
+            end
+            blips[job] = nil
+        end
         blips[jobName] = CreateBlip(blipInfo.loc, {
             sprite = blipInfo.sprite or 52,
             display = 4,
             scale = blipInfo.scale or 0.8,
             color = blipInfo.color or 2,
             label = blipInfo.label or 'Lazy Ass'
-        }, false)
+        }, true, false)
     end
 end
 
@@ -175,9 +181,8 @@ local function cleanupDelivery(job, netId)
         end
         blips[job .. '_delivery'] = nil
     end
-    local zone = zones[job .. "_delivery"]
-    if zone then
-        zone:remove()
+    if zones[job .. "_delivery"] then
+        zones[job .. "_delivery"]:remove()
         zones[job .. "_delivery"] = nil
     end
 end
@@ -200,9 +205,8 @@ local function endCatering(job)
         end
         trackingBlips[job] = nil
     end
-    local zone = zones[job .. "_catering"]
-    if zone then
-        zone:remove()
+    if zones[job .. "_catering"] then
+        zones[job .. "_catering"]:remove()
         zones[job .. "_catering"] = nil
     end
     lib.hideTextUI()
@@ -269,18 +273,24 @@ end)
 
 RegisterNetEvent('md-jobs:client:cateringStarted', function(job, info, npcNetId, vehicleNetId, blipConfig)
     if not job or GetJobName() ~= job then return end
-    info.employees            = info.employees
-    info.totals               = info.totals
-    info.details              = info.details
-    info.data                 = info.data
-    local details             = info.details
+    info.employees = info.employees
+    info.totals    = info.totals
+    info.details   = info.details
+    info.data      = info.data
+    local details  = info.details
+    if blips[job .. '_delivery'] ~= nil then
+        if DoesBlipExist(blips[job .. '_delivery']) then
+            RemoveBlip(blips[job .. '_delivery'])
+        end
+        blips[job .. '_delivery'] = nil
+    end
     local blip                = CreateBlip(details.location.loc, {
         sprite = blipConfig.sprite or 280,
         display = blipConfig.display or 2,
         scale = blipConfig.scale or 0.8,
         color = blipConfig.color or 8,
         label = blipConfig.label or "Catering Order"
-    }, true)
+    }, true, true)
     blips[job .. '_delivery'] = blip
 
     local options             = {
@@ -293,7 +303,11 @@ RegisterNetEvent('md-jobs:client:cateringStarted', function(job, info, npcNetId,
         }
     }
 
-    local zone                = lib.zones.sphere({
+    if zones[job .. "_delivery"] then
+        zones[job .. "_delivery"]:remove()
+        zones[job .. "_delivery"] = nil
+    end
+    zones[job .. "_delivery"] = lib.zones.sphere({
         coords = vector3(details.location.loc.x, details.location.loc.y, details.location.loc.z),
         radius = 50,
         debug = Config.Debug,
@@ -330,11 +344,11 @@ RegisterNetEvent('md-jobs:client:cateringStarted', function(job, info, npcNetId,
             end
         end,
     })
-    zones[job .. "_delivery"] = zone
     AddTargModel(peds[job .. "_delivery"], options)
 
     if vehicleNetId == -1 then
         Notify(L.cater.manage.van_dup, 'error')
+        GiveKeys(vehicle)
         return
     elseif vehicleNetId and NetworkDoesEntityExistWithNetworkId(vehicleNetId) then
         local vehicle = NetworkGetEntityFromNetworkId(vehicleNetId)
@@ -343,20 +357,31 @@ RegisterNetEvent('md-jobs:client:cateringStarted', function(job, info, npcNetId,
             SetVehicleFuelLevel(vehicle, 100.0)
             Notify(L.cater.manage.van, 'success')
             return
+        else
+            print('[ERROR] - Failed to get company vehicle', vehicle, DoesEntityExist(vehicle), IsEntityAVehicle(vehicle))
         end
+    else
+        print('[ERROR] - Failed to get valid vehicle network ID', vehicleNetId,
+            NetworkDoesEntityExistWithNetworkId(vehicleNetId))
     end
 end)
 
 RegisterNetEvent('md-jobs:client:endDelivery', function(job, npcNetId, vehModel, coords, blipConfig)
     if not job or GetJobName() ~= job then return end
     cleanupDelivery(job, npcNetId)
+    if blips[job .. '_catering'] ~= nil then
+        if DoesBlipExist(blips[job .. '_catering']) then
+            RemoveBlip(blips[job .. '_catering'])
+        end
+        blips[job .. '_catering'] = nil
+    end
     blips[job .. '_catering'] = CreateBlip(coords.xyz, {
         sprite = blipConfig.sprite or 357,
         display = blipConfig.display or 4,
         scale = blipConfig.scale or 0.8,
         color = blipConfig.color or 2,
         label = blipConfig.label or "Park Vehicle"
-    }, true)
+    }, true, true)
 
     local minDim, maxDim = GetModelDimensions(vehModel)
     local sizeVec = vector3(
@@ -364,6 +389,10 @@ RegisterNetEvent('md-jobs:client:endDelivery', function(job, npcNetId, vehModel,
         math.abs(maxDim.y - minDim.y),
         math.abs(maxDim.z - minDim.z)
     )
+    if zones[job .. '_catering'] ~= nil then
+        zones[job .. '_catering']:remove()
+        zones[job .. '_catering'] = nil
+    end
     zones[job .. '_catering'] = lib.zones.box({
         coords = vector3(coords.x, coords.y, coords.z - 0.8),
         size = sizeVec,
@@ -537,7 +566,7 @@ RegisterNetEvent('md-jobs:client:trackVan', function(job, coords, blipData)
         scale = blipData.scale or 0.8,
         color = blipData.color or 2,
         label = blipData.label or 'Company Vehicle'
-    }, false)
+    }, true, false)
     trackingBlips[job] = newBlip
 end)
 

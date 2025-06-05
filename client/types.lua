@@ -1,6 +1,6 @@
 ---@meta
 
----@class BlipData
+---@class MDBlipData
 ---@field sprite number
 ---@field display number
 ---@field scale number

@@ -62,7 +62,7 @@ L.cater        = {
     no_cater = 'There Is No Catering Order!',
     check =
     'Customer Details:  \n    \n  Customer Name: %s %s  \n  Location: %s  \n  Delivered: %s  \n  Due By: %s  \n  Total Amount Of Products: %s  \n  Total Price:' ..
-    L.cur .. '%s  \n  Itemized List: %s  \n  ',
+    L.cur .. '%s  \n    \n  Itemized List: %s',
     cater_header = '%s Catering Order',
     manage = {
         title = '%s Catering Management',

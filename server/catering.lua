@@ -327,7 +327,7 @@ local function spawnVan(job)
         local playerList = getEmployeesList()
         local van = NetworkGetEntityFromNetworkId(vehicleNetId)
         local blipColor = Jobs[job].Blip[1].color
-        local blipLabel = (Jobs[job].Blip[1].label or '') .. ' Company Vehicle'
+        local blipLabel = Jobs[job].Blip[1].label .. ' Company Vehicle'
         while DoesEntityExist(van) do
             counter += 1
             if counter >= 60 then -- Every 2 minutes
@@ -536,18 +536,12 @@ lib.callback.register('md-jobs:server:addtoCatering', function(source, job)
         return false
     end
     local existingEmployees = json.decode(dbResult[1].employees)
-    local newEmployeeList   = {}
-    local alreadyOnOrder    = false
-    for _, emp in ipairs(existingEmployees) do
-        if emp.cid == GetCid(source) then
-            alreadyOnOrder = true
-            break
-        end
-    end
-    if alreadyOnOrder then
+    local delivered         = dbResult[1].delivered
+    if isEmployee(source, job, existingEmployees) then
         Notifys(source, L.cater.already_on, 'error')
         return false
     end
+    local newEmployeeList = {}
     for _, emp in ipairs(existingEmployees) do
         table.insert(newEmployeeList, { cid = emp.cid, name = emp.name })
     end
@@ -556,6 +550,50 @@ lib.callback.register('md-jobs:server:addtoCatering', function(source, job)
         'UPDATE mdjobs_catering SET employees = ? WHERE job = ?',
         { json.encode(newEmployeeList), job }
     )
+    if Jobs[job].catering.Van.netId then
+        local npcNetId
+        if not Config.UseClientPeds then
+            npcNetId = Jobs[job].catering.npcNetId
+            if npcNetId then
+                local npcPed = NetworkGetEntityFromNetworkId(npcNetId)
+                if DoesEntityExist(npcPed) then
+                    FreezeEntityPosition(npcPed, false)
+                    SetEntityOrphanMode(npcPed, 0) -- Allow ped to be cleaned up
+                end
+                Jobs[job].catering.npcNetId = nil
+            end
+        end
+        local vehicleNetId = Jobs[job].catering.Van.netId
+        local blipColor = Jobs[job].Blip[1].color
+        local blipLabel = Jobs[job].Blip[1].label
+        if delivered then
+            local returnCoords = Jobs[job].catering.Van[job].loc
+            local model = GetEntityModel(NetworkGetEntityFromNetworkId(vehicleNetId))
+            blipLabel = Jobs[job].Blip[1].label .. ' Company Vehicle Parking'
+            local blipConfig = {
+                sprite = 357,
+                display = 4,
+                scale = 0.8,
+                color = blipColor,
+                label = blipLabel
+            }
+
+            TriggerClientEvent('md-jobs:client:endDelivery', source, job, npcNetId, model, returnCoords, blipConfig)
+            Notifys(source, L.cater.manage.delivered, 'success')
+        else
+            local info       = dbResult[1]
+            info.details     = json.decode(info.details)
+            blipLabel        = Jobs[job].Blip[1].label .. ' Company Vehicle'
+            local blipConfig = {
+                sprite = 67,
+                display = 4,
+                scale = 0.8,
+                color = blipColor,
+                label = blipLabel
+            }
+            TriggerClientEvent('md-jobs:client:cateringStarted', source, job, info, npcNetId, vehicleNetId, blipConfig)
+        end
+    end
     Log('Catering Order Added Employee: ' .. job .. ' Name:' .. GetName(source), 'catering')
     return true
 end)
