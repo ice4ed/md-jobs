@@ -4,6 +4,15 @@ local jobloc = 'burgershot'
 Jobs['burgershot'] = {
     CateringEnabled = true,
     closedShopsEnabled = true,
+    automaticJobDuty = true,
+    polyzone = {
+        vec3(-1175.25, -894.89, 13.85),
+        vec3(-1185.25, -901.6, 13.83),
+        vec3(-1187.4, -898.63, 13.83),
+        vec3(-1198.91, -905.37, 13.83),
+        vec3(-1208.06, -891.75, 13.85),
+        vec3(-1186.98, -877.53, 13.85)
+    },
     Blip = {
         { sprite = 106, color = 2, scale = 0.5, label = 'Burger Shot', loc = vec3(-1178.93, -888.79, 13.95) },
     },

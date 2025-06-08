@@ -8,122 +8,154 @@ local zones = {}
 --- @return nil
 local function createZones()
     CreateThread(function()
-        local closedShops = lib.callback.await('md-jobs:server:getClosedShops', false)
-        if not closedShops then
-            return
-        end
-        for _, shopObj in pairs(closedShops) do
-            local shopConfig = shopObj.config
-            if zones[shopConfig.job] then
-                zones[shopConfig.job]:remove()
-                zones[shopConfig.job] = nil
-            end
-            local shopOptions = {
+        local jobs = lib.callback.await('md-jobs:server:getJobConfigs', false)
+        if not jobs then return end
+
+        --- Helper to get shop target options
+        --- @param job string the job to target
+        --- @param num number the closed shop num
+        --- @return table - the options tree
+        local function getOpts(job, num)
+            return {
                 {
                     icon = Icons.shop,
                     label = L.T.shop,
-                    action = function() OpenClosedShop(shopConfig.job, shopConfig.num) end,
+                    action = function()
+                        OpenClosedShop(job, num)
+                    end,
                     canInteract = function()
-                        return CanOpenClosed(shopConfig.job)
+                        return CanOpenClosed(job)
                     end
                 },
                 {
                     icon = Icons.shop,
                     label = L.T.manage,
-                    action = function() ManageClosed(shopConfig.job, shopConfig.num) end,
+                    action = function()
+                        ManageClosed(job, num)
+                    end,
                     canInteract = function()
-                        return HasJob(shopConfig.job)
+                        return HasJob(job)
                     end
                 },
                 {
                     icon = Icons.shop,
                     label = "Adjust Prices",
-                    action = function() AdjustPrices(shopConfig.job, shopConfig.num) end,
+                    action = function()
+                        AdjustPrices(job, num)
+                    end,
                     canInteract = function()
-                        return IsBoss() and HasJob(shopConfig.job)
+                        return IsBoss() and HasJob(job)
                     end
-                }
+                },
             }
-            zones[shopConfig.job] = lib.zones.box({
-                coords = vector3(shopConfig.loc.x, shopConfig.loc.y, shopConfig.loc.z),
-                size = vector3(30, 30, 3),
-                rotation = shopConfig.loc.w or 0,
-                debug = Config.Debug,
+        end
+
+        --- Helper to spawn closed shop peds
+        ---@param shopObj table the shop config
+        --- @return nil
+        local function spawnShop(jobName, shopObj)
+            local cfg = shopObj.config
+            local opts = getOpts(jobName, cfg.num)
+            if shopObj.type == "ped" then
+                local ped = Config.UseClientPeds
+                    and SpawnLocalPed(cfg.model, cfg.loc)
+                    or (NetworkDoesEntityExistWithNetworkId(cfg.model) and NetToPed(cfg.model))
+                if not ped or not DoesEntityExist(ped) then
+                    print("[ERROR] - Failed to spawn ped for closed shop:", jobName, cfg.num)
+                    return
+                end
+                SetBlockingOfNonTemporaryEvents(ped, true)
+                SetPedFleeAttributes(ped, 0, false)
+                SetPedCanRagdoll(ped, false)
+                SetEntityCanBeDamaged(ped, false)
+                SetEntityInvincible(ped, true)
+                if math.random(1, 4) > 1 then
+                    SetEntityAsMissionEntity(ped, true, true)
+                    PlayPedAmbientSpeechNative(ped, 'GENERIC_HI', 'SPEECH_PARAMS_FORCE_NORMAL_CLEAR')
+                end
+                peds[cfg.num] = ped
+                AddTargModel(ped, opts)
+            elseif shopObj.type == "target" then
+                AddTargSphere(
+                    jobName .. "_" .. cfg.num,
+                    vector3(cfg.loc.x, cfg.loc.y, cfg.loc.z),
+                    opts
+                )
+            end
+        end
+
+        --- Helper to remove closed shop peds
+        --- @param shopObj table the shop config
+        --- @return nil
+        local function removeShop(jobName, shopObj)
+            local cfg = shopObj.config
+            local opts = getOpts(jobName, cfg.num)
+
+            if shopObj.type == "ped" then
+                local ped = peds[cfg.num]
+                if not ped or not DoesEntityExist(ped) then
+                    -- fallback to network ped
+                    ped = (NetworkDoesEntityExistWithNetworkId(cfg.model) and NetToPed(cfg.model))
+                end
+                if not ped or not DoesEntityExist(ped) then
+                    print("[ERROR] - Failed to find ped to remove for closed shop:", jobName, cfg.num)
+                    return
+                end
+                if math.random(1, 4) > 1 then
+                    SetEntityAsMissionEntity(ped, true, true)
+                    PlayPedAmbientSpeechNative(ped, 'GENERIC_BYE', 'SPEECH_PARAMS_FORCE_NORMAL_CLEAR')
+                    Wait(1000)
+                end
+                if Config.UseClientPeds then
+                    DeleteEntity(ped)
+                    peds[cfg.num] = nil
+                else
+                    RemoveTargModel(ped, opts)
+                end
+            elseif shopObj.type == "target" then
+                RemoveTargSphere(jobName .. "_" .. cfg.num)
+            end
+        end
+
+        for jobName, jobConfig in pairs(jobs) do
+            local zonePoints = jobConfig.zone
+            local closedShops = jobConfig.closedShops
+            if zones[jobName] then
+                zones[jobName]:remove()
+                zones[jobName] = nil
+            end
+
+            local zone = nil
+            local zoneConfig = {
+                debug   = Config.Debug,
                 onEnter = function()
-                    if shopObj.type == "ped" then
-                        local ped
-                        if Config.UseClientPeds then
-                            peds[shopConfig.num] = SpawnLocalPed(shopConfig.model, shopConfig.loc)
-                        else
-                            local netId = shopConfig.model -- If server spawned shopConfig.model is netId
-                            if NetworkDoesEntityExistWithNetworkId(netId) then
-                                ped = NetToPed(netId)
-                            else
-                                print("[ERROR] - No entity found for netId: " .. netId)
-                            end
-                        end
-                        if not ped or not DoesEntityExist(ped) then
-                            print("[ERROR] - Failed to get ped for interaction")
-                            return
-                        end
-
-                        SetBlockingOfNonTemporaryEvents(ped, true)
-                        SetPedFleeAttributes(ped, 0, false)
-                        SetPedCanRagdoll(ped, false)
-                        SetEntityCanBeDamaged(ped, false)
-                        SetEntityInvincible(ped, true)
-
-                        local hiChance = math.random(1, 4)
-                        if hiChance > 1 then
-                            PlayPedAmbientSpeechNative(ped, 'GENERIC_HI', 'SPEECH_PARAMS_FORCE_NORMAL_CLEAR')
-                        end
-
-                        AddTargModel(ped, shopOptions)
-                    elseif shopObj.type == "target" then
-                        AddTargSphere(shopConfig.job .. ' ' .. shopConfig.num,
-                            vector3(shopConfig.loc.x, shopConfig.loc.y, shopConfig.loc.z), shopOptions)
+                    TriggerServerEvent("md-jobs:server:enterJobZone", jobName)
+                    for _, shopObj in ipairs(closedShops) do
+                        spawnShop(jobName, shopObj)
                     end
                 end,
-                onExit = function()
-                    if shopObj.type == "ped" then
-                        if Config.UseClientPeds then
-                            local byeChance = math.random(1, 4)
-                            if byeChance > 1 then
-                                PlayPedAmbientSpeechNative(peds[shopConfig.num], 'GENERIC_BYE',
-                                    'SPEECH_PARAMS_FORCE_NORMAL_CLEAR')
-                            end
-
-                            if DoesEntityExist(peds[shopConfig.num]) then
-                                DeleteEntity(peds[shopConfig.num])
-                                peds[shopConfig.num] = nil
-                            end
-                        else
-                            local ped
-                            local netId = shopConfig.model -- If server spawned shopConfig.model is netId
-                            if NetworkDoesEntityExistWithNetworkId(netId) then
-                                ped = NetToPed(netId)
-                            end
-                            if not ped or not DoesEntityExist(ped) then
-                                print("[ERROR] - Failed to get ped for removal")
-                                return
-                            end
-
-                            local byeChance = math.random(1, 4)
-                            if byeChance > 1 then
-                                PlayPedAmbientSpeechNative(ped, 'GENERIC_BYE',
-                                    'SPEECH_PARAMS_FORCE_NORMAL_CLEAR')
-                            end
-
-                            RemoveTargModel(ped, shopOptions)
-                        end
-                    elseif shopObj.type == "target" then
-                        RemoveTargSphere(shopConfig.job .. ' ' .. shopConfig.num)
+                onExit  = function()
+                    TriggerServerEvent("md-jobs:server:leaveJobZone", jobName)
+                    for _, shopObj in ipairs(closedShops) do
+                        removeShop(jobName, shopObj)
                     end
                 end,
-            })
+            }
+            if #zonePoints == 1 then
+                -- No polyzone configured, using box zone
+                zoneConfig.coords = vector3(zonePoints.x, zonePoints.y, zonePoints.z)
+                zoneConfig.size = vector3(30, 30, 3)
+                zone = lib.zones.box(zoneConfig)
+            else
+                -- Polyzone configuired, using polyzone
+                zoneConfig.points = zonePoints
+                zone = lib.zones.poly(zoneConfig)
+            end
+            zones[jobName] = zone
         end
     end)
 end
+
 
 --- Create blips
 --- @return nil
@@ -131,11 +163,11 @@ local function spawnBlips()
     local blipConfigs = lib.callback.await('md-jobs:server:getBlips', false)
     for jobName, blipConfig in pairs(blipConfigs) do
         local blipInfo = blipConfig.info
-        if blips[job] ~= nil then
-            if DoesBlipExist(blips[job]) then
-                RemoveBlip(blips[job])
+        if blips[jobName] ~= nil then
+            if DoesBlipExist(blips[jobName]) then
+                RemoveBlip(blips[jobName])
             end
-            blips[job] = nil
+            blips[jobName] = nil
         end
         blips[jobName] = CreateBlip(blipInfo.loc, {
             sprite = blipInfo.sprite or 52,
@@ -172,6 +204,7 @@ local function cleanupDelivery(job, netId)
         TaskWanderStandard(ped, 10.0, 10)
         SetEntityAsMissionEntity(ped, false, false)
         SetEntityAsNoLongerNeeded(ped)
+        SetEntityCleanupByEngine(ped, true)
         RemoveTargModel(ped, { { label = L.cater.manage.deliver } }) -- THIS MUST MATCH THE OPTIONS LABEL
     end
     local blip = blips[job .. '_delivery']
@@ -348,7 +381,6 @@ RegisterNetEvent('md-jobs:client:cateringStarted', function(job, info, npcNetId,
 
     if vehicleNetId == -1 then
         Notify(L.cater.manage.van_dup, 'error')
-        GiveKeys(vehicle)
         return
     elseif vehicleNetId and NetworkDoesEntityExistWithNetworkId(vehicleNetId) then
         local vehicle = NetworkGetEntityFromNetworkId(vehicleNetId)

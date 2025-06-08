@@ -230,6 +230,47 @@ local function dispenseCommission(source, amount, commissionRate)
     AddJobMoney(GetJobName(source), salaryAmt)
 end
 
+--- Set a player's job duty status
+--- @param source number the player ID
+--- @param value boolean true for on duty, false for off
+--- @return nil
+local function setJobDuty(source, value)
+    local Player = GetPlayer(source)
+    if Config.Framework == 'qbx' then
+        if Player.PlayerData.job.onduty ~= value then
+            QBOX:SetJobDuty(source, value)
+            if value then
+                Notifys(source, L.Duty.on, 'info')
+            else
+                Notifys(source, L.Duty.off, 'info')
+            end
+        end
+    else
+        if Config.Framework == 'qb' then
+            if Player.PlayerData.job.onduty ~= value then
+                Player.Functions.SetJobDuty(value)
+                if value then
+                    Notifys(source, L.Duty.on, 'info')
+                else
+                    Notifys(source, L.Duty.off, 'info')
+                end
+            end
+        elseif Config.Framework == 'esx' then
+            local job = Player.getJob()
+            if job.onDuty ~= value then
+                Player.setJob(job.name, job.grade, value)
+                if value then
+                    Notifys(source, L.Duty.on, 'info')
+                else
+                    Notifys(source, L.Duty.off, 'info')
+                end
+            end
+        else
+            print('You need to set the framework in the config')
+        end
+    end
+end
+
 ------------------------
 ---- Event Handlers ----
 ------------------------
@@ -237,7 +278,7 @@ end
 RegisterNetEvent('md-jobs:server:billPlayer', function(job, tillIndex)
     local src = source
     if not src then return end
-    local tillData  = getLocData(job, 'Tills', tillIndex)
+    local tillData = getLocData(job, 'Tills', tillIndex)
     if job ~= tillData.job then
         return
     end
@@ -280,6 +321,24 @@ RegisterNetEvent('md-jobs:server:billPlayer', function(job, tillIndex)
         )
     else
         Notifys(src, Format(L.billing.too_poor, GetName(billedSrc)), 'error')
+    end
+end)
+
+RegisterNetEvent('md-jobs:server:enterJobZone', function(job)
+    print("enter")
+    local src = source
+    if not src or not job or GetJobName(src) ~= job then return end
+    if Jobs[job].automaticJobDuty then
+        setJobDuty(src, true)
+    end
+end)
+
+RegisterNetEvent('md-jobs:server:leaveJobZone', function(job)
+    local src = source
+    print("leave", src, job, Jobs[job].automaticJobDuty, IsCateringEmployee(src, job))
+    if not src or not job or GetJobName(src) ~= job then return end
+    if Jobs[job].automaticJobDuty and not IsCateringEmployee(src, job) then
+        setJobDuty(src, false)
     end
 end)
 
@@ -410,8 +469,50 @@ lib.callback.register('md-jobs:server:getBlips', function()
     for jobName, jobConfig in pairs(Jobs) do
         local blips = jobConfig.Blip or {}
         for _, blipData in pairs(blips) do
-            table.insert(blipList, { job = jobName, info = blipData})
+            table.insert(blipList, { job = jobName, info = blipData })
         end
     end
     return blipList
+end)
+
+lib.callback.register('md-jobs:server:getJobConfigs', function()
+    local jobs = {}
+    for jobName, jobData in pairs(Jobs) do
+        local jobConfig = {}
+        jobConfig.job = jobName
+        if jobData.polyzone then
+            jobConfig.zone = jobData.polyzone
+        elseif jobData.Blip[1].loc then
+            jobConfig.zone = jobData.Blip.loc
+        else
+            goto skip
+        end
+        local closedShops = nil
+        if jobData.closedShopsEnabled and jobData.closedShops then
+            closedShops = {}
+            for index, shop in pairs(jobData.closedShops) do
+                if shop.ped then
+                    local modelValue = nil -- Ped model if client spawned else netId
+                    if Config.UseClientPeds then
+                        modelValue = shop.ped
+                    else
+                        local netId = shop.netId
+                        if not netId or not DoesEntityExist(NetworkGetEntityFromNetworkId(netId)) then
+                            netId = SpawnPed(shop.ped, shop.loc)
+                            shop.netId = netId
+                        end
+                        modelValue = netId
+                    end
+                    table.insert(closedShops,
+                        { type = "ped", config = { model = modelValue, loc = shop.loc, num = index } })
+                else
+                    table.insert(closedShops, { type = "target", config = { loc = shop.loc, num = index } })
+                end
+            end
+        end
+        jobConfig.closedShops = closedShops
+        jobs[jobName] = jobConfig
+        ::skip::
+    end
+    return jobs
 end)

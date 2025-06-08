@@ -447,6 +447,36 @@ function SpawnVehicle(model, coords, plate, livery)
     return netId
 end
 
+--- Check if a player is on the catering employee list
+--- @param src number the player id of the player
+--- @param job string the job to check
+--- @param employeeList? table (optional) list of employees
+--- @return boolean - true if on the list, else false
+function IsCateringEmployee(src, job, employeeList)
+    if not src or not job or GetJobName(src) ~= job then
+        return false
+    end
+    if not employeeList then
+        local result = MySQL.query.await(
+            'SELECT * FROM mdjobs_catering WHERE job = ?', { job }
+        )
+        local info = result[1]
+        if not info then
+            return false
+        end
+        info.details  = json.decode(info.details)
+        local dueby = info.details.dueby
+        if dueby - os.time() < 0 then return false end -- expired
+        employeeList = json.decode(info.employees)
+    end
+    local isOnJob = false
+    local srcCid = GetCid(src)
+    for _, emp in ipairs(employeeList) do
+        if emp.cid == srcCid then isOnJob = true end
+    end
+    return isOnJob
+end
+
 ------------------------
 ---- Event Handlers ----
 ------------------------

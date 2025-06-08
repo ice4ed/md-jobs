@@ -6,6 +6,11 @@ L.devError     = {
 
 }
 
+L.Duty = {
+    on = 'You have gone on duty!',
+    off = 'You have gone off duty!'
+}
+
 L.Error        = {
     no_item = 'You Need %s !',
     no_job = 'You Need To Be A %s To Do This',

@@ -98,37 +98,6 @@ initialize()
 ---- Callback Functions ----
 ----------------------------
 
-lib.callback.register('md-jobs:server:getClosedShops', function()
-    local shops = {}
-    for jobName, jobData in pairs(Jobs) do
-        if jobData.closedShopsEnabled then
-            if jobData.closedShops then
-                for index, shop in pairs(Jobs[jobName].closedShops) do
-                    if shop.ped then
-                        local modelValue = nil -- Ped model if client spawned else netId
-                        if Config.UseClientPeds then
-                            modelValue = shop.ped
-                        else
-                            local netId = shop.netId
-                            if not netId or not DoesEntityExist(NetworkGetEntityFromNetworkId(netId)) then
-                                netId = SpawnPed(shop.ped, shop.loc)
-                                shop.netId = netId
-                            end
-                            modelValue = netId
-                        end
-                        table.insert(shops,
-                            { type = "ped", config = { model = modelValue, loc = shop.loc, job = jobName, num = index } })
-                    else
-                        table.insert(shops, { type = "target", config = { loc = shop.loc, job = jobName, num = index } })
-                    end
-                end
-            end
-        end
-    end
-    return shops
-end)
-
-
 lib.callback.register('md-jobs:server:getClosedShop', function(source, job, loc)
     local src = source
     local location = GetEntityCoords(GetPlayerPed(src))

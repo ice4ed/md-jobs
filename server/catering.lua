@@ -170,33 +170,6 @@ local function getDistance(a, b)
     return math.sqrt(dx * dx + dy * dy + dz * dz)
 end
 
---- Check if a player is on the catering employee list
---- @param src number the player id of the player
---- @param job string the job to check
---- @param employeeList? table (optional) list of employees
---- @return boolean - true if on the list, else false
-local function isEmployee(src, job, employeeList)
-    if not src or not job or GetJobName(src) ~= job then
-        return false
-    end
-    if not employeeList then
-        local result = MySQL.query.await(
-            'SELECT * FROM mdjobs_catering WHERE job = ?', { job }
-        )
-        local info = result[1]
-        if not info then
-            return false
-        end
-        employeeList = json.decode(info.employees)
-    end
-    local isOnJob = false
-    local srcCid = GetCid(src)
-    for _, emp in ipairs(employeeList) do
-        if emp.cid == srcCid then isOnJob = true end
-    end
-    return isOnJob
-end
-
 --- Check if the catering van can be returned (and optionally delete it)
 --- @param job string the name of the job
 --- @param delete? boolean (optional) delete the entity if it can be returned
@@ -375,7 +348,7 @@ RegisterNetEvent('md-jobs:server:startCatering', function(job)
     end
 
     local employees = json.decode(info.employees)
-    if not isEmployee(src, job, employees) then
+    if not IsCateringEmployee(src, job, employees) then
         Notifys(src, L.cater.manage.not_on_order, 'error')
         return
     end
@@ -445,7 +418,7 @@ RegisterNetEvent('md-jobs:server:deliverCatering', function(job)
     if not currentOrder[1] then return end
     local employeeList = json.decode(currentOrder[1].employees)
     local orderItems   = json.decode(currentOrder[1].data)
-    if not isEmployee(src, job, employeeList) then return end
+    if not IsCateringEmployee(src, job, employeeList) then return end
     local neededCount, haveCount = 0, 0
     for _, itemEntry in pairs(orderItems) do
         if HasItem(src, itemEntry.item, itemEntry.amount) then
@@ -537,7 +510,7 @@ lib.callback.register('md-jobs:server:addtoCatering', function(source, job)
     end
     local existingEmployees = json.decode(dbResult[1].employees)
     local delivered         = dbResult[1].delivered
-    if isEmployee(source, job, existingEmployees) then
+    if IsCateringEmployee(source, job, existingEmployees) then
         Notifys(source, L.cater.already_on, 'error')
         return false
     end
@@ -615,9 +588,16 @@ end)
 lib.callback.register('md-jobs:server:endCatering', function(source)
     if not source then return false end
     local job = GetJobName(source)
-    if not isEmployee(source, job) then
+    if not IsCateringEmployee(source, job) then
         Notifys(source, L.cater.manage.not_on_order, 'error')
         return
     end
     return stopCatering(source, job)
+end)
+
+lib.callback.register('md-jobs:server:isCatering', function(source, job)
+    if not source or not job or GetJobName(source) ~= job or not IsCateringEmployee(source, job) then
+        return false
+    end
+    return true
 end)
