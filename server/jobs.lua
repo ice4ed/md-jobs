@@ -325,7 +325,6 @@ RegisterNetEvent('md-jobs:server:billPlayer', function(job, tillIndex)
 end)
 
 RegisterNetEvent('md-jobs:server:enterJobZone', function(job)
-    print("enter")
     local src = source
     if not src or not job or GetJobName(src) ~= job then return end
     if Jobs[job].automaticJobDuty then
@@ -335,7 +334,6 @@ end)
 
 RegisterNetEvent('md-jobs:server:leaveJobZone', function(job)
     local src = source
-    print("leave", src, job, Jobs[job].automaticJobDuty, IsCateringEmployee(src, job))
     if not src or not job or GetJobName(src) ~= job then return end
     if Jobs[job].automaticJobDuty and not IsCateringEmployee(src, job) then
         setJobDuty(src, false)
@@ -479,10 +477,11 @@ lib.callback.register('md-jobs:server:getJobConfigs', function()
     local jobs = {}
     for jobName, jobData in pairs(Jobs) do
         local jobConfig = {}
-        jobConfig.job = jobName
         if jobData.polyzone then
+            jobConfig.polyzone = true
             jobConfig.zone = jobData.polyzone
         elseif jobData.Blip[1].loc then
+            jobConfig.polyzone = false
             jobConfig.zone = jobData.Blip[1].loc
         else
             print('[ERROR] - Failed to get zone coordinates for' .. jobName)

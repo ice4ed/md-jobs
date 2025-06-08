@@ -141,15 +141,15 @@ local function createZones()
                     end
                 end,
             }
-            if #zonePoints == 1 then
+            if jobConfig.polyzone then
+                -- Polyzone configuired, using polyzone
+                zoneConfig.points = zonePoints
+                zone = lib.zones.poly(zoneConfig)
+            else
                 -- No polyzone configured, using box zone
                 zoneConfig.coords = vector3(zonePoints.x, zonePoints.y, zonePoints.z)
                 zoneConfig.size = vector3(30, 30, 3)
                 zone = lib.zones.box(zoneConfig)
-            else
-                -- Polyzone configuired, using polyzone
-                zoneConfig.points = zonePoints
-                zone = lib.zones.poly(zoneConfig)
             end
             zones[jobName] = zone
         end
