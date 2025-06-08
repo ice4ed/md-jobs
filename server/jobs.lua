@@ -483,8 +483,9 @@ lib.callback.register('md-jobs:server:getJobConfigs', function()
         if jobData.polyzone then
             jobConfig.zone = jobData.polyzone
         elseif jobData.Blip[1].loc then
-            jobConfig.zone = jobData.Blip.loc
+            jobConfig.zone = jobData.Blip[1].loc
         else
+            print('[ERROR] - Failed to get zone coordinates for' .. jobName)
             goto skip
         end
         local closedShops = nil
