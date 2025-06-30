@@ -1,11 +1,7 @@
 {
     "Lua.diagnostics.globals": [
         "lib",
-        "progressbar",
         "MySQL",
-        "getPlayer"
-    ],
-    "Lua.diagnostics.disable": [
-        "lowercase-global"
+        "QBX"
     ]
 }

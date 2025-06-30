@@ -1,5 +1,5 @@
 # MD-Jobs
-    
+
 <div align="center">
   <a href="https://discord.gg/sAMzrB4DDx">
     <img src="https://i.imgur.com/t65G9Z0.png" width="200" alt="Mustache Scripts Discord">
@@ -8,59 +8,75 @@
   <a href="https://discord.gg/sAMzrB4DDx"><strong>Join the Mustache Scripts Discord</strong></a>
 </div>
 
-
 ## Acknowledgements
+
 ### big shoutout to [Mcklean](https://mckleans-scripts.tebex.io/) for MK-Items
+
 ### big shoutout to [bitc0de](https://github.com/bitc0de/fivem-items-gallery) for the items as well
-### Thanks to the beta testers as they have helped a lot :) 
+
+### Thanks to the beta testers as they have helped a lot :)
 
 ## Contributions
+
 ### as time moves on, I would love for this script to make more and more jobs accessible, free, and open source. If you make items and locations and want to contribute to the resource to help others get more jobs made for their server you must do the following
+
 ### make sure items and images are TOS friendly (we dont need coca-cola, ecola is fine.)
+
 ### fork/clone the current repository
+
 ### upload the folder in this format below
-  - name of job
-    - image folder with images
-    - qb.md -- qb items format
-    - ox.md -- ox items format
-    - jobData.md -- job code snippet for qb, qbx, esx
-    - jobname.lua -- please rename the lua file to be name of the job and which mlo
-      - uwu_gabz or deerdiner_dippzy
+
+- name of job
+  - image folder with images
+  - qb.md -- qb items format
+  - ox.md -- ox items format
+  - jobData.md -- job code snippet for qb, qbx, esx
+  - jobname.lua -- please rename the lua file to be name of the job and which mlo
+    - uwu_gabz or deerdiner_dippzy
+
 ### if that format is hard you can use the site linked below and upload the images and input the data for jobs on the site and hit export at the bottom
+
 ### then add in the jobname.lua to it
+
 ### Send A PR and As long as its TOS safe and the coords work, ill accept and merge it in.
 
 ## Features
+
 - **Unlimited Crafting Jobs**: Create as many jobs as you want with fully customizable crafting stations, shops, and catering options.
 - **Customizable Recipes**: Define ingredients, crafting animations, and results for each job.
 - **Catering System**: Enable catering orders with commission payouts for players.
 - **Closed Shops**: Add restricted shops with unique inventories and ped models.
 - **Easy Setup**: Use the provided website tool to generate configuration files quickly.
 
-
-
 ## Dependencies
+
 - **qb-core**, **qbx_core**, or **esx** (ESX support is experimental)
   - For ESX: `ox_inventory` and `ox_target` are required.
+- **oxmysql**
 - **ox_lib**
 - **rpemotes** or **scully_emotemenu**
-
 
 ## Installation
 
 ### Step 1: Install Items
+
 - The `items` folder contains pre-configured item templates for various businesses (e.g., Vanilla Unicorn).
 - Only install the items you plan to use. If you're not using Gabz Vanilla Unicorn, skip those files.
 
 ### Step 2: Upload Images to Inventory
+
 - Copy and paste the images into your inventory resource.
 
-### Step 3: Run the SQL File
+### Step 3: Run the SQL File (ONLY IF Config.AutorunSQL = false)
+
+- **ONLY DO THIS IF: Config.AutorunSQL = false**
 - Execute the provided SQL file to set up the necessary database tables.
   - If you're unsure how to run SQL files, there are many helpful tutorials on YouTube.
 
 ### Step 4: Add Emotes
+
 - The following emote is used for crafting animations. You can customize it if needed:
+
 ```lua
  ["uncuff"] = {"mp_arresting","a_uncuff","Uncuff", AnimationOptions = {     EmoteLoop = true,     EmoteMoving = true } },
 
@@ -80,6 +96,7 @@
         }
     },
 ```
+
 If using scully:
 
 ```lua
@@ -122,32 +139,44 @@ If using scully:
 
 ```
 
-
 ### Step 5 ( ONLY FOR QBX )
-- head to the fxmanifest.lua
-   - uncomment out the line in client_scripts { } for player data
 
-   
+- head to the fxmanifest.lua
+  - uncomment out the line in client_scripts { } for player data
+
 # How to edit things around
+
 ## Now There is an easy way and a harder way
 
 ### Easy Way
+
 I (98% Ai) made this website. you upload the images for items and fill out the info.
-### Highly Recommend you stick to image names like butter.png or buttered_toast.png as the site will read _ as a space and capitlize the next letter for your items
+
+### Highly Recommend you stick to image names like butter.png or buttered*toast.png as the site will read * as a space and capitlize the next letter for your items
+
 - it will read the image names and make ox and qb formatted items
 - it will then make sure you have the images in the img folder
 - it will then spit out a {jobnameyouinput}.lua to add to your locations
 
 ### https://mustachedom.github.io/md-jobs-maker/
 
-
 ### harder way
-Lets start with a job snippet and ill explain it further 
-```lua
 
+Lets start with a job snippet and ill explain it further
+
+```lua
 Jobs['bestbudz'] = {
     CateringEnabled = false,
     closedShopsEnabled = true,
+    automaticJobDuty = false,
+    polyzone = { -- Make false/nil if you don't want this (it will use Blip loc instead)
+        vec3(-1175.25, -894.89, 13.85),
+        vec3(-1185.25, -901.6, 13.83),
+        vec3(-1187.4, -898.63, 13.83),
+        vec3(-1198.91, -905.37, 13.83),
+        vec3(-1208.06, -891.75, 13.85),
+        vec3(-1186.98, -877.53, 13.85)
+    },
     Blip = {
         {sprite = 469, color = 2, scale = 0.8, label = 'Best Budz', loc = vector3(374.57, -825.79, 29.05)},
     },
@@ -193,7 +222,7 @@ Jobs['bestbudz'] = {
             {anim = 'uncuff',give = {bluntwrap = 1, weed_job_og_kush=1}, take = {blunt_og_kush=1}, progtext = 'Rolling' },
             {anim = 'uncuff',give = {bluntwrap = 1, weed_job_purple_haze=1}, take = {blunt_purple_haze=1}, progtext = 'Rolling' },
             {anim = 'uncuff',give = {bluntwrap = 1, weed_job_skunk=1}, take = {blunt_skunk=1}, progtext = 'Rolling' },
-            {anim = 'uncuff',give = {bluntwrap = 1, weed_job_ak47=1}, take = {blunt_ak47=1}, progtext = 'Rolling' }, 
+            {anim = 'uncuff',give = {bluntwrap = 1, weed_job_ak47=1}, take = {blunt_ak47=1}, progtext = 'Rolling' },
         },
         oil = {
             {anim = 'uncuff',give = {weed_job_white_widow = 1}, take = {weed_oil=1}, progtext = 'Pouring' },
@@ -219,7 +248,7 @@ Jobs['bestbudz'] = {
             {name = 'weed_oil',     minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
         Van = {
-            taxi = {model = 'burrito', label = 'Burrito', plate = 'WeedMan', loc = vector4(364.85, -829.15, 29.29, 192.0), heading = 192.00},
+            taxi = {model = 'burrito', label = 'Burrito', plate = 'WeedMan', livery = false, loc = vector4(364.85, -829.15, 29.29, 192.0), heading = 192.00},
         }
     },
     shops = {
@@ -248,7 +277,7 @@ Jobs['bestbudz'] = {
                 loc = vector3(379.26, -811.68, 29.04), l = 0.5, w = 0.7, lwr = 0.25, upr = 0.75, r = 180, job = 'bestbudz'},
             {CraftData = {type = 'skunk', targetLabel = 'Pick Skunk', menuLabel = 'Pick Skunk!'},
                 loc = vector3(380.57, -811.65, 29.07), l = 0.5, w = 0.7, lwr = 0.25, upr = 0.75, r = 180, job = 'bestbudz'},
-            {CraftData = {type = 'ak47', targetLabel = 'Pick AK47', menuLabel = 'Pick AK47!'},  
+            {CraftData = {type = 'ak47', targetLabel = 'Pick AK47', menuLabel = 'Pick AK47!'},
                 loc = vector3(381.8, -811.65, 29.06), l = 0.5, w = 0.7, lwr = 0.25, upr = 0.75, r = 180, job = 'bestbudz'},
             {CraftData = {type = 'ak47', targetLabel = 'Pick AK47', menuLabel = 'Pick AK47!'},
                 loc = vector3(382.76, -811.6, 29.01), l = 0.5, w = 0.7, lwr = 0.25, upr = 0.75, r = 180, job = 'bestbudz'},
@@ -293,17 +322,21 @@ Jobs['bestbudz'] = {
 ```
 
 ## making a job
- #### in order to make the job you need to add it to the Jobs table. its very simple
+
+#### in order to make the job you need to add it to the Jobs table. its very simple
 
 ```lua
     Jobs['bestbudz'] = {
 
     }
 ```
- #### now it **needs** to be the job  <b>NAME</b> not job label
+
+#### now it **needs** to be the job <b>NAME</b> not job label
 
 ## enable catering or closed shop
+
 #### this is very simple as well, you are simply going to put the bools in the table you just make
+
 ```lua
     Jobs['bestbudz'] = {
         CateringEnabled = true,
@@ -311,11 +344,40 @@ Jobs['bestbudz'] = {
     }
 ```
 
-## making a blip
-#### lets make a blip for this job
+## Automatic duty
+
+#### this will automatically set the user on/off duty when they enter/exit the business (unless catering!)
+
 ```lua
     Jobs['bestbudz'] = {
-        CateringEnabled = true,    
+        automaticJobDuty = true,
+    }
+```
+
+## Job Polyzone
+
+#### create a polyzone for more fine-tuned job behavior, otherwise it will use the blip loc (see below)
+
+```lua
+    Jobs['burgershot'] = { -- This is for burgetshot_uniqz!
+        polyzone = {
+        vec3(-1175.25, -894.89, 13.85),
+        vec3(-1185.25, -901.6, 13.83),
+        vec3(-1187.4, -898.63, 13.83),
+        vec3(-1198.91, -905.37, 13.83),
+        vec3(-1208.06, -891.75, 13.85),
+        vec3(-1186.98, -877.53, 13.85)
+    },
+    }
+```
+
+## making a blip
+
+#### lets make a blip for this job
+
+```lua
+    Jobs['bestbudz'] = {
+        CateringEnabled = true,
         closedShopsEnabled = true,
         Blip = {
             {sprite = 469, color = 2, scale = 0.8, label = 'Best Budz', loc = vector3(374.57, -825.79, 29.05)},
@@ -323,16 +385,18 @@ Jobs['bestbudz'] = {
       }
 ```
 
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-| `sprite` | icon displayed | yes | - |
-| `color` | color of blip | yes | - | 
-| `scale` | size of blip  | Yes | - |
-| `label` | name of blip  | Yes | - |
-| `loc`   | location of blip | yes| -|
+| Parameter | Description      | Required | Default |
+| --------- | ---------------- | -------- | ------- |
+| `sprite`  | icon displayed   | yes      | -       |
+| `color`   | color of blip    | yes      | -       |
+| `scale`   | size of blip     | Yes      | -       |
+| `label`   | name of blip     | Yes      | -       |
+| `loc`     | location of blip | yes      | -       |
 
 ## Making A closed shop
+
 #### sweet, now we need to add where the peds will be!
+
 ```lua
        Jobs['bestbudz'] = {
         closedShopsEnabled = true,
@@ -342,26 +406,33 @@ Jobs['bestbudz'] = {
         },
       }
 ```
-   Parameter | Description | Required | Default |
-  |-----------|-------------|----------|---------|
-  | `ped` | Model of Ped| yes | - |
-  | `loc` | location of ped | yes | -       | 
-  | `label` | UNIQUE Name | Yes | - |
-  |
+
+| Parameter | Description     | Required | Default |
+| --------- | --------------- | -------- | ------- |
+| `ped`     | Model of Ped    | yes      | -       |
+| `loc`     | location of ped | yes      | -       |
+| `label`   | UNIQUE Name     | Yes      | -       |
+|  |
+
 ```lua
     Jobs['police'] = {
         closedShopsEnabled = false,
         closedShops = {},
     }
 ```
-or 
+
+or
+
 ```lua
   Jobs['police'] = {
         closedShopsEnabled = false,
     }
 ```
+
 ## Adding What Can Be In a Closed Shop
+
 ### this part is simple, add the items you want to sell and the price for them to be defaulted to
+
 ```lua
  Jobs['bestbudz'] = {
    closedShopsEnabled = true,
@@ -383,18 +454,24 @@ or
    },
  }
 ```
-###  now if you have the closed shop enabled you add the items in the format above
-###  this is set to $5 but the owner of the business **can** change the prices in city :)
- | Parameter | Description | Required | Default |
- |-----------|-------------|----------|---------|
- | `key value (item)` | item added| yes | - |
- | `name` | repeat item key | yes | -       | 
- | `price` | deafult price | Yes | - |
- |
+
+### now if you have the closed shop enabled you add the items in the format above
+
+### this is set to $5 but the owner of the business **can** change the prices in city :)
+
+| Parameter          | Description     | Required | Default |
+| ------------------ | --------------- | -------- | ------- |
+| `key value (item)` | item added      | yes      | -       |
+| `name`             | repeat item key | yes      | -       |
+| `price`            | deafult price   | Yes      | -       |
+|  |
+
 ### doing good so far! now you can see how to start a job and enable closedShops and blips. Lets get further in!
 
 ## Adding Crafting Stations
-###  Sweet now lets look at making some crafting stations and recipes
+
+### Sweet now lets look at making some crafting stations and recipes
+
 ```lua
    Jobs['police'] = {
      CateringEnabled = true,    -- if false catering can be catering = {} or not even there
@@ -421,16 +498,22 @@ or
      },
    }
 ```
-###  ok i admit thats a lot of changes really quick. lets break it down 
-###  so we are making three crafting stations.
-### they can be any name like 
+
+### ok i admit thats a lot of changes really quick. lets break it down
+
+### so we are making three crafting stations.
+
+### they can be any name like
+
 ```lua
     cocktail = {},
     coffee = {},
     ice = {},
     tswiftIsForTheHomies = {},
 ```
+
 ### so the tables above are what type of crafting it is. lets add data
+
 ```lua
     cocktail = {
        {anim = 'cocktail', give = {ice = 1, soda_water = 1, vodka = 1}, take = {vodka_soda = 1}, progtext = 'Making', time = 5000, max = 10000},
@@ -443,19 +526,21 @@ or
    }
 ```
 
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-| `anim` | Animation to play during crafting | no | 'uncuff' |
-| `give` | Required items with quantities | yes/no | give = {} will not require item removal |
-| `take` | Produced items with quantities | Yes | take needs an item to give |
-| `progtext` | Text shown on the progress bar | no | "Crafting"  |
-| `time` | Duration in milliseconds | No | `Config.DefaultCraftTime` |
-| `max` | Maximum quantity craftable at once | No | `Config.MultiCraftDefault` |
+| Parameter  | Description                        | Required | Default                                 |
+| ---------- | ---------------------------------- | -------- | --------------------------------------- |
+| `anim`     | Animation to play during crafting  | no       | 'uncuff'                                |
+| `give`     | Required items with quantities     | yes/no   | give = {} will not require item removal |
+| `take`     | Produced items with quantities     | Yes      | take needs an item to give              |
+| `progtext` | Text shown on the progress bar     | no       | "Crafting"                              |
+| `time`     | Duration in milliseconds           | No       | `Config.DefaultCraftTime`               |
+| `max`      | Maximum quantity craftable at once | No       | `Config.MultiCraftDefault`              |
 
 ### Now all you need to do is fill out as many crafting things as you want!
 
 ## Setting Up Catering!
+
 ### going off assuming you want to use catering for this job lets add it in
+
 ```lua
    Jobs['police'] = {
     CateringEnabled = true,    -- if false catering can be catering = {} or not even there
@@ -465,35 +550,44 @@ or
             {name = 'vodka',        minPrice = 10, maxPrice = 20, maxAmount = 30},
             {name = 'tequila',      minPrice = 10, maxPrice = 20, maxAmount = 30},
         },
-        Van = {model = 'burrito', label = 'Burrito', plate = 'policeCATER', loc = vector4(144.72, -1300.25, 28.89, 121.44)},
+        Van = {model = 'burrito', label = 'Burrito', plate = 'policeCATER', livery = false, loc = vector4(144.72, -1300.25, 28.89, 121.44)},
     },
 }
 ```
-   ### Catering Parameters   
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-| `commission` | Commission rate (0.0-1.0) paid to employee | Yes | - |
-| `items` | Table of items available for catering see below| Yes | - |
-| `Van` | Delivery vehicle configuration See Below | Yes | - |   
-### Items Parameters   
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-| `name` | Item identifier | Yes | - |
-| `minPrice` | Minimum selling price | Yes | - |
-| `maxPrice` | Maximum selling price | Yes | - |
-| `maxAmount` | Maximum quantity available | Yes | - |   
-### Van Parameters   
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-| `model` | Vehicle model name | Yes | - |
-| `label` | Display name for the vehicle | Yes | - |
-| `plate` | License plate text | Yes | - |
-| `loc` | Vector4 spawn location (x, y, z, heading) | Yes | - |
+
+### Catering Parameters
+
+| Parameter    | Description                                     | Required | Default |
+| ------------ | ----------------------------------------------- | -------- | ------- |
+| `commission` | Commission rate (0.0-1.0) paid to employee      | Yes      | -       |
+| `items`      | Table of items available for catering see below | Yes      | -       |
+| `Van`        | Delivery vehicle configuration See Below        | Yes      | -       |
+
+### Items Parameters
+
+| Parameter   | Description                | Required | Default |
+| ----------- | -------------------------- | -------- | ------- |
+| `name`      | Item identifier            | Yes      | -       |
+| `minPrice`  | Minimum selling price      | Yes      | -       |
+| `maxPrice`  | Maximum selling price      | Yes      | -       |
+| `maxAmount` | Maximum quantity available | Yes      | -       |
+
+### Van Parameters
+
+| Parameter | Description                               | Required | Default |
+| --------- | ----------------------------------------- | -------- | ------- |
+| `model`   | Vehicle model name                        | Yes      | -       |
+| `label`   | Display name for the vehicle              | Yes      | -       |
+| `plate`   | License plate text                        | Yes      | -       |
+| `livery`  | Vehicle livery index                      | No       | -       |
+| `loc`     | Vector4 spawn location (x, y, z, heading) | Yes      | -       |
 
 ## Setting up Shops!
+
 ### is this closed shops? we did this already? nope. this is to get ingridients
 
-### lets start with adding the types of shops and what items it goes in 
+### lets start with adding the types of shops and what items it goes in
+
 ```lua
 Jobs['police'] = {
   shops = { -- must match the key value in locations
@@ -521,7 +615,9 @@ Jobs['police'] = {
   },
 }
 ```
+
 ### so lets break this down more
+
 ```lua
     shops = { -- must match the key value in locations
         ingridients = {
@@ -529,15 +625,20 @@ Jobs['police'] = {
         }
     },
 ```
-### we need to make a table for the type of shop it is 
+
+### we need to make a table for the type of shop it is
+
 #### so the key is the type and the value is the items
+
 ```lua
   shops = {
      -- KEY      | Value
      ingridients = {}
   }
 ```
+
 ### and now we just add the items that go inside the ingridients shop
+
 ```lua
    shops = { -- must match the key value in locations
       ingridients = {
@@ -563,24 +664,26 @@ Jobs['police'] = {
       }
   },
 ```
+
 ### shops = {} Parameters
 
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-| `[category]` | Category name (must match location key) | Yes | - |
-| `items` | Table of items in this shop category see below | Yes | - |
+| Parameter    | Description                                    | Required | Default |
+| ------------ | ---------------------------------------------- | -------- | ------- |
+| `[category]` | Category name (must match location key)        | Yes      | -       |
+| `items`      | Table of items in this shop category see below | Yes      | -       |
 
 ### Item Parameters
 
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-| `name` | Item identifier | Yes | - |
-| `price` | Purchase price | Yes | - |
-| `amount` | Maximum available stock | Yes | - |
-
+| Parameter | Description             | Required | Default |
+| --------- | ----------------------- | -------- | ------- |
+| `name`    | Item identifier         | Yes      | -       |
+| `price`   | Purchase price          | Yes      | -       |
+| `amount`  | Maximum available stock | Yes      | -       |
 
 ## Adding Locations!
+
 ### so this is the hardest part since there is multiple formats here. ill break them down one by one but here is the way it should look
+
 ```lua
 craftingStations = { --must match the key value in locations
     cocktail = {
@@ -608,7 +711,7 @@ locations = { -- l = length, w = width, lwr = (for target) lower height, upr = (
     Crafter = { -- CraftData.type MUST MATCH A KEY VALUE IN craftStations ABOVE so type = 'cocktail' will look for cocktail in craftingStations
         {CraftData = {type = 'coffee', targetLabel = 'Make Coffee', menuLabel = 'Make Coffee!',prop = 'prop_coffee_mac_02'},
             loc = vector3(130.66, -1281.72, 29.5), l = 0.5, w = 0.4, lwr = 0.25, upr = 0.25, r = 40, job = 'police'},
-        {CraftData = {type = 'ice', targetLabel = 'Grab Ice', menuLabel = 'Grab Ice!' }, 
+        {CraftData = {type = 'ice', targetLabel = 'Grab Ice', menuLabel = 'Grab Ice!' },
             loc = vector3(127.95, -1281.9, 28.99), l = 1.25, w = 0.65, lwr = 0.5, upr = 0.5, r = 40, job = 'police'},
         {CraftData = {type = 'cocktail', targetLabel = 'Make Cocktail', menuLabel = 'Make Cocktail!' },
             loc = vector3(128.19, -1282.81, 29.44), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 120, job = 'police'},
@@ -643,32 +746,34 @@ locations = { -- l = length, w = width, lwr = (for target) lower height, upr = (
 ### yeah this locations table is scary so lets break it down option by option!
 
 ## Crafter
-###  so we have locations.Crafter now but how do we format it and what is all these numbers. im lost!
-###  each crafter location needs a craftdata table like this
+
+### so we have locations.Crafter now but how do we format it and what is all these numbers. im lost!
+
+### each crafter location needs a craftdata table like this
 
 ### CrafterData Parameters
 
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-| `type` | Category name (must match craftStations key) | Yes | - |
-| `targetLabel` | Target Label | No | "Craft" |
-| `menuLabel`  | Menu Label  |  No|  "Craft!"|
-| `prop`       | prop you want to spawn (if you want) | no | - |
+| Parameter     | Description                                  | Required | Default  |
+| ------------- | -------------------------------------------- | -------- | -------- |
+| `type`        | Category name (must match craftStations key) | Yes      | -        |
+| `targetLabel` | Target Label                                 | No       | "Craft"  |
+| `menuLabel`   | Menu Label                                   | No       | "Craft!" |
+| `prop`        | prop you want to spawn (if you want)         | no       | -        |
 
 ### location Parameters
 
-| Parameter | Description                       | Required | Default|
-|-----------|---------------------------------  |----------|--------|
-| `loc`       | Location coordinates (x, y, z)  | Yes      | -      |
-| `l`        | Length of target zone            | No       | 1.0    |
-| `w`        | Width of target zone             | No       | 1.0    |
-| `lwr `    | Lower range of target zone        | No       | 1.0    |
-| `upr  `     | Upper range of target zone      | No       | 1.0    |
-| `r     `    | Radius  of target zone          | No       | 180.0  |
-| `job    `   | Job type                        | Yes      | -      |
-
+| Parameter | Description                    | Required | Default |
+| --------- | ------------------------------ | -------- | ------- |
+| `loc`     | Location coordinates (x, y, z) | Yes      | -       |
+| `l`       | Length of target zone          | No       | 1.0     |
+| `w`       | Width of target zone           | No       | 1.0     |
+| `lwr `    | Lower range of target zone     | No       | 1.0     |
+| `upr  `   | Upper range of target zone     | No       | 1.0     |
+| `r     `  | Radius of target zone          | No       | 180.0   |
+| `job    ` | Job type                       | Yes      | -       |
 
 ### so the smallest code block should look this this
+
 ```lua
 locations = {
      Crafters = {
@@ -678,6 +783,7 @@ locations = {
 ```
 
 ### While the biggest should be
+
 ```lua
 locations = {
      Crafters = {
@@ -686,14 +792,16 @@ locations = {
      }
 }
 ```
-### so this doesnt seem to hard! 
 
-### now lets look again at Crafters 
+### so this doesnt seem to hard!
+
+### now lets look again at Crafters
+
 ```lua
   Crafter = { -- CraftData.type MUST MATCH A KEY VALUE IN craftStations ABOVE so type = 'cocktail' will look for cocktail in craftingStations
           {CraftData = {type = 'coffee', targetLabel = 'Make Coffee', menuLabel = 'Make Coffee!',prop = 'prop_coffee_mac_02'},
               loc = vector3(130.66, -1281.72, 29.5), l = 0.5, w = 0.4, lwr = 0.25, upr = 0.25, r = 40, job = 'police'},
-          {CraftData = {type = 'ice', targetLabel = 'Grab Ice', menuLabel = 'Grab Ice!' }, 
+          {CraftData = {type = 'ice', targetLabel = 'Grab Ice', menuLabel = 'Grab Ice!' },
               loc = vector3(127.95, -1281.9, 28.99), l = 1.25, w = 0.65, lwr = 0.5, upr = 0.5, r = 40, job = 'police'},
           {CraftData = {type = 'cocktail', targetLabel = 'Make Cocktail', menuLabel = 'Make Cocktail!' },
               loc = vector3(128.19, -1282.81, 29.44), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 120, job = 'police'},
@@ -701,11 +809,13 @@ locations = {
               loc = vector3(128.57, -1283.46, 29.42), l = 0.7, w = 0.6, lwr = 0.25, upr = 0.25, r = 120, job = 'police'},
       },
 ```
+
 - this means there are 4 locations to craft at
   - 2 cocktails
   - 1 ice
   - 1 coffee
-- and if we look back at craftStations we should have 
+- and if we look back at craftStations we should have
+
 ```lua
   craftingStations = { --must match the key value in locations
      cocktail = {
@@ -729,10 +839,13 @@ locations = {
      }
  },
 ```
-  showing that we have all the types we made!
+
+showing that we have all the types we made!
 
 ## Stores
+
 ### pretty much the same thing as Crafters!
+
 ```lua
   Stores = { -- prop is only needed if you want to spawn an object | prop = 'prop_bar_fridge_01' for example
       {StoreData = {type = 'ingridients', targetLabel = 'Get Ingredients', menuLabel = 'Get Ingredients!'},
@@ -745,42 +858,47 @@ locations = {
           loc = vector3(129.14, -1279.99, 28.68), l = 0.7, w = 1.0, lwr = 0.50, upr = 0.5, r = 120, job = 'police'},
   },
 ```
+
 but this time we have StoreData instead of CraftData!
 
 Other than that change Everything is the same as Crafter!
 
-It just will look for 
+It just will look for
+
 ```lua
     shops = { -- must match the key value in locations
         ingridients = {
         }
     }
 ```
+
 just to re-iterate
+
 ### StoreData Parameters
 
-| Parameter | Description | Required | Default |
-|-----------|-------------|----------|---------|
-| `type` | Category name (must match craftStations key) | Yes | - |
-| `targetLabel` | Target Label | No | "Craft" |
-| `menuLabel`  | Menu Label  |  No|  "Craft!"|
-| `prop`       | prop you want to spawn | no | - |
+| Parameter     | Description                                  | Required | Default  |
+| ------------- | -------------------------------------------- | -------- | -------- |
+| `type`        | Category name (must match craftStations key) | Yes      | -        |
+| `targetLabel` | Target Label                                 | No       | "Craft"  |
+| `menuLabel`   | Menu Label                                   | No       | "Craft!" |
+| `prop`        | prop you want to spawn                       | no       | -        |
 
 ### location Parameters
 
-| Parameter | Description                     | Required | Default                     |
-|-----------|---------------------------------|----------|-----------------------------|
-| `loc`       | Location coordinates (x, y, z)  | Yes      | - |
-| `l`        | Length of target zone           | No       | 1.0                        |
-| `w`        | Width of target zone            | No       | 1.0                        |
-| `lwr `    | Lower range of target zone      | No       | 1.0                        |
-| `upr  `     | Upper range of target zone      | No       | 1.0                        |
-| `r     `    | Radius  of target zone          | No       | 180.0                         |
-| `job    `   | Job type                        | Yes      | -                   |
-
+| Parameter | Description                    | Required | Default |
+| --------- | ------------------------------ | -------- | ------- |
+| `loc`     | Location coordinates (x, y, z) | Yes      | -       |
+| `l`       | Length of target zone          | No       | 1.0     |
+| `w`       | Width of target zone           | No       | 1.0     |
+| `lwr `    | Lower range of target zone     | No       | 1.0     |
+| `upr  `   | Upper range of target zone     | No       | 1.0     |
+| `r     `  | Radius of target zone          | No       | 180.0   |
+| `job    ` | Job type                       | Yes      | -       |
 
 ## Tills
+
 ### so now its a format change! lets break this down easier
+
 ```lua
     Tills = { -- prop is only needed if you want to spawn an object | prop = 'prop_till_03' for example
       {loc = vec3(130.83, -1282.33, 29.42), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 40,  commission = 0.2, job = 'police'},
@@ -789,22 +907,23 @@ just to re-iterate
     },
 ```
 
-| Parameter    | Description                                      | Required | Default  |
-|--------------|--------------------------------------------------|----------|----------|
-| `loc`        | Location coordinates (x, y, z)                  | Yes      | -        |
-| `l`          | Length of target zone                           | No       | 1.0      |
-| `w`          | Width of target zone                            | No       | 1.0      |
-| `lwr`        | Lower range of target zone                      | No       | 1.0      |
-| `upr`        | Upper range of target zone                      | No       | 1.0      |
-| `r`          | Radius of target zone                           | No       | 180.0    |
-| `commission` | How much commission player gets (0.0-1.0) (0.2 is 20%) | Yes  | -      |
-| `job`        | Job type                                         | Yes      | -        |
+| Parameter    | Description                                            | Required | Default |
+| ------------ | ------------------------------------------------------ | -------- | ------- |
+| `loc`        | Location coordinates (x, y, z)                         | Yes      | -       |
+| `l`          | Length of target zone                                  | No       | 1.0     |
+| `w`          | Width of target zone                                   | No       | 1.0     |
+| `lwr`        | Lower range of target zone                             | No       | 1.0     |
+| `upr`        | Upper range of target zone                             | No       | 1.0     |
+| `r`          | Radius of target zone                                  | No       | 180.0   |
+| `commission` | How much commission player gets (0.0-1.0) (0.2 is 20%) | Yes      | -       |
+| `job`        | Job type                                               | Yes      | -       |
 
-
-this one is fairly straight forward! 
+this one is fairly straight forward!
 
 ## Stash and Trays!
+
 ### Stash and Trays Are the same thing besides one difference, trays anyone can open!
+
 ```lua
    stash = { -- prop is only needed if you want to spawn an object | prop = 'prop_lev_crate_01' for example
        {prop = 'prop_drop_crate_01',loc = vec3(131.6136, -1287.2435, 28.2753), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 120,slots = 20, weight = 100000, job = 'police'},
@@ -813,20 +932,20 @@ this one is fairly straight forward!
        {prop = 'prop_food_tray_01', label = 'Grab Food', loc = vector3(129.6180, -1286.6339, 29.2904), l = 0.5, w = 0.5, lwr = 0.10, upr = 0.25, r = 214, slots = 20, weight = 100000,},
    }
 ```
-| Parameter | Description                                      | Required | Default       |
-|-----------|--------------------------------------------------|----------|---------------|
-| prop      | If you **want** to spawn a prop, just add which one here | No       | None          |
-| label     | The target label                                  | no      |Open Stash / Grab Food          |
-| l         | Length of target                                  | No      | 1.0           |
-| w         | Width of target                                   | No      | 1.0           |
-| lwr       | Lower height of target                            | No      | 1.0           |
-| upr       | Upper height of target                            | No      | 1.0           |
-| r         | Rotation of target                                | No       | 180.0             |
-| slots     | How many slots the stash or tray will have        | Yes      | N/A           |
-| weight    | How much weight the stash or tray can carry       | Yes      | N/A           |
-|job (if stash)| What job can open this? | Yes (for stashes) | N/A|
+
+| Parameter      | Description                                              | Required          | Default                |
+| -------------- | -------------------------------------------------------- | ----------------- | ---------------------- |
+| prop           | If you **want** to spawn a prop, just add which one here | No                | None                   |
+| label          | The target label                                         | no                | Open Stash / Grab Food |
+| l              | Length of target                                         | No                | 1.0                    |
+| w              | Width of target                                          | No                | 1.0                    |
+| lwr            | Lower height of target                                   | No                | 1.0                    |
+| upr            | Upper height of target                                   | No                | 1.0                    |
+| r              | Rotation of target                                       | No                | 180.0                  |
+| slots          | How many slots the stash or tray will have               | Yes               | N/A                    |
+| weight         | How much weight the stash or tray can carry              | Yes               | N/A                    |
+| job (if stash) | What job can open this?                                  | Yes (for stashes) | N/A                    |
 
 # the hardest part is here
-- make sure to add this file into server/locations folder. it will populate all that data you made on the next restart! 
 
-
+- make sure to add this file into server/locations folder. it will populate all that data you made on the next restart!

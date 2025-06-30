@@ -1,12 +1,17 @@
-L = {} -- dont fuck with the %s if you forget one or add one without reflecting the code that calls it, it will error and break
-L.cur = '$'
+L              = {} -- dont fuck with the %s if you forget one or add one without reflecting the code that calls it, it will error and break
+L.cur          = '$'
 
-L.devError = {
+L.devError     = {
     no_item = 'There is No %s in your %s Items.lua',
 
 }
 
-L.Error = {
+L.Duty = {
+    on = 'You have gone on duty!',
+    off = 'You have gone off duty!'
+}
+
+L.Error        = {
     no_item = 'You Need %s !',
     no_job = 'You Need To Be A %s To Do This',
     no_near = 'There Is No One Near You To Bill',
@@ -15,7 +20,7 @@ L.Error = {
     too_poor = 'You Are To Poor To Afford This! Go Get A Job Hippie!'
 }
 
-L.Menus = {
+L.Menus        = {
     craft = {
         am = 'Amount To Craft',
         description = 'How Many Do You Want?'
@@ -40,9 +45,9 @@ L.Menus = {
         decline = 'Decline',
     },
     closed = {
-       amount = 'Amount To Buy',
-       description = 'How Many Do You Want To Buy?',
-       shop = '%s Shop'
+        amount = 'Amount To Buy',
+        description = 'How Many Do You Want To Buy?',
+        shop = '%s Shop'
 
     },
     addItem = 'Add Items',
@@ -55,11 +60,14 @@ L.Progressbars = {
     Crafting = '%s %s',
 }
 
-L.cater = {
+L.cater        = {
     time = '%d hours, %d minutes, %d seconds',
     timeout = 'Your Catering Is Overdue, They Refuse To Pay',
+    no_return = 'The Company Vehicle Was Not Returned, You Have Been Fined',
     no_cater = 'There Is No Catering Order!',
-    check = 'Customer Details:%s %s Customer Name: %s %s %s Location: %s %s Due By: %s %s Total Amount Of Products: %s %s Total Price:' .. L.cur ..'%s  %s  Itemized List: %s %s',
+    check =
+    'Customer Details:  \n    \n  Customer Name: %s %s  \n  Location: %s  \n  Delivered: %s  \n  Due By: %s  \n  Total Amount Of Products: %s  \n  Total Price:' ..
+    L.cur .. '%s  \n    \n  Itemized List: %s',
     cater_header = '%s Catering Order',
     manage = {
         title = '%s Catering Management',
@@ -71,26 +79,37 @@ L.cater = {
         deliver = 'Deliver Catering Order',
         deliver_desc = 'Deliver The Catering Order To The Customer',
         too_late = 'You Are Too Late To Deliver The Catering Order',
-        complete = 'You Have Delivered The Catering Order',
-        van = 'The Van Is Outside! Go To The Marked Location',
+        not_on_order = 'You Are Not On This Catering Order',
+        delivered = 'You Delivered The Order, Return The Company Vehicle',
+        complete = 'You Have Completed The Catering Order',
+        van = 'The Company Vehicle Is Outside! Go To The Marked Location',
+        van_dup = 'The Company Vehicle is Already Waiting Outside!',
         cancel = 'Cancel Catering Order',
         cancel_desc = 'Cancel The Catering Order',
-        cancelled = 'You Have Cancelled The Catering Order',
+        cancel_confirm = 'Are You Sure You Want To Cancel The Catering Order?',
+        cancel_incomplete = 'The Order Has Not Been Delivered Yet!',
+        cancel_return = 'The Order Is Delivered, But The Company Vehicle Has Not Been Returned!',
+        cancel_fee = 'Canceling Now Will Result In A %s Fee',
+        canceled = 'The Catering Order Has Been Canceled',
         add = 'Add Yourself To The Catering Order',
         add_desc = 'Add Yourself To The Catering Order',
         added = 'You Have Added Yourself To The Catering Order',
         history = 'View Catering History',
         history_desc = 'View The History Of Catering Orders',
-        hd = 'Customer Name: %s Total: ' .. L.cur .. '%s',
-        hd_desc = 'Customer Details: %s %s Customer Name: %s %s Location: %s %s Total Amount Of Products: %s %s Total Price: ' .. L.cur .. '%s  %s %s Itemized List: %s %s %s Employees On Order: %s',
+        history_none = 'No History',
+        history_none_desc = 'You Have No Catering History. Complete A Catering Order To Get History',
+        hd = 'Customer Name: %s  \n  Total: ' .. L.cur .. '%s',
+        hd_desc =
+        'Order Details:  \n    \n  Customer Name: %s  \n  Location: %s  \n  Delivered: %s  \n  Company Vehicle Returned: %s  \n  Total Amount Of Products: %s  \n  Total Price: ' ..
+        L.cur .. '%s  \n    \n  Itemized List: %s  \n    \n  Employees On Order: %s',
     },
     commission = 'You Have Recieved A Commission Of ' .. L.cur .. '%s For Delivering The Catering Order',
     already = 'Your Job Already Has A Catering Order',
-    already_on = 'You Already Are On This Catering Order',
+    already_on = 'You Are Already On This Catering Order',
     dontHave = 'You Dont Have All The Correct Items!'
 }
 
-L.closed = {
+L.closed       = {
     no_item = 'There Is Nothing For Sale In The Shop',
     des = '%s | ' .. L.cur .. '%s',
     stock = 'Stock: %s',
@@ -98,7 +117,7 @@ L.closed = {
     bought = 'You Have Bought %s Of %s For ' .. L.cur .. '%s',
 }
 
-L.T = { -- targets
+L.T            = { -- targets
     beer = 'Grab Beer',
     coffee = 'Grab Coffee',
     fryer = 'Use Fryer',
@@ -119,12 +138,12 @@ L.T = { -- targets
     boss = 'Boss Menu',
 }
 
-L.billing = {
+L.billing      = {
     billed = 'You Have Billed ' .. L.cur .. '%s To %s',
     paid = 'You Were Billed ' .. L.cur .. '%s By %s',
     too_poor = '%s Is Too Poor, What A Loser',
 }
-Icons  = {
+Icons          = {
     beer = 'fas fa-beer',
     coffee = 'fas fa-coffee',
     fryer = 'fas fa-fish',
