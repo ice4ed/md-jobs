@@ -26,6 +26,7 @@ Config.GroupBlips = false              -- If blips should group by category on m
 -- 15 = Food
 -- 16 = Bar
 -- 17 Coffee Shop
+-- 18 Weed Shop
 
 if Config.Framework == 'qb' then
     QBCore = exports['qb-core']:GetCoreObject()
