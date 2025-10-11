@@ -162,20 +162,25 @@ end
 local function spawnBlips()
     local blipConfigs = lib.callback.await('md-jobs:server:getBlips', false)
     for jobName, blipConfig in pairs(blipConfigs) do
-        local blipInfo = blipConfig.info
-        if blips[jobName] ~= nil then
-            if DoesBlipExist(blips[jobName]) then
+        local blipInfo = blipConfig[1] or blipConfig.info
+        if blipInfo and blipInfo.loc then
+            if blips[jobName] ~= nil and DoesBlipExist(blips[jobName]) then
                 RemoveBlip(blips[jobName])
+                blips[jobName] = nil
             end
-            blips[jobName] = nil
+            local blip = AddBlipForCoord(blipInfo.loc.x, blipInfo.loc.y, blipInfo.loc.z)
+            SetBlipSprite(blip, blipInfo.sprite or 52)
+            SetBlipScale(blip, blipInfo.scale or 0.8)
+            SetBlipColour(blip, blipInfo.col or blipInfo.color or 0)
+            SetBlipDisplay(blip, blipInfo.disp or 4)
+            if Config.GroupBlips and blipInfo.category then
+                SetBlipCategory(blip, blipInfo.category)
+            end
+            BeginTextCommandSetBlipName("STRING")
+            AddTextComponentString(blipInfo.label or jobName)
+            EndTextCommandSetBlipName(blip)
+            blips[jobName] = blip
         end
-        blips[jobName] = CreateBlip(blipInfo.loc, {
-            sprite = blipInfo.sprite or 52,
-            display = 4,
-            scale = blipInfo.scale or 0.8,
-            color = blipInfo.color or 2,
-            label = blipInfo.label or 'Lazy Ass'
-        }, true, false)
     end
 end
 
@@ -784,3 +789,4 @@ CreateThread(function()
         end
     end
 end)
+
