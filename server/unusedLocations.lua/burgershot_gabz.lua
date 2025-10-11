@@ -2,7 +2,7 @@ Jobs['burgershot'] = {
     CateringEnabled = true,
     closedShopsEnabled = true,
     Blip = {
-        {sprite = 106, color = 2, scale = 0.5, label = 'Burger Shot', loc = vec3(-1178.93, -888.79, 13.95), category = 15 },
+        {sprite = 106, color = 2, scale = 0.5, label = 'Burger Shot', loc = vec3(-1178.93, -888.79, 13.95), category = 15},
     },
     closedShops = {
         {ped = 'mp_m_freemode_01', loc = vec4(-1178.93, -888.79, 13.95, 304.48), label = 'Burgershot Shop'}
@@ -168,3 +168,4 @@ Jobs['burgershot'] = {
     },
 
 }
+
