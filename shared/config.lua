@@ -21,7 +21,7 @@ Config.ClosedShopAlwaysActive = true   -- If you want to always have closed shop
 Config.ClosedShopLoop = 5              -- How many minutes you want to wait for the closed shop loop | Recommended higher than 5
 Config.ClosedShopCount = 2             -- How many players you want to allow to be on duty before closed shops are active
 Config.ClosedShopFee = 0.2             -- 20% of the total price
-Config.GroupBlips = false              -- If blips should group by category on map set to true
+Config.GroupBlips = true              -- If blips should group by category on map set to true
 -- Default Categories can be edited/added in the job locations luas - if you already use blip categories elsewhere make sure these numbers do not conflict with existing ones
 -- 15 = Food
 -- 16 = Bar
