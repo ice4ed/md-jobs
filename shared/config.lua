@@ -22,11 +22,12 @@ Config.ClosedShopLoop = 5              -- How many minutes you want to wait for 
 Config.ClosedShopCount = 2             -- How many players you want to allow to be on duty before closed shops are active
 Config.ClosedShopFee = 0.2             -- 20% of the total price
 Config.GroupBlips = true              -- If blips should group by category on map set to true
--- Default Categories can be edited/added in the job locations luas - if you already use blip categories elsewhere make sure these numbers do not conflict with existing ones
--- 15 = Food
--- 16 = Bar
--- 17 Coffee Shop
--- 18 Weed Shop
+Config.CategoryNames = {
+    [15] = "Food",
+    [16] = "Bar",
+    [17] = "Coffee Shop",
+    [18] = "Weed Shop",
+}
 
 if Config.Framework == 'qb' then
     QBCore = exports['qb-core']:GetCoreObject()
